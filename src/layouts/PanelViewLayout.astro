@@ -2,11 +2,13 @@
 import { ClientRouter } from "astro:transitions";
 import "@/styles/global.css";
 import "@/styles/motion.css";
-import Header from "@/components/utilitified_decorations/HeaderDemo.astro";
+import Header from "@/components/utilitified_decorations/HeaderCosmic.astro";
 import Footer from "@/components/utilitified_decorations/Footer.astro";
 import ThreeColumnGrid from "@/components/grid/ThreeColumnGrid.astro";
 import GridBackgrounded from "./GridBackgrounded";
 import { MenuItemProps } from "@/components/menu/MenuItem";
+import { GravityStarsBackground } from "@/components/animate-ui/components/backgrounds/gravity-stars";
+import { GradientBackground } from "@/components/animate-ui/components/backgrounds/gradient";
 
 interface Props {
   active?: string;
@@ -31,8 +33,16 @@ const { hideLinks, hideAuth, additional } = Astro.props;
     <ClientRouter />
   </head>
   <body class="min-h-screen bg-slate-200 dark:bg-slate-800">
+    <GradientBackground
+      className="fixed h-screen w-screen z-0 pointer-events-none"
+      client:load
+    />
     <GridBackgrounded />
-    <div class="z-1 relative">
+    <GravityStarsBackground
+      className="fixed h-screen w-screen z-1 pointer-events-none"
+      client:load
+    />
+    <div class="z-2 relative">
       <Header hideLinks={hideLinks} hideAuth={hideAuth} additional={additional}>
         <slot name="header-navbar" />
       </Header>

@@ -70,7 +70,7 @@ const PageLikePanel: React.FC<PageLikePanelProps> = ({
         interactive ? <InteractivePanel
             {...interactiveProps}
             expandableTitle={expandable ? title : undefined}
-            className={cn('space-y-4', className)}
+            className={cn('space-y-4 z-10', className)}
         >
             {renderHeader()}
 
@@ -85,7 +85,7 @@ const PageLikePanel: React.FC<PageLikePanelProps> = ({
             <PanelAction actions={actions} />
         </InteractivePanel> : <BasePanel
             {...interactiveProps}
-            className={cn('space-y-4', className)}
+            className={cn('space-y-4 z-10', className)}
         >
             {renderHeader()}
 

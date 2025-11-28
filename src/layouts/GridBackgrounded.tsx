@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 
 function GridSmallBackground() {
   return (
-    <div className="fixed h-screen w-screen z-0 bg-teal-50 dark:bg-slate-700">
+    <div className="fixed h-screen w-screen z-0 bg-transparent">
       <div
         className={cn(
           "absolute inset-0 bg-fixed",
@@ -12,7 +12,7 @@ function GridSmallBackground() {
         )}
       />
       {/* Radial gradient for the container to give a faded look */}
-      <div className="bg-fixed pointer-events-none absolute inset-0 flex items-center justify-center bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)] dark:bg-black"></div>
+      <div className="bg-fixed pointer-events-none absolute inset-0 flex items-center justify-center bg-white/50 [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)] dark:bg-black/50"></div>
     </div>
   );
 }

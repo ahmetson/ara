@@ -6,8 +6,7 @@ import MenuPanel from "@/components/menu/MenuPanel";
 import CworkPanel from "@/components/maintainer/CworkPanel";
 ---
 
-<Layout active={MenuName.ProjectName}>
+<Layout active={MenuName.ProjectName} hideLinks={Object.keys(MenuName)}>
   <MenuPanel slot="left" activeMenuItem="dependencies" client:load />
   <CworkPanel slot="center" client:load />
 </Layout>
-

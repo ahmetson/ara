@@ -76,8 +76,12 @@ const { active, hideLinks, hideAuth, additional } = Astro.props;
       </WorkNavbar>
     </div>
     <div class="navbar-end flex h-6 items-center gap-3">
-      {!hideAuth && <AuthNavItem className="py-2! px-2!" client:load />}
-      {!hideAuth && <WalletBalance className="py-2! px-2!" client:load />}
+      {!hideAuth && <AuthNavItem className="py-2! px-2!" client:only="react" />}
+      {
+        !hideAuth && (
+          <WalletBalance className="py-2! px-2!" client:only="react" />
+        )
+      }
     </div>
   </div>
 </header>

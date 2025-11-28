@@ -6,8 +6,7 @@ import { MenuName } from "@/components/navbar/WorkNavbar.astro";
 import RoadmapTabs from "@/components/maintainer/RoadmapTabs";
 ---
 
-<Layout active={MenuName.ProjectName}>
+<Layout hideLinks={Object.keys(MenuName)}>
   <MenuPanel activeMenuItem="roadmap" slot="left" />
   <RoadmapTabs slot="center" client:load />
 </Layout>
-

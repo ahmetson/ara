@@ -1,0 +1,13 @@
+---
+import Layout from "@/layouts/PanelViewLayout.astro";
+import MenuPanel from "@/components/menu/MenuPanel";
+import { MenuName } from "@/components/navbar/WorkNavbar.astro";
+
+import RoadmapTabs from "@/components/maintainer/RoadmapTabs";
+---
+
+<Layout active={MenuName.ProjectName}>
+  <MenuPanel activeMenuItem="roadmap" slot="left" />
+  <RoadmapTabs slot="center" client:load />
+</Layout>
+

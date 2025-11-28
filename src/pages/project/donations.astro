@@ -1,0 +1,13 @@
+---
+import Layout from "@/layouts/PanelViewLayout.astro";
+import { MenuName } from "@/components/navbar/WorkNavbar.astro";
+
+import MenuPanel from "@/components/menu/MenuPanel";
+import BalancePanel from "@/components/maintainer/BalancePanel";
+---
+
+<Layout active={MenuName.ProjectName}>
+  <MenuPanel activeMenuItem="donations" slot="left" />
+  <BalancePanel slot="center" />
+</Layout>
+

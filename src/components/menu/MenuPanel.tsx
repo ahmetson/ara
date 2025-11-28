@@ -2,7 +2,7 @@ import React from 'react'
 import PageLikePanel from '@/components/panel/PageLikePanel'
 import MenuItem from './MenuItem';
 
-type MenuName = 'ihistory' | 'iwork' | 'balance' | 'cbalance' | 'project' | 'marketing' | 'work' | 'cwork';
+type MenuName = 'ihistory' | 'iwork' | 'balance' | 'cbalance' | 'project' | 'marketing' | 'work' | 'cwork' | 'guide' | 'dependencies' | 'roadmap' | 'issues' | 'share-btn' | 'donations';
 
 interface Props {
   title?: string
@@ -71,6 +71,13 @@ const maintainerCollabItems = (activeMenuItem: MenuName, disableAnimation: boole
       focus={focusMenuItem === 'marketing'}
     />,
     <MenuItem
+      icon="guide"
+      label="Guide"
+      uri="/project/guide"
+      active={activeMenuItem === 'guide'}
+      focus={focusMenuItem === 'guide'}
+    />,
+    <MenuItem
       icon="work"
       label="Work"
       badges={[
@@ -99,6 +106,41 @@ const maintainerCollabItems = (activeMenuItem: MenuName, disableAnimation: boole
       uri="/maintainer/cwork"
       active={activeMenuItem === 'cwork'}
       focus={focusMenuItem === 'cwork'}
+    />,
+    <MenuItem
+      icon="dependencies"
+      label="Dependencies"
+      uri="/project/dependencies"
+      active={activeMenuItem === 'dependencies'}
+      focus={focusMenuItem === 'dependencies'}
+    />,
+    <MenuItem
+      icon="roadmap"
+      label="Roadmap"
+      uri="/project/roadmap"
+      active={activeMenuItem === 'roadmap'}
+      focus={focusMenuItem === 'roadmap'}
+    />,
+    <MenuItem
+      icon="work"
+      label="Issues"
+      uri="/project/issues"
+      active={activeMenuItem === 'issues'}
+      focus={focusMenuItem === 'issues'}
+    />,
+    <MenuItem
+      icon="share"
+      label="Share Button"
+      uri="/project/share-btn"
+      active={activeMenuItem === 'share-btn'}
+      focus={focusMenuItem === 'share-btn'}
+    />,
+    <MenuItem
+      icon="money"
+      label="Donations"
+      uri="/project/donations"
+      active={activeMenuItem === 'donations'}
+      focus={focusMenuItem === 'donations'}
     />
   ]
 }

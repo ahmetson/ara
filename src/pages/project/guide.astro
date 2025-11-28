@@ -1,0 +1,13 @@
+---
+import Layout from "@/layouts/PanelViewLayout.astro";
+import { MenuName } from "@/components/navbar/WorkNavbar.astro";
+import MenuPanel from "@/components/menu/MenuPanel";
+
+import QuestPanel from "@/components/quest/QuestPanel";
+---
+
+<Layout active={MenuName.ProjectName}>
+  <MenuPanel slot="left" activeMenuItem="guide" client:load />
+  <QuestPanel slot="center" title="My Cascading Tasks" client:load />
+</Layout>
+

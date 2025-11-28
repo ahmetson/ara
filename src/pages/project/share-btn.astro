@@ -1,0 +1,13 @@
+---
+import Layout from "@/layouts/PanelViewLayout.astro";
+import MenuPanel from "@/components/menu/MenuPanel";
+import { MenuName } from "@/components/navbar/WorkNavbar.astro";
+
+import ShareTools from "@/components/maintainer/ShareToolsPanel";
+---
+
+<Layout active={MenuName.ProjectName}>
+  <MenuPanel activeMenuItem="share-btn" slot="left" />
+  <ShareTools slot="center" />
+</Layout>
+

@@ -1,0 +1,13 @@
+---
+import Layout from "@/layouts/PanelViewLayout.astro";
+import { MenuName } from "@/components/navbar/WorkNavbar.astro";
+import MenuPanel from "@/components/menu/MenuPanel";
+
+import CworkPanel from "@/components/maintainer/CworkPanel";
+---
+
+<Layout active={MenuName.ProjectName}>
+  <MenuPanel slot="left" activeMenuItem="dependencies" client:load />
+  <CworkPanel slot="center" client:load />
+</Layout>
+

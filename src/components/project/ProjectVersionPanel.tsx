@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import PageLikePanel from '@/components/panel/PageLikePanel'
 import Button from '../custom-ui/Button'
 import Tooltip from '../custom-ui/Tooltip'
+import Link from '../custom-ui/Link'
 import { getIcon } from '../icon'
 import PanelFooter from '../panel/PanelFooter'
 import PanelStat from '../panel/PanelStat'
@@ -10,6 +11,7 @@ import NumberFlow from '@number-flow/react'
 import * as RadixSlider from '@radix-ui/react-slider'
 import { Checkbox, CheckboxIndicator } from '@/components/animate-ui/primitives/radix/checkbox'
 import ByAuthor from '../ByAuthor'
+import MenuAvatar from '../MenuAvatar'
 import { ProfileLink } from '../profile/types'
 import LoadingSpinner from '../LoadingSpinner'
 
@@ -48,6 +50,9 @@ const ProjectVersionPanel: React.FC<ProjectVersionProps> = ({
   const [completedIssues, setCompletedIssues] = useState<number>(initialCompletedIssues ?? 0)
   const [totalIssues, setTotalIssues] = useState<number>(initialTotalIssues ?? 0)
   const [loading, setLoading] = useState<boolean>(false)
+  const [issuesList, setIssuesList] = useState<Issue[]>(issues)
+  const [revertingIssueId, setRevertingIssueId] = useState<string | null>(null)
+  const [notificationMessage, setNotificationMessage] = useState<string | null>(null)
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -109,6 +114,57 @@ const ProjectVersionPanel: React.FC<ProjectVersionProps> = ({
       console.error('Error calling API:', error)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleRevertPatch = async (issueId: string) => {
+    if (revertingIssueId) return
+
+    setRevertingIssueId(issueId)
+    try {
+      const response = await fetch('/api-json', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          jsonrpc: '2.0',
+          method: 'revert-patch',
+          params: {
+            projectId,
+            version,
+            issueId
+          },
+          id: 1
+        })
+      })
+
+      const data = await response.json()
+
+      if (data.error) {
+        console.error('Error reverting patch:', data.error)
+        alert('Failed to revert patch. Please try again.')
+      } else if (data.result) {
+        // Find the issue before removing it
+        const removedIssue = issuesList.find(issue => issue.id === issueId)
+        // Remove issue from list
+        setIssuesList(prevIssues => prevIssues.filter(issue => issue.id !== issueId))
+        // Update counts
+        if (removedIssue) {
+          setTotalIssues(prev => Math.max(0, prev - 1))
+          if (removedIssue.completed) {
+            setCompletedIssues(prev => Math.max(0, prev - 1))
+          }
+        }
+        // Show notification
+        setNotificationMessage('Issue was added to the Issue page.')
+        setTimeout(() => setNotificationMessage(null), 3000)
+      }
+    } catch (error) {
+      console.error('Error calling API:', error)
+      alert('Failed to revert patch. Please try again.')
+    } finally {
+      setRevertingIssueId(null)
     }
   }
 
@@ -190,19 +246,90 @@ const ProjectVersionPanel: React.FC<ProjectVersionProps> = ({
           </h4>
         </Tooltip>
         <ul className="space-y-2">
-          {issues.map((issue) => (
-            <li key={issue.id} className="flex items-center space-x-2">
-              <Checkbox
-                checked={issue.completed || status === 'completed'}
-                disabled
-                className="w-4 h-4 rounded-sm border-2 border-slate-400 dark:border-slate-600 bg-white dark:bg-slate-600 data-[state=checked]:bg-slate-600 dark:data-[state=checked]:bg-slate-400 data-[state=checked]:border-slate-600 dark:data-[state=checked]:border-slate-400 flex items-center justify-center"
-              >
-                <CheckboxIndicator className="w-3 h-3 text-white dark:text-slate-700" />
-              </Checkbox>
-              <span className="text-sm text-slate-700 dark:text-slate-400">{issue.title}</span>
-            </li>
-          ))}
+          {issuesList.map((issue) => {
+            const issueTooltipContent = (
+              <div className="text-sm space-y-3">
+                <div className="flex items-center gap-3">
+                  <div className="flex flex-col gap-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-slate-400 dark:text-slate-500 text-xs">Maintainer:</span>
+                      <MenuAvatar
+                        nickname={issue.maintainer}
+                        uri={`/data/profile?nickname=${issue.maintainer}`}
+                        className="w-6! h-6!"
+                      />
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-slate-400 dark:text-slate-500 text-xs">Contributor:</span>
+                      <MenuAvatar
+                        nickname={issue.contributor}
+                        uri={`/data/profile?nickname=${issue.contributor}`}
+                        className="w-6! h-6!"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  {getIcon({ iconType: 'sunshine', className: 'w-4 h-4 text-yellow-500' })}
+                  <span className="text-slate-300 dark:text-slate-400">Sunshines: </span>
+                  <NumberFlow
+                    value={issue.sunshines}
+                    locales="en-US"
+                    format={{ useGrouping: false }}
+                    className="text-slate-200 dark:text-slate-300 font-semibold"
+                  />
+                </div>
+                <hr className="border-slate-600 dark:border-slate-700" />
+                <Link
+                  uri={`/data/issue?id=${issue.id}`}
+                  className="text-blue-400 hover:text-blue-300 dark:text-blue-500 dark:hover:text-blue-400 text-xs underline"
+                >
+                  Click to see more about this issue
+                </Link>
+              </div>
+            )
+
+            return (
+              <li key={issue.id} className="flex items-center space-x-2">
+                <Checkbox
+                  checked={issue.completed || status === 'completed'}
+                  disabled
+                  className="w-4 h-4 rounded-sm border-2 border-slate-400 dark:border-slate-600 bg-white dark:bg-slate-600 data-[state=checked]:bg-slate-600 dark:data-[state=checked]:bg-slate-400 data-[state=checked]:border-slate-600 dark:data-[state=checked]:border-slate-400 flex items-center justify-center"
+                >
+                  <CheckboxIndicator className="w-3 h-3 text-white dark:text-slate-700" />
+                </Checkbox>
+                <Tooltip content={issueTooltipContent}>
+                  <Link
+                    uri={`/data/issue?id=${issue.id}`}
+                    className="text-sm text-slate-700 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 cursor-pointer"
+                  >
+                    {issue.title}
+                  </Link>
+                </Tooltip>
+                {!issue.completed && status !== 'completed' && (
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    disabled={revertingIssueId === issue.id}
+                    onClick={() => handleRevertPatch(issue.id)}
+                    className="ml-auto"
+                  >
+                    {revertingIssueId === issue.id ? (
+                      <LoadingSpinner />
+                    ) : (
+                      getIcon({ iconType: 'revert', className: 'w-4 h-4' })
+                    )}
+                  </Button>
+                )}
+              </li>
+            )
+          })}
         </ul>
+        {notificationMessage && (
+          <div className="mt-4 p-3 bg-green-50/10 border border-green-200 dark:border-green-700 rounded-xs text-green-700 dark:text-green-400 text-sm">
+            {notificationMessage}
+          </div>
+        )}
         {/* Author and date at bottom right */}
         <ByAuthor author={authorProfile} createdTime={date} />
       </div>

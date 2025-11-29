@@ -80,6 +80,7 @@ export type IconType =
   | 'unattached'
   | 'arrow-to-br-corner'
   | 'multiple-users'
+  | 'revert'
 
 export type IconProps = {
   iconType: IconType
@@ -428,6 +429,11 @@ export const getIcon = (props: IconProps | IconType): React.ReactNode => {
     case 'multiple-users': return (
       <svg className={className} fill={fill} stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+      </svg>
+    )
+    case 'revert': return (
+      <svg className={className} fill={fill} stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
       </svg>
     )
     default:

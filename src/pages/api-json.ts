@@ -187,6 +187,40 @@ async function handleUpdateProjectVersionStatus(params: { projectId?: string, cu
     }
 }
 
+async function handleRevertPatch(params: { projectId?: string, version?: string, issueId?: string }): Promise<{ success: boolean, message: string }> {
+    if (!params.projectId) {
+        throw {
+            code: -32602,
+            message: 'Invalid params',
+            data: 'projectId is required'
+        }
+    }
+
+    if (!params.version) {
+        throw {
+            code: -32602,
+            message: 'Invalid params',
+            data: 'version is required'
+        }
+    }
+
+    if (!params.issueId) {
+        throw {
+            code: -32602,
+            message: 'Invalid params',
+            data: 'issueId is required'
+        }
+    }
+
+    // Sleep for 1 second to simulate server delay
+    await sleep(1000)
+
+    return {
+        success: true,
+        message: 'Patch reverted successfully'
+    }
+}
+
 export const POST: APIRoute = async ({ request }) => {
     console.log('api-json POST request')
     try {
@@ -287,6 +321,29 @@ export const POST: APIRoute = async ({ request }) => {
             case 'updateProjectVersionStatus':
                 try {
                     result = await handleUpdateProjectVersionStatus(body.params)
+                } catch (error: any) {
+                    return new Response(
+                        JSON.stringify({
+                            jsonrpc: '2.0',
+                            error: {
+                                code: error.code || -32603,
+                                message: error.message || 'Internal error',
+                                data: error.data
+                            },
+                            id: body.id ?? null
+                        } as JSONRPCResponse),
+                        {
+                            status: 200, // JSON-RPC errors still return 200
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        }
+                    )
+                }
+                break
+            case 'revert-patch':
+                try {
+                    result = await handleRevertPatch(body.params as { projectId?: string, version?: string, issueId?: string })
                 } catch (error: any) {
                     return new Response(
                         JSON.stringify({

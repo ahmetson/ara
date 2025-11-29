@@ -164,6 +164,9 @@ const ContentArea: React.FC<Props> = ({ title = 'Issues', draggable = false, fil
       {draggable && <p className='text-md mb-2 text-gray-600 flex items-center gap-2'>
         {getIcon('info')} Issues are draggable. Your dragging will highlight the drop targets.
       </p>}
+      {!draggable && <p className='text-md mb-2 text-gray-600 dark:text-gray-400 flex items-center gap-2'>
+        {getIcon('lock')} Issues are closed and will never be back.
+      </p>}
       <FilterableList
         items={issues}
         itemComponent={draggable ? DraggableIssueLink : IssueLink}

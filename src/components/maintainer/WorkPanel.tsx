@@ -4,6 +4,7 @@ import IssueListPanel from '../issue/IssueListPanel'
 import DropTarget from '../DropTarget'
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import { getIcon } from '../icon';
 
 const C: React.FC = () => {
   const tabs: TabProps[] = [
@@ -38,7 +39,7 @@ const C: React.FC = () => {
       </DndProvider>
     },
     {
-      label: <DndProvider backend={HTML5Backend}><DropTarget id="closed-list" accept={["issue"]} onDrop={(e) => console.log(e)}>Closed</DropTarget></DndProvider>,
+      label: <DndProvider backend={HTML5Backend}><DropTarget id="closed-list" accept={["issue"]} onDrop={(e) => console.log(e)}><span className="flex items-center gap-1.5">{getIcon({ iconType: 'lock', className: 'w-4 h-4' })}Closed</span></DropTarget></DndProvider>,
       key: "closed",
       content: <IssueListPanel title={'Closed Issues'} />
     },

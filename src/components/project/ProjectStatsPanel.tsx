@@ -7,7 +7,8 @@ import Badge from '../badge/Badge'
 const ProjectStats: React.FC = () => {
   return (
     <PageLikePanel
-      className="mb-8"
+      bg="bg-white/50 dark:bg-slate-900/50"
+      className="mb-8 hover:bg-white dark:hover:bg-slate-900 transition-colors"
       interactive={false}
       title="Project Stats" >
       <div className="space-y-3 text-sm py-4 text-slate-800 dark:text-slate-400">

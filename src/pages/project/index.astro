@@ -7,10 +7,8 @@ import ProjectInfo, {
   ProjectInfoProps,
 } from "@/components/project/ProjectLink";
 import ProjectStats from "@/components/project/ProjectStatsPanel";
-import IssuesSection from "@/components/issue/IssueListPanel";
 // import ProjectPeople from "@/components/project/ProjectPeoplePanel";
 // import HighlightedInteraction from "@/components/project/HighlightedInteractionPanel";
-import IssueInfoPanel from "@/components/project/IssueStatPanel";
 import BackButton from "@/components/custom-ui/BackButton";
 
 const projectData: ProjectInfoProps = {
@@ -67,9 +65,10 @@ const projectData: ProjectInfoProps = {
 };
 ---
 
-<V2Layout active={MenuName.ProjectName} subtitle="Data Section: Project">
+<V2Layout active={MenuName.ProjectName} hideLinks={Object.keys(MenuName)}>
   <BackButton slot="left" uri="/data/projects" />
-  <NotificationBanner
+
+  <!-- <NotificationBanner
     type="success"
     title="Quest System Updated!"
     slot="center"
@@ -90,11 +89,10 @@ const projectData: ProjectInfoProps = {
       >You are now following the project. Whenever it appears on the
       CascadeFund, you will be notified.</span
     >
-  </NotificationBanner>
+  </NotificationBanner> -->
 
   <ProjectInfo slot="center" {...projectData} />
-  <ProjectStats slot="right" />
-  <IssuesSection title="All Issues" filterable={true} slot="center" />
+  <ProjectStats slot="center" />
 
   <!-- <HighlightedInteraction slot="right" /> -->
   <!-- <ProjectPeople slot="right" /> -->

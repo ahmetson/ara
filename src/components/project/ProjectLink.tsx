@@ -85,7 +85,10 @@ const ProjectCard: React.FC<ProjectInfoProps> = ({
 }) => {
   return (
     <Link uri={uri || '#'}>
-      <BasePanel className='mb-4 hover:bg-slate-100 dark:hover:bg-blue-800/10 hover:border-blue-500/20 transition-colors'>
+      <BasePanel 
+        bg="bg-white/50 dark:bg-slate-900/50"
+        className='mb-4 hover:bg-white dark:hover:bg-slate-900 hover:border-blue-500/20 transition-colors'
+      >
         <div className="flex items-start space-x-4">
           <div className="absolute w-20 bottom-1 overflow-hidden">
             <Followings following={isFollowing} followers={followers} onActionClick={() => { }} />

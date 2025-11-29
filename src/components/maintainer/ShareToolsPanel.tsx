@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PageLikePanel from '@/components/panel/PageLikePanel'
 import InfoPanel from '@/components/panel/InfoPanel'
-import { IconType } from '@/components/icon'
+import { IconType, getIcon } from '@/components/icon'
 import { ActionProps } from '@/types/eventTypes'
 
 // Helper function to map emoji icons to IconType values
@@ -17,75 +17,85 @@ const mapEmojiToIconType = (emoji: string): IconType => {
 }
 
 const ShareTools: React.FC = () => {
+  const [copied, setCopied] = useState(false)
+  const badgeCode = '[CascadeFund](https://cascadefund.org/badge/)'
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(badgeCode)
+      setCopied(true)
+      setTimeout(() => {
+        setCopied(false)
+      }, 2000)
+    } catch (err) {
+      console.error('Failed to copy text:', err)
+      // Fallback for older browsers
+      const textArea = document.createElement('textarea')
+      textArea.value = badgeCode
+      textArea.style.position = 'fixed'
+      textArea.style.opacity = '0'
+      document.body.appendChild(textArea)
+      textArea.select()
+      try {
+        document.execCommand('copy')
+        setCopied(true)
+        setTimeout(() => {
+          setCopied(false)
+        }, 2000)
+      } catch (fallbackErr) {
+        console.error('Fallback copy failed:', fallbackErr)
+      }
+      document.body.removeChild(textArea)
+    }
+  }
+
   return (
     <PageLikePanel interactive={false} title="Share Tools" className="">
       <InfoPanel
         icon={mapEmojiToIconType('🎯')}
-        title="Goal: Onboard Users & Contributors"
-        className="mb-4"
+        title="Increase Reach with a README Badge"
+        className="mb-4 dark:bg-transparent bg-transparent"
       >
-        This marketing tool is not only about when people know about it. The link to your page reviews, tell to people about your project, and configuration goes on the CascadeFund.
-      </InfoPanel>
-
-      <InfoPanel
-        icon={mapEmojiToIconType('📋')}
-        title="GitHub Issue for Users"
-        className="mb-4"
-        actions={[
-          {
-            children: '📋',
-            variant: 'default'
-          } as ActionProps
-        ]}
-      >
-        The 'Issues and support moved to CascadeFund' Description: Hey, my time is scarce, for providing the best support, I moved to CascadeFund where I will help them. Sign up.
+        <p className='text-gray-600 dark:text-gray-500 text-md'>
+          This share link and copy button let you quickly add a CascadeFund badge to your README.
+          The badge helps visitors interact with you, and donate directly to your project,
+          while you focus on your project.
+        </p>
       </InfoPanel>
 
       <InfoPanel
         icon={mapEmojiToIconType('📄')}
         title="Share Button for README"
-        className="mb-4"
+        className="mb-4 dark:bg-transparent bg-transparent"
         actions={[
           {
-            children: '📋',
-            variant: 'default'
+            children: (
+              <span className="flex items-center gap-2">
+                {copied ? (
+                  <>
+                    {getIcon({ iconType: 'check', className: 'w-4 h-4' })}
+                    <span>Copied!</span>
+                  </>
+                ) : (
+                  <>
+                    {getIcon({ iconType: 'new-file', className: 'w-4 h-4' })}
+                    <span>Copy</span>
+                  </>
+                )}
+              </span>
+            ),
+            variant: 'secondary',
+            onClick: handleCopy
           } as ActionProps
         ]}
       >
-        <div className="text-xs text-blue-600 bg-blue-50 p-2 rounded mb-2 font-mono">
-          [CascadeFund](https://cascadefund.org/badge/)
+        <p className="mb-3">
+          Copy the markdown into your README to start collaboration and receive donations for project. Place it anywhere in your Readme, I recommend putting it on the top.</p>
+        <div className="text-lg text-slate-700 dark:text-slate-300/80 bg-slate-100 dark:bg-slate-800 p-3 rounded border border-slate-200 dark:border-slate-700 font-mono break-all">
+          {badgeCode}
         </div>
       </InfoPanel>
-
-      <InfoPanel
-        icon={mapEmojiToIconType('👥')}
-        title="Contributors Outreach Issue"
-        className="mb-4"
-        actions={[
-          {
-            children: '📋',
-            variant: 'default'
-          } as ActionProps
-        ]}
-      >
-        Title: 'Contributors' On CascadeFund to help with this code base. Description: I need help with this code base. CascadeFund: I will help if code when you have questions or issues.
-      </InfoPanel>
-
-      <InfoPanel
-        icon={mapEmojiToIconType('💰')}
-        title="Donation Link"
-        className="mb-4"
-        actions={[
-          {
-            children: '📋',
-            uri: 'https://cascadefund.org/donate/reflect',
-            variant: 'default'
-          } as ActionProps
-        ]}
-      >
-        Support us and influence the project on CascadeFund.
-      </InfoPanel>
-    </PageLikePanel>
+    </PageLikePanel >
   )
 }
 

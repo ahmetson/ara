@@ -14,13 +14,21 @@ const PanelAction: React.FC<{ actions: ActionProps[] | React.ReactNode, classNam
     }
 
     return (
-        <div className={cn("flex justify-center gap-3", className)}>
+        <div className={cn("flex justify-center gap-3 pt-1", className)}>
             {actions.map((action, index) => (
                 action.uri ? (
                     <Link
                         key={index}
                         uri={action.uri}
-                        className={cn("flex-1 inline-flex items-center font-bold py-1 px-4 rounded transition-colors", action.className)}
+                        className={cn(
+                            "flex-1 inline-flex items-center font-normal py-1 px-4 rounded transition-colors text-blue-600 dark:text-blue-400",
+                            action.className,
+                            actions.length - 1 === index
+                                ? 'justify-end'
+                                : index === 0
+                                    ? 'justify-start'
+                                    : 'justify-center'
+                        )}
                     >
                         {action.children}
                     </Link>

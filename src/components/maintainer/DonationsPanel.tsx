@@ -84,7 +84,7 @@ const DonationsPanel: React.FC = () => {
                 }
             ]}
         >
-            <div className="mb-6 flex flex-row gap-4">
+            <div className="mb-6 mt-4 flex flex-row gap-4">
                 <div className="flex-1">
                     <BalanceInfoItem icon="D">
                         <div>
@@ -93,7 +93,7 @@ const DonationsPanel: React.FC = () => {
                                 value={totalUserDonations}
                                 locales="en-US"
                                 format={{ style: 'currency', currency: 'USD', maximumFractionDigits: 2, signDisplay: 'negative' }}
-                                className="text-lg font-semibold text-gray-700 dark:text-gray-300"
+                                className="text-lg font-semibold text-gray-700 dark:text-gray-300/70"
                             />
                         </div>
                     </BalanceInfoItem>
@@ -124,7 +124,7 @@ const DonationsPanel: React.FC = () => {
                                 value={cascadingUserDonations}
                                 locales="en-US"
                                 format={{ style: 'currency', currency: 'USD', maximumFractionDigits: 2, signDisplay: 'negative' }}
-                                className="text-lg font-semibold text-gray-700 dark:text-gray-300"
+                                className="text-lg font-semibold text-gray-700 dark:text-gray-300/70"
                             />
                         </div>
                     </BalanceInfoItem>
@@ -133,7 +133,7 @@ const DonationsPanel: React.FC = () => {
                     <BalanceInfoItem icon="T">
                         <div>
                             <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">Project's created time</div>
-                            <TimeAgo datetime={projectCreatedTime} className="text-lg font-semibold text-gray-700 dark:text-gray-300" />
+                            <TimeAgo datetime={projectCreatedTime} className="text-lg font-semibold text-gray-700 dark:text-gray-300/70" />
                         </div>
                     </BalanceInfoItem>
                 </div>

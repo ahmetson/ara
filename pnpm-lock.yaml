@@ -122,6 +122,9 @@ importers:
       postcss:
         specifier: ^8.5.6
         version: 8.5.6
+      postprocessing:
+        specifier: ^6.36.0
+        version: 6.38.0(three@0.167.1)
       radix-ui:
         specifier: ^1.4.3
         version: 1.4.3(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -152,6 +155,9 @@ importers:
       tailwindcss:
         specifier: ^4.1.16
         version: 4.1.16
+      three:
+        specifier: ^0.167.1
+        version: 0.167.1
       timeago-react:
         specifier: ^3.0.7
         version: 3.0.7(react@19.2.0)
@@ -3842,6 +3848,11 @@ packages:
     resolution: {integrity: sha512-3Ybi1tAuwAP9s0r1UQ2J4n5Y0G05bJkpUIO0/bI9MhwmD70S5aTWbXGBwxHrelT+XM1k6dM0pk+SwNkpTRN7Pg==}
     engines: {node: ^10 || ^12 || >=14}
 
+  postprocessing@6.38.0:
+    resolution: {integrity: sha512-tisx8XN/PWTL3uXz2mt8bjlMS1wiOUSCK3ixi4zjwUCFmP8XW8hNhXwrxwd2zf2VmCyCQ3GUaLm7GLnkkBbDsQ==}
+    peerDependencies:
+      three: '>= 0.157.0 < 0.182.0'
+
   pretty-format@27.5.1:
     resolution: {integrity: sha512-Qb1gy5OrP5+zDf2Bvnzdl3jsTf1qXVMazbvCoKhtKqVs4/YK4ozX4gKQJJVyNe+cajNPn0KoC0MC3FUmaHWEmQ==}
     engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
@@ -4493,6 +4504,9 @@ packages:
   teeny-request@10.1.0:
     resolution: {integrity: sha512-3ZnLvgWF29jikg1sAQ1g0o+lr5JX6sVgYvfUJazn7ZjJroDBUTWp44/+cFVX0bULjv4vci+rBD+oGVAkWqhUbw==}
     engines: {node: '>=18'}
+
+  three@0.167.1:
+    resolution: {integrity: sha512-gYTLJA/UQip6J/tJvl91YYqlZF47+D/kxiWrbTon35ZHlXEN0VOo+Qke2walF1/x92v55H6enomymg4Dak52kw==}
 
   timeago-react@3.0.7:
     resolution: {integrity: sha512-5LSQuq+mzfEpMHkJQgMWnOs27dGh25aUQhffQpAW6q431vVVmHP194KYsM4bhzli0XfohUgN8+r3Pq6GVprN4A==}
@@ -8945,6 +8959,10 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
+  postprocessing@6.38.0(three@0.167.1):
+    dependencies:
+      three: 0.167.1
+
   pretty-format@27.5.1:
     dependencies:
       ansi-regex: 5.0.1
@@ -9823,6 +9841,8 @@ snapshots:
       stream-events: 1.0.5
     transitivePeerDependencies:
       - supports-color
+
+  three@0.167.1: {}
 
   timeago-react@3.0.7(react@19.2.0):
     dependencies:

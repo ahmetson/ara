@@ -50,7 +50,7 @@ export interface ProjectInfoProps {
   createdTime: number
   author: ProfileLink
   influencers: Array<ProfileLink>
-  actions: ActionProps[]  // Comes links to the work, and cascade work along with their badges
+  actions?: ActionProps[]  // Comes links to the work, and cascade work along with their badges
 }
 
 const ProjectCard: React.FC<ProjectInfoProps> = ({
@@ -85,21 +85,21 @@ const ProjectCard: React.FC<ProjectInfoProps> = ({
 }) => {
   return (
     <Link uri={uri || '#'}>
-      <BasePanel className='mb-4'>
+      <BasePanel className='mb-4 hover:bg-slate-100 dark:hover:bg-blue-800/10 hover:border-blue-500/20 transition-colors'>
         <div className="flex items-start space-x-4">
-          <div className="w-16 overflow-hidden flex flex-col space-y-2 items-center">
+          <div className="absolute w-20 bottom-1 overflow-hidden">
             <Followings following={isFollowing} followers={followers} onActionClick={() => { }} />
           </div>
 
-          <div className="flex-1 w-full">
+          <div className="ml-22 flex-1 w-full">
             <div className="flex items-center justify-between mb-2">
-              <h1 className="text-xl font-bold text-slate-600 dark:text-slate-300 flex flex-row items-center space-x-1">
+              <h1 className="text-xl font-bold text-slate-600 dark:text-slate-400 flex items-center space-x-1">
                 {title}
                 {isInfluencer && (
-                  <Badge variant="info">You are influencer</Badge>
+                  <Badge variant="info" className='mx-2 -mt-1.9'>Donator</Badge>
                 )}
                 {version && (
-                  <Badge variant="info">Version: {version}</Badge>
+                  <Badge variant="info" className='mx-2 -mt-1.9'>{version}</Badge>
                 )}
               </h1>
 
@@ -110,12 +110,12 @@ const ProjectCard: React.FC<ProjectInfoProps> = ({
               </div>
             </div>
 
-            <div className="text-md mb-4 text-slate-600 dark:text-slate-300">
+            <div className="text-md mb-4 text-slate-600 dark:text-slate-400">
               {description}
             </div>
 
             {/* Issue author and created time */}
-            <div className="flex justify-end items-center space-x-1 text-slate-600 dark:text-slate-300 gap-1 text-xs">
+            <div className="flex justify-end items-center space-x-1 text-slate-600 dark:text-slate-400 gap-1 text-xs">
               By <MenuAvatar src={author?.icon} uri={author?.uri} className='w-7! h-7!' />
               {createdTime &&
                 <TimeAgo datetime={createdTime} />

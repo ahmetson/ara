@@ -1,17 +1,17 @@
 import React from 'react'
 import type { TabProps } from '@/components/Tabs';
-import Tabs from '@/components/Tabs';
 import ProjectListPanel from '../project/ProjectListPanel';
 import { ProjectInfoProps } from '../project/ProjectLink';
 
 const CworkPanel: React.FC = () => {
   const mockProjects: ProjectInfoProps[] = [
     {
+      uri: '/project',
       title: 'React Dashboard',
       isInfluencer: true,
       rating: {
-        rating: 8,
-        pointsLeft: 200
+        sunshines: 2880,
+        stars: 8.0
       },
       forks: 124,
       likes: 89,
@@ -69,52 +69,33 @@ const CworkPanel: React.FC = () => {
           }
         }
       ],
-      actions: [
-        {
-          variant: 'secondary',
-          uri: '/data/project/react-dashboard',
-          children: 'View',
-          icon: 'project'
-        },
-        {
-          variant: 'primary',
-          uri: '/maintainer/work/react-dashboard',
-          children: 'Work',
-          icon: 'work'
-        },
-        {
-          variant: 'primary',
-          uri: '/maintainer/cwork/react-dashboard',
-          children: 'Cascade Work',
-          icon: 'work'
-        }
-      ],
       collaborators: []
     }
   ]
 
-  const tabs: TabProps[] = [
-    {
-      label: 'Dependencies',
-      key: "dependencies",
-      content: <ProjectListPanel projects={mockProjects} />
-    },
-    // import IssueList from '@/components/issue/IssueListPanel'
-    // {
-    //   label: 'Following Issues',
-    //   key: "following-issues",
-    //   content: <IssueListPanel />
-    // },
-    // import ProfileList from '@/components/maintainer/ProfileListPanel'
-    // {
-    //   label: 'Following Rockstars',
-    //   key: "following-rockstars",
-    //   content: <ProfileListPanel />
-    // }
-  ]
+  // const tabs: TabProps[] = [
+  //   {
+  //     label: 'Dependencies',
+  //     key: "dependencies",
+  //     content: <ProjectListPanel projects={mockProjects} />
+  //   },
+  // import IssueList from '@/components/issue/IssueListPanel'
+  // {
+  //   label: 'Following Issues',
+  //   key: "following-issues",
+  //   content: <IssueListPanel />
+  // },
+  // import ProfileList from '@/components/maintainer/ProfileListPanel'
+  // {
+  //   label: 'Following Rockstars',
+  //   key: "following-rockstars",
+  //   content: <ProfileListPanel />
+  // }
+  // ]
 
   return (
-    <Tabs id="cwork" activeTab='dependencies' tabs={tabs} />
+    // <Tabs id="cwork" activeTab='dependencies' tabs={tabs} />
+    <ProjectListPanel projects={mockProjects} />
   )
 }
 

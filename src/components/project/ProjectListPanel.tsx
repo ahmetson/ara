@@ -4,6 +4,7 @@ import ProjectCard, { type ProjectInfoProps } from '@/components/project/Project
 import Badge from '../badge/Badge'
 import { FilterOption } from '@/components/list/FilterToggle'
 import BasePanel from '../panel/Panel'
+import { getIcon } from '../icon'
 
 interface Props {
   projects: ProjectInfoProps[]
@@ -103,7 +104,7 @@ const projectFilters: FilterOption[] = [
 const ProjectsSection: React.FC<Props> = ({ projects }) => {
   const title = (
     <div className="flex items-center gap-2">
-      <span className="mt-1">Projects</span>
+      <span className="mt-1">Dependencies</span>
       <Badge variant="gray" static={true}>{projects.length}</Badge>
     </div>
   )
@@ -118,7 +119,11 @@ const ProjectsSection: React.FC<Props> = ({ projects }) => {
         searchPlaceholder="Search projects..."
         searchableFields={['title', 'description', 'issue', 'originalProject']}
         showNumber={false}
-      />
+      >
+        <div className="flex items-center gap-2">
+          {getIcon('info')}<span className="">Third party packages you used in your project. Imported using SBOM. Contact and send request to them.</span>
+        </div>
+      </FilterableList>
     </BasePanel>
   )
 }

@@ -104,7 +104,7 @@ const FilterableList = <T,>({
     }
 
     return (
-        <div className={`${className}`}>
+        <div className={`text-slate-600 dark:text-slate-400 ${className}`}>
             {/* Title */}
             {title ? (
                 <div className="inline-flex items-center gap-1 mb-2">

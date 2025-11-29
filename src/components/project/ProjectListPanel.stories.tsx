@@ -31,8 +31,8 @@ const mockProjects: ProjectInfoProps[] = [
         title: 'React Dashboard',
         isInfluencer: true,
         rating: {
-            rating: 8,
-            pointsLeft: 200
+            sunshines: 2880,
+            stars: 8.0
         },
         forks: 124,
         likes: 89,
@@ -109,8 +109,8 @@ const mockProjects: ProjectInfoProps[] = [
         title: 'Vue.js E-commerce',
         isInfluencer: false,
         rating: {
-            rating: 6,
-            pointsLeft: 400
+            sunshines: 2160,
+            stars: 6.0
         },
         forks: 67,
         likes: 45,
@@ -170,8 +170,8 @@ const mockProjects: ProjectInfoProps[] = [
         title: 'Node.js API Gateway',
         isInfluencer: true,
         rating: {
-            rating: 9,
-            pointsLeft: 100
+            sunshines: 3240,
+            stars: 9.0
         },
         forks: 203,
         likes: 156,
@@ -308,8 +308,8 @@ export const ManyProjects: Story = {
                 ...project,
                 title: `${project.title} ${index + 2}`,
                 rating: {
-                    rating: Math.max(1, project.rating.rating - (index * 1)),
-                    pointsLeft: project.rating.pointsLeft + (index * 50)
+                    sunshines: Math.max(360, project.rating.sunshines - (index * 360)),
+                    stars: Math.max(1.0, project.rating.stars - (index * 1.0))
                 },
                 forks: project.forks + (index * 10),
                 likes: project.likes + (index * 5),
@@ -338,8 +338,8 @@ export const MixedStates: Story = {
             {
                 ...mockProjects[2],
                 rating: {
-                    rating: 2,
-                    pointsLeft: 800
+                    sunshines: 720,
+                    stars: 2.0
                 }, // Low rating
                 openIssues: 45, // Many open issues
                 avgResponseTime: '2 days', // Slow response
@@ -361,8 +361,8 @@ export const HighRatedProjects: Story = {
         projects: mockProjects.map(project => ({
             ...project,
             rating: {
-                rating: 8 + Math.floor(Math.random() * 2), // 8-10 rating
-                pointsLeft: Math.floor(Math.random() * 200) + 50 // 50-250 points left
+                sunshines: (8 + Math.floor(Math.random() * 2)) * 360, // 8-10 stars worth of sunshines
+                stars: 8 + Math.floor(Math.random() * 2) // 8-10 stars
             },
             forks: project.forks + Math.floor(Math.random() * 100),
             likes: project.likes + Math.floor(Math.random() * 50),

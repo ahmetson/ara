@@ -55,13 +55,13 @@ const Button: React.FC<ButtonProps> = ({
 
     switch (variant) {
       case 'primary':
-        return 'text-white! bg-sky-400! text-gray-100! dark:bg-sky-400! dark:text-white! dark:hover:bg-sky-700!'
+        return 'text-white! bg-sky-400! text-gray-100! dark:bg-sky-400! dark:text-slate-100! dark:hover:bg-sky-700!'
       case 'secondary':
-        return 'text-gray-100! bg-gray-500! dark:bg-gray-700! dark:text-white! dark:hover:bg-teal-700!'
+        return 'text-gray-100! bg-gray-500! dark:bg-gray-700! dark:text-slate-100! dark:hover:bg-teal-700!'
       case 'danger':
-        return 'text-gray-100! bg-orange-500! dark:bg-orange-700! dark:text-white! dark:hover:bg-violet-700!'
+        return 'text-gray-100! bg-orange-500! dark:bg-orange-700! dark:text-slate-100! dark:hover:bg-violet-700!'
       case 'success':
-        return 'text-gray-100! bg-green-500! dark:bg-green-700! dark:text-gray-50! dark:hover:bg-indigo-700!'
+        return 'text-gray-100! bg-green-500! dark:bg-green-700! dark:text-slate-100! dark:hover:bg-indigo-700!'
       default:
         return defaultStyle
     }
@@ -73,13 +73,13 @@ const Button: React.FC<ButtonProps> = ({
 
     switch (variant) {
       case 'primary':
-        return 'bg-rose-500 text-white hover:bg-sky-500 dark:bg-rose-700 dark:text-white dark:hover:bg-sky-700'
+        return 'bg-rose-500 text-white hover:bg-sky-500 dark:bg-rose-700 dark:text-slate-300/80 text-shadow-sm text-shadow-gray-900/50 dark:hover:bg-sky-700'
       case 'secondary':
-        return 'bg-gray-500 text-white hover:bg-teal-500 dark:bg-gray-700 dark:text-white dark:hover:bg-teal-700'
+        return 'bg-gray-500 text-white hover:bg-teal-500 dark:bg-gray-700 dark:text-slate-300/80 text-shadow-sm text-shadow-gray-900/50 dark:hover:bg-teal-700'
       case 'danger':
-        return 'bg-orange-500 text-white hover:bg-violet-500 dark:bg-orange-700 dark:text-white! dark:bg-orange-700 dark:hover:bg-violet-700'
+        return 'bg-orange-500 text-white hover:bg-violet-500 dark:bg-orange-700 dark:text-slate-300/80 text-shadow-sm text-shadow-gray-900/50 dark:hover:bg-violet-700'
       case 'success':
-        return 'bg-green-500 text-white hover:bg-indigo-500 dark:bg-green-700 dark:text-white dark:hover:bg-indigo-700'
+        return 'bg-green-500 text-white hover:bg-indigo-500 dark:bg-green-700 dark:text-slate-300/80 text-shadow-sm text-shadow-gray-900/50 dark:hover:bg-indigo-700'
       default:
         return defaultStyle
     }

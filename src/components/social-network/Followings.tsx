@@ -38,15 +38,15 @@ const Followings: React.FC<FollowingsProps> = ({ following, followers, selfProfi
         variant={isFollowing ? "danger" : "secondary"}
         disabled={isLoading}
         onClick={onClick}
-        className={`cursor flex items-center space-x-1 ${isFollowing && 'opacity-70'} h-8 text-slate-800 dark:text-slate-300`}
+        className={`cursor flex items-center space-x-1 ${isFollowing && 'opacity-70'} h-8 text-slate-800 dark:text-slate-100`}
       >
-        <div className="flex items-center space-x-1 w-full px-2">
+        <div className="flex items-center space-x-1 w-full px-1">
           {isLoading ?
             <Spinner className='w-5 h-5' key={'ellipsis'} variant={'ellipsis'} /> :
             (<>{getIcon({
               iconType: 'heart',
               fill: (isFollowing ? 'currentColor' : 'none'),
-              className: 'text-white dark:text-slate-300 w-5 h-5 mt-0.5'
+              className: 'text-slate-100 dark:text-slate-100 w-5 h-5 mt-0.5'
             })}
             </>)}
           <span>{followerCount}</span>

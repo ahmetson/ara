@@ -8,7 +8,7 @@ const meta: Meta<typeof ProjectRating> = {
         layout: 'centered',
         docs: {
             description: {
-                component: 'A project rating component that displays a 10-star rating system with progress bar and tooltip showing points needed for the next star.'
+                component: 'A project rating component that displays sunshines, stars, and purple energy percentage showing how much shines turned into stars.'
             }
         }
     },
@@ -18,9 +18,36 @@ const meta: Meta<typeof ProjectRating> = {
 export default meta
 type Story = StoryObj<typeof ProjectRating>
 
-// Default story - 6/10 stars
+// Default story
 export const Default: Story = {
-    render: () => <ProjectRating />
+    args: {
+        sunshines: 1250,
+        stars: 3.47
+    }
+}
+
+// Low sunshines and stars
+export const LowSunshines: Story = {
+    args: {
+        sunshines: 720,
+        stars: 2.0
+    }
+}
+
+// High sunshines and stars
+export const HighSunshines: Story = {
+    args: {
+        sunshines: 3600,
+        stars: 10.0
+    }
+}
+
+// Medium sunshines and stars
+export const MediumSunshines: Story = {
+    args: {
+        sunshines: 1800,
+        stars: 5.0
+    }
 }
 
 // Low rating - 2/10 stars
@@ -196,9 +223,22 @@ export const InteractiveShowcase: Story = {
         <div className="space-y-8">
             <h3 className="text-xl font-semibold text-center mb-6">Interactive Project Rating Component</h3>
             <div className="text-center">
-                <p className="text-gray-600 mb-4">Hover over the rating to see the tooltip with points information</p>
-                <ProjectRating />
+                <p className="text-gray-600 mb-4">Hover over the energy percentage to see how much shines turned into stars</p>
+                <ProjectRating sunshines={1250} stars={3.47} />
             </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="text-center">
+                    <h4 className="font-semibold mb-2">Low Sunshines</h4>
+                    <ProjectRating sunshines={720} stars={2.0} />
+                </div>
+                <div className="text-center">
+                    <h4 className="font-semibold mb-2">High Sunshines</h4>
+                    <ProjectRating sunshines={3600} stars={10.0} />
+                </div>
+            </div>
+        </div>
+    )
+}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="text-center">
                     <h4 className="font-semibold mb-2">Low Progress (2/10)</h4>

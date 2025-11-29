@@ -114,12 +114,12 @@ const FilterToggle: React.FC<FilterToggleProps> = ({
 
             {/* Sort Dropdown */}
             {currentSortOptions.length > 0 && (
-                <div className="flex items-center space-x-2">
-                    <span className="text-sm text-gray-600 dark:text-gray-400">Sort by:</span>
+                <div className="flex items-center space-x-2 ml-2">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Sort</span>
                     <select
                         value={activeSortId}
                         onChange={handleSortChange}
-                        className="border border-gray-300 rounded-lg px-3 py-1 text-sm bg-white dark:bg-gray-700 dark:text-gray-400"
+                        className="border border-gray-300 hover:border-teal-500! hover:bg-teal-100/10! dark:hover:bg-teal-900/10! dark:border-teal-700! cursor-pointer rounded-xs px-3 py-2 text-sm bg-white dark:bg-gray-700 dark:text-gray-400"
                     >
                         {currentSortOptions.map((sortOption) => (
                             <option key={sortOption.id} value={sortOption.id}>

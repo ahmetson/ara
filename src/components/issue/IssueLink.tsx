@@ -74,9 +74,9 @@ const IssueLinkPanel4: React.FC<Issue & { actions?: ActionProps[] }> = (issue) =
 
       <div className='w-full'>
         {/* Issue title and description */}
-        <div className='flex justify-between items-center'>
+        <div className='flex justify-between items-center mb-1 ml-0.5'>
           <div className="flex items-center gap-2">
-            <span className="text-sm font-medium text-slate-700 dark:text-slate-200">{issue.title}</span>
+            <span className="text-lg font-medium text-slate-700 dark:text-slate-300/80">{issue.title}</span>
             {/* Voting power badge for cascadefund storage */}
             {issue.storage === 'cascadefund' && (
               <Badge variant={isRatingIssue ? 'success' : 'gray'} static={true}>
@@ -88,7 +88,7 @@ const IssueLinkPanel4: React.FC<Issue & { actions?: ActionProps[] }> = (issue) =
             {issue.type}
           </Badge>
         </div>
-        <p className="text-sm text-slate-600 dark:text-slate-300">{issue.description}</p>
+        <p className="text-base text-slate-600 dark:text-slate-400">{issue.description}</p>
 
         {/* Issue author and created time */}
         {(issue.author || issue.createdTime) &&

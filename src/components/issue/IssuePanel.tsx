@@ -166,7 +166,7 @@ const IssueContentPanel: React.FC<IssueContentPanelProps> = ({
                   </div>
                 }
               >
-                <h1 className="text-xl font-bold text-gray-500 flex space-x-1 items-center gap-1">
+                <h1 className="text-xl font-bold text-gray-500 dark:text-slate-100 flex space-x-1 items-center gap-1">
                   {editable ? (
                     <Editable
                       id="title"
@@ -204,7 +204,7 @@ const IssueContentPanel: React.FC<IssueContentPanelProps> = ({
           </div>
 
           {/* Description */}
-          <div className="text-slate-700 text-md mb-4 prose max-w-none">
+          <div className="text-slate-700 dark:text-slate-200 text-md mb-4 prose max-w-none">
             <Tooltip
               openDelay={2000}
               content={

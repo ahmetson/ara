@@ -161,13 +161,14 @@ const ContentArea: React.FC<Props> = ({ title = 'Issues', draggable = false, fil
 
   return (
     <BasePanel className="max-w-6xl mx-auto">
-      {draggable && <p className='text-xs mb-2 text-gray-600 flex items-center flex-row'>
-        {getIcon('info')} Issues are draggable. Your dragging will highlight droppable lists.
+      {draggable && <p className='text-md mb-2 text-gray-600 flex items-center gap-2'>
+        {getIcon('info')} Issues are draggable. Your dragging will highlight the drop targets.
       </p>}
       <FilterableList
         items={issues}
         itemComponent={draggable ? DraggableIssueLink : IssueLink}
         title={title}
+        titleCenter={true}
         searchPlaceholder="Search issues..."
         searchableFields={['title', 'description']}
         filters={filerable ? filters : undefined}

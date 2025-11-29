@@ -8,19 +8,19 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 const C: React.FC = () => {
   const tabs: TabProps[] = [
     {
-      label: <>Public</>,
-      key: "public-issues",
+      label: <><span className="text-amber-600 dark:text-amber-400 font-semibold">Shining issues</span></>,
+      key: "funded-issues",
       content: <DndProvider backend={HTML5Backend}>
-        <IssueListPanel title={'Public Issues'} draggable={true} />
-      </DndProvider>
+        <IssueListPanel title={'Shining Issues'} draggable={true} />
+      </DndProvider>,
+      className: 'bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20',
     },
     {
-      label: <>Funded</>,
-      key: "funded-issues",
-      className: 'bg-teal-200 hover:bg-teal-400 ',
+      label: <>Public Backlog</>,
+      key: "public-issues",
       content: <DndProvider backend={HTML5Backend}>
-        <IssueListPanel title={'Funded Issues'} draggable={true} />
-      </DndProvider>,
+        <IssueListPanel title={'Public Backlog'} draggable={true} />
+      </DndProvider>
     },
     {
       label: <DndProvider backend={HTML5Backend}><DropTarget id="detailize-list" accept={["issue"]} onDrop={(e) => console.log(e)}>Detailize</DropTarget></DndProvider>,

@@ -12,6 +12,7 @@ export interface FilterableListProps<T> {
     filters?: FilterOption[]
     onFilterChange?: (filterId: string, sortId: string) => void
     title?: React.ReactNode
+    titleCenter?: boolean
     searchPlaceholder?: string
     hideSearchbar?: boolean
     searchableFields?: (keyof T)[]
@@ -50,6 +51,7 @@ const FilterableList = <T,>({
     filters,
     onFilterChange,
     title,
+    titleCenter = false,
     searchPlaceholder = "Search...",
     hideSearchbar = false,
     searchableFields,
@@ -107,7 +109,7 @@ const FilterableList = <T,>({
         <div className={`text-slate-600 dark:text-slate-400 ${className}`}>
             {/* Title */}
             {title ? (
-                <div className="inline-flex items-center gap-1 mb-2">
+                <div className={`flex items-center gap-1 mb-2 ${titleCenter ? 'justify-center' : ''}`}>
                     {title}
                     {showNumber && (
                         <Badge variant="info">
@@ -153,7 +155,7 @@ const FilterableList = <T,>({
             )}
 
             {/* List Content */}
-            <List contentHeight={contentHeight}>
+            <List className={'space-y-4'} contentHeight={contentHeight}>
                 {filteredItems.map((item, index) => {
                     return <ItemComponent key={index} {...(item as any)} />
                 })}

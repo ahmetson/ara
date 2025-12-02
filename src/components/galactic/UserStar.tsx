@@ -57,15 +57,50 @@ const UserStar: React.FC<UserStarProps> = ({
       : Math.max(1, Math.min(10, Math.round((stars / 5) * 10) || 1))
     : 1
 
+  // Determine special status
+  const isMaintainer = role === 'Maintainer'
+  const isFirstPlace = leaderboardPosition === 1
+  const isSecondPlace = leaderboardPosition === 2
+  const isThirdPlace = leaderboardPosition === 3
+
   // Calculate level-based styling values
   // Opacity: level 10 = 1.0, level 1 = 0.35
-  const opacity = 0.35 + ((starLevel - 1) / 9) * 0.65
+  // Maintainer and first place get full opacity
+  const baseOpacity = 0.35 + ((starLevel - 1) / 9) * 0.65
+  const opacity = isMaintainer || isFirstPlace ? 1.0 : baseOpacity
 
   // Blur: level 10 = 0px, level 1 = 12px (when not hovered)
-  const blurAmount = 12 - ((starLevel - 1) / 9) * 12
+  // Maintainer and first place get no blur
+  const baseBlur = 12 - ((starLevel - 1) / 9) * 12
+  const blurAmount = isMaintainer || isFirstPlace ? 0 : baseBlur
 
   // Size: level 10 = 48px, level 1 = 32px
-  const size = 32 + ((starLevel - 1) / 9) * 16
+  // Maintainer: 72px (extra large), First place: 64px (large), others: normal
+  const baseSize = 32 + ((starLevel - 1) / 9) * 16
+  const size = isMaintainer ? 72 : isFirstPlace ? 64 : baseSize
+
+  // Color gradients based on position
+  // Gold (default), Silver (2nd), Bronze (3rd)
+  let glowGradient1: string
+  let glowGradient2: string
+  let glowGradient3: string
+
+  if (isSecondPlace) {
+    // Silver gradients
+    glowGradient1 = 'radial-gradient(circle, rgba(192, 192, 192, 0.9) 0%, rgba(230, 230, 230, 0.5) 50%, transparent 100%)'
+    glowGradient2 = 'radial-gradient(circle, rgba(220, 220, 220, 0.7) 0%, rgba(192, 192, 192, 0.4) 50%, transparent 100%)'
+    glowGradient3 = 'radial-gradient(circle, rgba(200, 200, 200, 0.6) 0%, rgba(240, 240, 240, 0.3) 50%, transparent 100%)'
+  } else if (isThirdPlace) {
+    // Bronze/gold gradients
+    glowGradient1 = 'radial-gradient(circle, rgba(205, 127, 50, 0.9) 0%, rgba(255, 200, 100, 0.5) 50%, transparent 100%)'
+    glowGradient2 = 'radial-gradient(circle, rgba(255, 180, 80, 0.7) 0%, rgba(205, 127, 50, 0.4) 50%, transparent 100%)'
+    glowGradient3 = 'radial-gradient(circle, rgba(220, 150, 70, 0.6) 0%, rgba(255, 220, 150, 0.3) 50%, transparent 100%)'
+  } else {
+    // Default gold gradients
+    glowGradient1 = 'radial-gradient(circle, rgba(255, 215, 0, 0.8) 0%, rgba(255, 255, 0, 0.4) 50%, transparent 100%)'
+    glowGradient2 = 'radial-gradient(circle, rgba(255, 255, 100, 0.6) 0%, rgba(255, 215, 0, 0.3) 50%, transparent 100%)'
+    glowGradient3 = 'radial-gradient(circle, rgba(255, 200, 0, 0.5) 0%, rgba(255, 255, 150, 0.2) 50%, transparent 100%)'
+  }
 
   const tooltipContent = (
     <div className="text-sm space-y-3">
@@ -160,9 +195,20 @@ const UserStar: React.FC<UserStarProps> = ({
           }
           50% {
             opacity: ${Math.min(1, opacity + 0.2)};
-            transform: scale(1.1);
+            transform: scale(${isMaintainer ? '1.15' : '1.1'});
           }
         }
+        
+        ${isMaintainer ? `
+        @keyframes maintainerGlow-${starId} {
+          0%, 100% {
+            filter: blur(${blurAmount}px) drop-shadow(0 0 20px rgba(255, 215, 0, 0.8)) drop-shadow(0 0 40px rgba(255, 255, 0, 0.6));
+          }
+          50% {
+            filter: blur(${blurAmount}px) drop-shadow(0 0 30px rgba(255, 215, 0, 1)) drop-shadow(0 0 60px rgba(255, 255, 0, 0.9));
+          }
+        }
+        ` : ''}
         
         @keyframes starRotate-${starId} {
           from {
@@ -180,6 +226,7 @@ const UserStar: React.FC<UserStarProps> = ({
           display: flex;
           align-items: center;
           justify-content: center;
+          ${isMaintainer ? 'z-index: 100;' : isFirstPlace ? 'z-index: 50;' : ''}
         }
         
         .star-glow-${starId} {
@@ -187,42 +234,42 @@ const UserStar: React.FC<UserStarProps> = ({
           width: 100%;
           height: 100%;
           clip-path: ${starClipPath};
-          background: radial-gradient(circle, rgba(255, 215, 0, 0.8) 0%, rgba(255, 255, 0, 0.4) 50%, transparent 100%);
-          filter: blur(${blurAmount}px);
+          background: ${glowGradient1};
+          filter: blur(${blurAmount}px)${isMaintainer ? ' drop-shadow(0 0 20px rgba(255, 215, 0, 0.8)) drop-shadow(0 0 40px rgba(255, 255, 0, 0.6))' : ''};
           opacity: ${opacity};
-          animation: starPulse-${starId} 3s ease-in-out infinite, starRotate-${starId} 20s linear infinite;
+          animation: starPulse-${starId} ${isMaintainer ? '2s' : '3s'} ease-in-out infinite, starRotate-${starId} 20s linear infinite${isMaintainer ? `, maintainerGlow-${starId} 2s ease-in-out infinite` : ''};
           pointer-events: none;
           transition: filter 0.3s ease, opacity 0.3s ease;
         }
         
         .star-glow-container-${starId}:hover .star-glow-${starId} {
-          filter: blur(0px);
+          filter: blur(0px)${isMaintainer ? ' drop-shadow(0 0 25px rgba(255, 215, 0, 1))' : ''};
           opacity: 1;
         }
         
         .star-glow-2-${starId} {
           animation-delay: -1s;
-          background: radial-gradient(circle, rgba(255, 255, 100, 0.6) 0%, rgba(255, 215, 0, 0.3) 50%, transparent 100%);
-          filter: blur(${blurAmount + 2}px);
+          background: ${glowGradient2};
+          filter: blur(${blurAmount + 2}px)${isMaintainer ? ' drop-shadow(0 0 15px rgba(255, 255, 100, 0.6))' : ''};
           opacity: ${opacity * 0.75};
           transition: filter 0.3s ease, opacity 0.3s ease;
         }
         
         .star-glow-container-${starId}:hover .star-glow-2-${starId} {
-          filter: blur(2px);
+          filter: blur(2px)${isMaintainer ? ' drop-shadow(0 0 20px rgba(255, 255, 100, 0.8))' : ''};
           opacity: 0.75;
         }
         
         .star-glow-3-${starId} {
           animation-delay: -2s;
-          background: radial-gradient(circle, rgba(255, 200, 0, 0.5) 0%, rgba(255, 255, 150, 0.2) 50%, transparent 100%);
-          filter: blur(${blurAmount + 4}px);
+          background: ${glowGradient3};
+          filter: blur(${blurAmount + 4}px)${isMaintainer ? ' drop-shadow(0 0 10px rgba(255, 200, 0, 0.5))' : ''};
           opacity: ${opacity * 0.6};
           transition: filter 0.3s ease, opacity 0.3s ease;
         }
         
         .star-glow-container-${starId}:hover .star-glow-3-${starId} {
-          filter: blur(4px);
+          filter: blur(4px)${isMaintainer ? ' drop-shadow(0 0 15px rgba(255, 200, 0, 0.7))' : ''};
           opacity: 0.6;
         }
         
@@ -235,10 +282,14 @@ const UserStar: React.FC<UserStarProps> = ({
           overflow: hidden;
           opacity: ${opacity};
           transition: opacity 0.3s ease;
+          ${isMaintainer ? 'box-shadow: 0 0 30px rgba(255, 215, 0, 0.6), 0 0 60px rgba(255, 255, 0, 0.4);' : ''}
+          ${isFirstPlace ? 'box-shadow: 0 0 20px rgba(255, 215, 0, 0.5), 0 0 40px rgba(255, 255, 0, 0.3);' : ''}
         }
         
         .star-glow-container-${starId}:hover .star-avatar-${starId} {
           opacity: 1;
+          ${isMaintainer ? 'box-shadow: 0 0 40px rgba(255, 215, 0, 0.8), 0 0 80px rgba(255, 255, 0, 0.6);' : ''}
+          ${isFirstPlace ? 'box-shadow: 0 0 30px rgba(255, 215, 0, 0.7), 0 0 60px rgba(255, 255, 0, 0.5);' : ''}
         }
         
         .star-avatar-${starId} img {
@@ -250,7 +301,11 @@ const UserStar: React.FC<UserStarProps> = ({
 
       <div
         className={`absolute ${className || ''}`}
-        style={{ left: `${x}px`, top: `${y}px` }}
+        style={{
+          left: `${x}px`,
+          top: `${y}px`,
+          zIndex: isMaintainer ? 100 : isFirstPlace ? 50 : undefined
+        }}
       >
         <Tooltip content={tooltipContent}>
           <Link uri={profileUri} >

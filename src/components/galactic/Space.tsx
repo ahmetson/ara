@@ -49,6 +49,7 @@ const Space: React.FC<SpaceProps> = ({ users, className = '' }) => {
       {users.map((user, index) => (
         <div key={`${user.nickname}-${index}`} style={{ pointerEvents: 'auto' }}>
           <UserStar
+            leaderboardPosition={index + 1}
             x={user.x}
             y={user.y}
             src={user.src}

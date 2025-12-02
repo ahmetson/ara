@@ -31,7 +31,8 @@ const GalaxyZoomWrapper: React.FC<GalaxyZoomWrapperProps> = ({
 
   useEffect(() => {
     const zoomScale = zoom / 100;
-    
+    const inverseScale = 100 / zoom; // Counter-transform to keep data-fixed elements at 100%
+
     // Apply transform to background container
     const backgroundContainer = document.querySelector('[data-galaxy-backgrounds]');
     if (backgroundContainer) {
@@ -45,6 +46,13 @@ const GalaxyZoomWrapper: React.FC<GalaxyZoomWrapperProps> = ({
       (contentContainer as HTMLElement).style.transform = `scale(${zoomScale})`;
       (contentContainer as HTMLElement).style.transformOrigin = 'center center';
     }
+
+    // Apply counter-transform to elements with data-fixed to keep them at 100% scale
+    const fixedElements = document.querySelectorAll('[data-fixed]');
+    fixedElements.forEach((element) => {
+      (element as HTMLElement).style.transform = `scale(${inverseScale})`;
+      (element as HTMLElement).style.transformOrigin = 'center center';
+    });
   }, [zoom]);
 
   const handleConfirm = () => {

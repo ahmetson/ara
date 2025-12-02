@@ -69,14 +69,16 @@ const {
     </div>
 
     <!-- Content Container - Will be transformed by GalaxyZoomWrapper -->
+    <div data-galaxy-fixed>
+      <Header hideLinks={hideLinks} hideAuth={hideAuth} additional={additional}>
+        <slot name="header-navbar" />
+      </Header>
+    </div>
     <div
       data-galaxy-content
       class="z-2 relative border border-red-500/10"
       style="transform-origin: center center;"
     >
-      <Header hideLinks={hideLinks} hideAuth={hideAuth} additional={additional}>
-        <slot name="header-navbar" />
-      </Header>
       <section class="mt-6">
         <slot name="hero" />
       </section>
@@ -88,10 +90,10 @@ const {
         <slot name="center" class="mx-4" slot="center" />
         <slot name="right" class="ml-4" slot="right" />
       </ThreeColumnGrid>
+    </div>
+    <div data-galaxy-fixed>
       <Footer />
     </div>
-
-    <!-- Galaxy Zoom Wrapper - Controls zoom transforms -->
     <GalaxyZoomWrapper
       client:only="react"
       projectName={projectName}

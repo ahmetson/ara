@@ -39,12 +39,10 @@ const {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/png" href="/cascadefund_logo.png" />
     <meta name="generator" content={Astro.generator} />
-    <title>CascadeFund</title>
-    <style is:global>
-      @import "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
-    </style>
-    <ClientRouter />
+    <title>'{projectName + " " + "in CascadeFund"}</title>
   </head>
+  <ClientRouter />
+
   <body
     class="min-h-screen bg-slate-200 dark:bg-slate-800 border-1 border-red-500/10"
   >
@@ -102,4 +100,6 @@ const {
       maxZoom={maxZoom}
     />
   </body>
+
+
 </html>

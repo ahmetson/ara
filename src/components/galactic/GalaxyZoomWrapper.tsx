@@ -48,7 +48,7 @@ const GalaxyZoomWrapper: React.FC<GalaxyZoomWrapperProps> = ({
     }
 
     // Apply counter-transform to elements with data-fixed to keep them at 100% scale
-    const fixedElements = document.querySelectorAll('[data-fixed]');
+    const fixedElements = document.querySelectorAll('[data-galaxt-fixed]');
     fixedElements.forEach((element) => {
       (element as HTMLElement).style.transform = `scale(${inverseScale})`;
       (element as HTMLElement).style.transformOrigin = 'center center';

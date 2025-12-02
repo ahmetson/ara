@@ -20,6 +20,7 @@ interface UserStarProps {
   received?: number
   issuesClosed?: number
   issuesActive?: number
+  leaderboardPosition?: number
 }
 
 // 5-pointed star clip-path polygon
@@ -41,10 +42,30 @@ const UserStar: React.FC<UserStarProps> = ({
   received,
   issuesClosed,
   issuesActive,
+  leaderboardPosition,
 }) => {
   const defaultSrc = 'https://api.backdropbuild.com/storage/v1/object/public/avatars/9nFM8HasgS.jpeg'
   const defaultAlt = 'Avatar'
   const profileUri = nickname ? `${uri}?nickname=${nickname}` : uri
+
+  // Calculate star level (1-10) from stars prop
+  // If stars is already 1-10, use it directly; otherwise normalize from 0-5 range to 1-10
+  // If stars is undefined, default to level 1
+  const starLevel = stars !== undefined
+    ? stars >= 1 && stars <= 10
+      ? Math.round(stars)
+      : Math.max(1, Math.min(10, Math.round((stars / 5) * 10) || 1))
+    : 1
+
+  // Calculate level-based styling values
+  // Opacity: level 10 = 1.0, level 1 = 0.35
+  const opacity = 0.35 + ((starLevel - 1) / 9) * 0.65
+
+  // Blur: level 10 = 0px, level 1 = 12px (when not hovered)
+  const blurAmount = 12 - ((starLevel - 1) / 9) * 12
+
+  // Size: level 10 = 48px, level 1 = 32px
+  const size = 32 + ((starLevel - 1) / 9) * 16
 
   const tooltipContent = (
     <div className="text-sm space-y-3">
@@ -62,8 +83,10 @@ const UserStar: React.FC<UserStarProps> = ({
         </div>
         <div>
           <div className="font-medium">{nickname}</div>
-          {role && (
-            <div className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">{role}</div>
+          {leaderboardPosition !== undefined && (
+            <div className="text-xs text-slate-400 dark:text-slate-100 mt-0.5">
+              Star Order: #{leaderboardPosition}
+            </div>
           )}
         </div>
       </div>
@@ -132,11 +155,11 @@ const UserStar: React.FC<UserStarProps> = ({
       <style>{`
         @keyframes starPulse-${starId} {
           0%, 100% {
-            opacity: 0.6;
+            opacity: ${opacity};
             transform: scale(1);
           }
           50% {
-            opacity: 1;
+            opacity: ${Math.min(1, opacity + 0.2)};
             transform: scale(1.1);
           }
         }
@@ -152,8 +175,8 @@ const UserStar: React.FC<UserStarProps> = ({
         
         .star-glow-container-${starId} {
           position: relative;
-          width: 48px;
-          height: 48px;
+          width: ${size}px;
+          height: ${size}px;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -165,30 +188,57 @@ const UserStar: React.FC<UserStarProps> = ({
           height: 100%;
           clip-path: ${starClipPath};
           background: radial-gradient(circle, rgba(255, 215, 0, 0.8) 0%, rgba(255, 255, 0, 0.4) 50%, transparent 100%);
-          filter: blur(4px);
+          filter: blur(${blurAmount}px);
+          opacity: ${opacity};
           animation: starPulse-${starId} 3s ease-in-out infinite, starRotate-${starId} 20s linear infinite;
           pointer-events: none;
+          transition: filter 0.3s ease, opacity 0.3s ease;
+        }
+        
+        .star-glow-container-${starId}:hover .star-glow-${starId} {
+          filter: blur(0px);
+          opacity: 1;
         }
         
         .star-glow-2-${starId} {
           animation-delay: -1s;
           background: radial-gradient(circle, rgba(255, 255, 100, 0.6) 0%, rgba(255, 215, 0, 0.3) 50%, transparent 100%);
-          filter: blur(6px);
+          filter: blur(${blurAmount + 2}px);
+          opacity: ${opacity * 0.75};
+          transition: filter 0.3s ease, opacity 0.3s ease;
+        }
+        
+        .star-glow-container-${starId}:hover .star-glow-2-${starId} {
+          filter: blur(2px);
+          opacity: 0.75;
         }
         
         .star-glow-3-${starId} {
           animation-delay: -2s;
           background: radial-gradient(circle, rgba(255, 200, 0, 0.5) 0%, rgba(255, 255, 150, 0.2) 50%, transparent 100%);
-          filter: blur(8px);
+          filter: blur(${blurAmount + 4}px);
+          opacity: ${opacity * 0.6};
+          transition: filter 0.3s ease, opacity 0.3s ease;
+        }
+        
+        .star-glow-container-${starId}:hover .star-glow-3-${starId} {
+          filter: blur(4px);
+          opacity: 0.6;
         }
         
         .star-avatar-${starId} {
           position: relative;
           z-index: 1;
-          width: 48px;
-          height: 48px;
+          width: ${size}px;
+          height: ${size}px;
           clip-path: ${starClipPath};
           overflow: hidden;
+          opacity: ${opacity};
+          transition: opacity 0.3s ease;
+        }
+        
+        .star-glow-container-${starId}:hover .star-avatar-${starId} {
+          opacity: 1;
         }
         
         .star-avatar-${starId} img {

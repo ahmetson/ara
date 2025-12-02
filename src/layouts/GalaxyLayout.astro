@@ -75,7 +75,6 @@ const {
           autoCenterRepulsion={0.5}
         />
       </div>
-      <Space client:only="react" users={mockUserStars} className="z-3" />
       <slot
         name="background"
         class="fixed h-screen w-screen z-3 pointer-events-none"
@@ -93,6 +92,7 @@ const {
       class="z-2 relative border border-red-500/10"
       style="transform-origin: center center;"
     >
+      <Space client:only="react" users={mockUserStars} className="z-10" />
       <section class="mt-6">
         <slot name="hero" />
       </section>

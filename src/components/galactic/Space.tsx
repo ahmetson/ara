@@ -39,11 +39,10 @@ const Space: React.FC<SpaceProps> = ({ users, className = '' }) => {
   return (
     <div
       ref={containerRef}
-      className={`fixed top-0 left-0 w-full h-full ${className}`}
+      className={`absolute top-0 left-0 w-full h-full ${className} `}
       style={{
-        // Use initial viewport as reference point
-        // The container itself is fixed to viewport, but children use absolute positioning
-        // relative to this container's top-left (0,0)
+        // Positioned absolutely relative to the parent content container
+        // Children use absolute positioning relative to this container's top-left (0,0)
         pointerEvents: 'none',
       }}
     >

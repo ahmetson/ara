@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
+import * as RadixSlider from '@radix-ui/react-slider';
 import Button from '@/components/custom-ui/Button';
 import { getIcon } from '@/components/icon';
 import { cn } from '@/lib/utils';
@@ -17,6 +18,9 @@ interface PlaceCtaPanelProps {
 const PlaceCtaPanel: React.FC<PlaceCtaPanelProps> = ({ userData }) => {
     const [hasTriggeredConfetti, setHasTriggeredConfetti] = useState(false);
     const [isStarPlaced, setIsStarPlaced] = useState(false);
+    const [countdown, setCountdown] = useState(3);
+    const [isVisible, setIsVisible] = useState(true);
+    const [showCountdown, setShowCountdown] = useState(false);
 
     const triggerConfetti = () => {
         if (hasTriggeredConfetti) return; // Prevent multiple triggers
@@ -71,10 +75,33 @@ const PlaceCtaPanel: React.FC<PlaceCtaPanelProps> = ({ userData }) => {
         });
         window.dispatchEvent(event);
 
-        // Mark as placed and trigger confetti
+        // Mark as placed, trigger confetti, and start countdown
         setIsStarPlaced(true);
+        setShowCountdown(true);
         triggerConfetti();
     };
+
+    // Countdown effect
+    useEffect(() => {
+        if (!showCountdown) return;
+
+        const interval = setInterval(() => {
+            setCountdown((prev) => {
+                const newValue = prev - 0.1;
+                if (newValue <= 0) {
+                    clearInterval(interval);
+                    // Hide after fade animation completes
+                    setTimeout(() => setIsVisible(false), 300);
+                    return 0;
+                }
+                return newValue;
+            });
+        }, 100); // Update every 100ms for smooth animation
+
+        return () => clearInterval(interval);
+    }, [showCountdown]);
+
+    if (!isVisible) return null;
 
     return (
         <motion.div
@@ -86,8 +113,11 @@ const PlaceCtaPanel: React.FC<PlaceCtaPanelProps> = ({ userData }) => {
                 "overflow-hidden"
             )}
             initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5 }}
+            animate={{
+                opacity: showCountdown ? 1 - (3 - countdown) / 3 : 1,
+                scale: 1
+            }}
+            transition={{ duration: 0.3 }}
         >
             {/* Twinkling stars around the panel */}
             <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -152,9 +182,32 @@ const PlaceCtaPanel: React.FC<PlaceCtaPanelProps> = ({ userData }) => {
                         <h3 className="text-lg font-bold text-slate-800 dark:text-slate-200 text-center">
                             You placed your star, congratulations. Share the project.
                         </h3>
-                        <div className="flex items-center justify-center">
+                        <div className="flex items-center justify-center mb-4">
                             {getIcon({ iconType: 'star', className: 'w-16 h-16 text-yellow-500 dark:text-yellow-500/90', fill: 'currentColor' })}
                         </div>
+
+                        {/* Countdown Slider */}
+                        {showCountdown && (
+                            <div className="w-full space-y-2">
+                                <div className="flex items-center justify-between text-sm text-slate-600 dark:text-slate-400">
+                                    <span>Closing in...</span>
+                                    <span className="font-semibold">{Math.ceil(countdown)}s</span>
+                                </div>
+                                <RadixSlider.Root
+                                    value={[countdown]}
+                                    max={3}
+                                    min={0}
+                                    step={0.1}
+                                    disabled
+                                    className="relative flex h-5 w-full touch-none select-none items-center"
+                                >
+                                    <RadixSlider.Track className="relative h-2 grow rounded-full bg-slate-200 dark:bg-slate-700">
+                                        <RadixSlider.Range className="absolute h-full rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 transition-all duration-100" />
+                                    </RadixSlider.Track>
+                                    <RadixSlider.Thumb className="relative block h-5 w-5 rounded-full bg-yellow-400 dark:bg-yellow-500 shadow-md ring-2 ring-yellow-300 dark:ring-yellow-600 transition-all" />
+                                </RadixSlider.Root>
+                            </div>
+                        )}
                     </>
                 )}
 

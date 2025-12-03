@@ -2,7 +2,6 @@ import React from 'react';
 import BlurText from '@/components/BlurText';
 import { ProjectInfoProps } from './ProjectLink';
 import { getIcon } from '@/components/icon';
-import NumberFlow from '@number-flow/react';
 import Tooltip from '@/components/custom-ui/Tooltip';
 import Link from '@/components/custom-ui/Link';
 
@@ -21,15 +20,7 @@ const ProjectLandingHero: React.FC<ProjectLandingHeroProps> = ({
   blockchainExplorerUrl,
   documentationUrl,
 }) => {
-  const { title, rating, description } = projectData;
-  const { sunshines, stars } = rating;
-
-  // Calculate energy percentage (same logic as ProjectRating)
-  const sunshinesToStar = 360;
-  const totalSunshines = sunshines || 0;
-  const totalStars = stars || 0;
-  const shinesInStars = totalStars * sunshinesToStar;
-  const energyPercentage = totalSunshines > 0 ? ((shinesInStars / totalSunshines) * 100) : 0;
+  const { title, description } = projectData;
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-8 px-4">
@@ -46,18 +37,6 @@ const ProjectLandingHero: React.FC<ProjectLandingHeroProps> = ({
 
       {/* Icons for Sunshines and Action Links */}
       <div className="flex items-center justify-center gap-6 flex-wrap">
-        {sunshines !== undefined && (
-          <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 dark:bg-slate-900/10 backdrop-blur-sm border border-slate-200/20 dark:border-slate-700/20">
-            {getIcon({ iconType: 'sunshine', className: 'w-6 h-6 text-yellow-500' })}
-            <NumberFlow
-              value={sunshines}
-              locales="en-US"
-              format={{ style: 'decimal', maximumFractionDigits: 0 }}
-              className="text-lg font-semibold text-slate-800 dark:text-slate-200"
-            />
-          </div>
-        )}
-
         {/* Issues Link */}
         {projectUri && (
           <Link uri={projectUri} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 dark:bg-slate-900/10 backdrop-blur-sm border border-slate-200/20 dark:border-slate-700/20 hover:bg-white/20 dark:hover:bg-slate-900/20 transition-colors">

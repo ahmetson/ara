@@ -14,8 +14,6 @@ interface ProjectGoalPanelProps {
     goalStars?: number; // Stars needed for community control
     goalDonations?: number; // Donations needed (in parentheses)
     projectName?: string; // Project name
-    projectUri?: string; // Project URI
-    githubUrl?: string; // GitHub repository URL
 }
 
 const ProjectGoalPanel: React.FC<ProjectGoalPanelProps> = ({
@@ -25,8 +23,6 @@ const ProjectGoalPanel: React.FC<ProjectGoalPanelProps> = ({
     goalStars = 100,
     goalDonations,
     projectName,
-    projectUri = '/project/issues',
-    githubUrl = 'https://github.com/ara-foundation/cascadefund-app',
 }) => {
     // Calculate energy percentage (same logic as ProjectLandingHero)
     const sunshinesToStar = 360;
@@ -44,37 +40,8 @@ const ProjectGoalPanel: React.FC<ProjectGoalPanelProps> = ({
     // Calculate remaining stars needed
     const remainingStars = Math.max(0, goalStars - (starsCount || 0));
 
-    // Prepare actions for InfoPanel
-    const actions = [
-        {
-            uri: projectUri,
-            children: (
-                <Tooltip content="Show project issues">
-                    <div className="flex items-center gap-2">
-                        {getIcon({ iconType: 'cascadefund', className: 'w-4 h-4' })}
-                        <span>Issues</span>
-                    </div>
-                </Tooltip>
-            ),
-            className: 'text-sm'
-        },
-        {
-            uri: githubUrl,
-            children: (
-                <Tooltip content="Source">
-                    <div className="flex items-center gap-2">
-                        {getIcon({ iconType: 'github', className: 'w-4 h-4' })}
-                        <span>Source</span>
-                    </div>
-                </Tooltip>
-            ),
-            className: 'text-sm'
-        }
-    ];
-
     return (
         <InfoPanel
-            actions={actions}
             className={cn(
                 'absolute bottom-4 md:bottom-auto md:top-[calc(20vh+60px)] right-24 ',
                 // Base styles

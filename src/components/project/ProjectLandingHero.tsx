@@ -3,12 +3,24 @@ import BlurText from '@/components/BlurText';
 import { ProjectInfoProps } from './ProjectLink';
 import { getIcon } from '@/components/icon';
 import NumberFlow from '@number-flow/react';
+import Tooltip from '@/components/custom-ui/Tooltip';
+import Link from '@/components/custom-ui/Link';
 
 interface ProjectLandingHeroProps {
   projectData: ProjectInfoProps;
+  projectUri?: string; // Project issues URI
+  githubUrl?: string; // GitHub repository URL
+  blockchainExplorerUrl?: string; // Blockchain explorer address URL
+  documentationUrl?: string; // Documentation link URL
 }
 
-const ProjectLandingHero: React.FC<ProjectLandingHeroProps> = ({ projectData }) => {
+const ProjectLandingHero: React.FC<ProjectLandingHeroProps> = ({
+  projectData,
+  projectUri,
+  githubUrl,
+  blockchainExplorerUrl,
+  documentationUrl,
+}) => {
   const { title, rating, description } = projectData;
   const { sunshines, stars } = rating;
 
@@ -32,7 +44,7 @@ const ProjectLandingHero: React.FC<ProjectLandingHeroProps> = ({ projectData }) 
         />
       </div>
 
-      {/* Icons for Sunshines, Stars, and Energy */}
+      {/* Icons for Sunshines and Action Links */}
       <div className="flex items-center justify-center gap-6 flex-wrap">
         {sunshines !== undefined && (
           <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 dark:bg-slate-900/10 backdrop-blur-sm border border-slate-200/20 dark:border-slate-700/20">
@@ -44,6 +56,54 @@ const ProjectLandingHero: React.FC<ProjectLandingHeroProps> = ({ projectData }) 
               className="text-lg font-semibold text-slate-800 dark:text-slate-200"
             />
           </div>
+        )}
+
+        {/* Issues Link */}
+        {projectUri && (
+          <Link uri={projectUri} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 dark:bg-slate-900/10 backdrop-blur-sm border border-slate-200/20 dark:border-slate-700/20 hover:bg-white/20 dark:hover:bg-slate-900/20 transition-colors">
+            <Tooltip content="Show project issues">
+              <div className="flex items-center gap-2">
+                {getIcon({ iconType: 'cascadefund', className: 'w-5 h-5 text-blue-500' })}
+                <span className="text-sm font-semibold text-slate-800 dark:text-slate-200">Issues</span>
+              </div>
+            </Tooltip>
+          </Link>
+        )}
+
+        {/* GitHub Source Link */}
+        {githubUrl && (
+          <Link uri={githubUrl} asNewTab={true} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 dark:bg-slate-900/10 backdrop-blur-sm border border-slate-200/20 dark:border-slate-700/20 hover:bg-white/20 dark:hover:bg-slate-900/20 transition-colors">
+            <Tooltip content="Source">
+              <div className="flex items-center gap-2">
+                {getIcon({ iconType: 'github', className: 'w-5 h-5 text-slate-700 dark:text-slate-300' })}
+                <span className="text-sm font-semibold text-slate-800 dark:text-slate-200">Source</span>
+              </div>
+            </Tooltip>
+          </Link>
+        )}
+
+        {/* Blockchain Explorer Link */}
+        {blockchainExplorerUrl && (
+          <Link uri={blockchainExplorerUrl} asNewTab={true} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 dark:bg-slate-900/10 backdrop-blur-sm border border-slate-200/20 dark:border-slate-700/20 hover:bg-white/20 dark:hover:bg-slate-900/20 transition-colors">
+            <Tooltip content="Blockchain Explorer">
+              <div className="flex items-center gap-2">
+                {getIcon({ iconType: 'wallet', className: 'w-5 h-5 text-blue-500' })}
+                <span className="text-sm font-semibold text-slate-800 dark:text-slate-200">Explorer</span>
+              </div>
+            </Tooltip>
+          </Link>
+        )}
+
+        {/* Documentation Link */}
+        {documentationUrl && (
+          <Link uri={documentationUrl} asNewTab={true} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 dark:bg-slate-900/10 backdrop-blur-sm border border-slate-200/20 dark:border-slate-700/20 hover:bg-white/20 dark:hover:bg-slate-900/20 transition-colors">
+            <Tooltip content="Documentation">
+              <div className="flex items-center gap-2">
+                {getIcon({ iconType: 'new-file', className: 'w-5 h-5 text-purple-500' })}
+                <span className="text-sm font-semibold text-slate-800 dark:text-slate-200">Docs</span>
+              </div>
+            </Tooltip>
+          </Link>
         )}
       </div>
 

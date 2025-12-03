@@ -121,7 +121,9 @@ const GoalChart: React.FC<GoalChartProps> = ({
                                     cy={centerY}
                                     r={radius}
                                     fill="#e5e7eb"
-                                    className="dark:fill-slate-700"
+                                    stroke="#d1d5db"
+                                    strokeWidth="2"
+                                    className="dark:fill-slate-700 dark:stroke-slate-600"
                                 />
 
                                 {/* Stars segment (orange/gold) */}
@@ -129,11 +131,15 @@ const GoalChart: React.FC<GoalChartProps> = ({
                                     <path
                                         d={createPieSlice(0, starsAngle, radius, centerX, centerY)}
                                         fill="#f97316"
-                                        className="dark:fill-orange-500 cursor-pointer transition-all duration-200"
+                                        stroke={hoveredSegment === 'stars' ? '#f97316' : '#f59e0b'}
+                                        strokeWidth={hoveredSegment === 'stars' ? '2' : '3'}
+                                        className="fill-orange-500 dark:fill-orange-500/70 hover:fill-yellow-500/90 dark:hover:fill-yellow-500/70 cursor-pointer transition-all duration-200"
                                         style={{
                                             pointerEvents: 'all',
                                             opacity: hoveredSegment === 'stars' ? 0.8 : hoveredSegment ? 0.5 : 1,
-                                            filter: hoveredSegment === 'stars' ? 'brightness(1.1)' : 'none'
+                                            filter: hoveredSegment === 'stars' ? 'brightness(1.1)' : 'none',
+                                            transform: hoveredSegment === 'stars' ? 'translateY(+12px)' : 'translateY(0)',
+                                            transformOrigin: 'center',
                                         }}
                                         onMouseEnter={(e) => {
                                             setHoveredSegment('stars');
@@ -154,11 +160,15 @@ const GoalChart: React.FC<GoalChartProps> = ({
                                     <path
                                         d={createPieSlice(starsAngle, starsAngle + sunshinesAngle, radius, centerX, centerY)}
                                         fill="#eab308"
+                                        stroke={hoveredSegment === 'sunshines' ? '#f97316' : '#f59e0b'}
+                                        strokeWidth={hoveredSegment === 'sunshines' ? '3' : '2'}
                                         className="dark:fill-yellow-500 cursor-pointer transition-all duration-200"
                                         style={{
                                             pointerEvents: 'all',
                                             opacity: hoveredSegment === 'sunshines' ? 0.8 : hoveredSegment ? 0.5 : 1,
-                                            filter: hoveredSegment === 'sunshines' ? 'brightness(1.1)' : 'none'
+                                            filter: hoveredSegment === 'sunshines' ? 'brightness(1.1)' : 'none',
+                                            transform: hoveredSegment === 'sunshines' ? 'translateY(-4px)' : 'translateY(0)',
+                                            transformOrigin: 'center',
                                         }}
                                         onMouseEnter={(e) => {
                                             setHoveredSegment('sunshines');
@@ -179,11 +189,15 @@ const GoalChart: React.FC<GoalChartProps> = ({
                                     <path
                                         d={createPieSlice(starsAngle + sunshinesAngle, 360, radius, centerX, centerY)}
                                         fill="#9ca3af"
+                                        stroke={hoveredSegment === 'remaining' ? '#6b7280' : '#4b5563'}
+                                        strokeWidth={hoveredSegment === 'remaining' ? '3' : '2'}
                                         className="dark:fill-slate-600 cursor-pointer transition-all duration-200"
                                         opacity={hoveredSegment === 'remaining' ? 0.5 : 0.3}
                                         style={{
                                             pointerEvents: 'all',
-                                            filter: hoveredSegment === 'remaining' ? 'brightness(1.1)' : 'none'
+                                            filter: hoveredSegment === 'remaining' ? 'brightness(1.1)' : 'none',
+                                            transform: hoveredSegment === 'remaining' ? 'translateY(-4px)' : 'translateY(0)',
+                                            transformOrigin: 'center',
                                         }}
                                         onMouseEnter={(e) => {
                                             setHoveredSegment('remaining');

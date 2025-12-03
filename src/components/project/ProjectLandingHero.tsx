@@ -89,7 +89,7 @@ const ProjectLandingHero: React.FC<ProjectLandingHeroProps> = ({
       {/* Description as Subtitle */}
       {description && (
         <div className="w-full max-w-2xl">
-          <p className="text-lg md:text-xl text-slate-600 dark:text-slate-400 leading-relaxed">
+          <p className="text-xl md:text-3xl text-slate-600 dark:text-slate-400 leading-relaxed">
             {description}
           </p>
         </div>

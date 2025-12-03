@@ -54,16 +54,6 @@ const UserStar: React.FC<UserStarProps> = ({
   const defaultAlt = 'Avatar'
   const profileUri = nickname ? `${uri}?nickname=${nickname}` : uri
 
-  // Generate blockchain explorer URL (defaulting to Ethereum/Etherscan)
-  const getExplorerUrl = (address: string) => {
-    // Check if it's an Ethereum address (starts with 0x)
-    if (address.startsWith('0x')) {
-      return `https://etherscan.io/address/${address}`
-    }
-    // Default to Etherscan for now, can be extended for other chains
-    return `https://etherscan.io/address/${address}`
-  }
-
   // Calculate star level (1-10) from stars prop
   // If stars is already 1-10, use it directly; otherwise normalize from 0-5 range to 1-10
   // If stars is undefined, default to level 1
@@ -139,40 +129,29 @@ const UserStar: React.FC<UserStarProps> = ({
               Star Order: #{leaderboardPosition}
             </div>
           )}
-          {(walletAddress || githubUrl || linkedinUrl) && (
-            <div className="flex items-center gap-2 mt-2 pt-2 border-t border-slate-700">
-              {walletAddress && (
-                <Link
-                  uri={getExplorerUrl(walletAddress)}
-                  asNewTab={true}
-                  className="text-[10px] text-blue-500 dark:text-blue-400 hover:text-teal-300 dark:hover:text-teal-200"
-                >
-                  {getIcon({ iconType: 'wallet', className: 'w-3 h-3', fill: 'currentColor' })}
-                </Link>
+          {(stars !== undefined || sunshines !== undefined) && (
+            <div className="flex items-center gap-3 mt-2 pt-2 border-t border-slate-700">
+              {stars !== undefined && (
+                <div className="flex items-center gap-1">
+                  {getIcon({ iconType: 'star', className: 'w-3 h-3 text-yellow-500', fill: 'currentColor' })}
+                  <NumberFlow
+                    value={stars}
+                    locales="en-US"
+                    format={{ style: 'decimal', maximumFractionDigits: 2 }}
+                    className="text-xs font-medium"
+                  />
+                </div>
               )}
-              {githubUrl && (
-                <>
-                  {walletAddress && <span className="text-[10px] text-slate-500">•</span>}
-                  <Link
-                    uri={githubUrl}
-                    asNewTab={true}
-                    className="text-[10px] text-blue-500 dark:text-blue-400 hover:text-teal-300 dark:hover:text-teal-200"
-                  >
-                    {getIcon({ iconType: 'github', className: 'w-3 h-3', fill: 'currentColor' })}
-                  </Link>
-                </>
-              )}
-              {linkedinUrl && (
-                <>
-                  {(walletAddress || githubUrl) && <span className="text-[10px] text-slate-500">•</span>}
-                  <Link
-                    uri={linkedinUrl}
-                    asNewTab={true}
-                    className="text-[10px] text-blue-500 dark:text-blue-400 hover:text-teal-300 dark:hover:text-teal-200"
-                  >
-                    {getIcon({ iconType: 'linkedin', className: 'w-3 h-3', fill: 'currentColor' })}
-                  </Link>
-                </>
+              {sunshines !== undefined && (
+                <div className="flex items-center gap-1">
+                  {getIcon({ iconType: 'sunshine', className: 'w-3 h-3 text-orange-500' })}
+                  <NumberFlow
+                    value={sunshines}
+                    locales="en-US"
+                    format={{ style: 'decimal', maximumFractionDigits: 0 }}
+                    className="text-xs font-medium"
+                  />
+                </div>
               )}
             </div>
           )}
@@ -237,6 +216,35 @@ const UserStar: React.FC<UserStarProps> = ({
   )
 
   const starId = `user-star-${nickname.replace(/\s+/g, '-').toLowerCase()}`
+
+  // Calculate number of ellipses (1 per 100 sunshines)
+  const totalSunshines = sunshines || 0
+  const fullEllipseCount = Math.floor(totalSunshines / 100)
+  const remainingSunshines = totalSunshines % 100
+
+  // Create full ellipses
+  const fullEllipses = Array.from({ length: fullEllipseCount }, (_, i) => ({
+    id: i,
+    radius: size / 2 + 15 + (i * 20), // Base radius + spacing between ellipses
+    rotationDuration: 20 + (i * 5), // Varying rotation speeds
+    isPartial: false,
+    partialOpacity: 1,
+  }))
+
+  // Add partial ellipse if there are remaining sunshines
+  const partialOpacity = remainingSunshines > 0 ? Math.min(1.0, (remainingSunshines / 100) * 2) : 0
+  const ellipses = remainingSunshines > 0
+    ? [
+      ...fullEllipses,
+      {
+        id: fullEllipseCount,
+        radius: size / 2 + 15 + (fullEllipseCount * 20),
+        rotationDuration: 20 + (fullEllipseCount * 5),
+        isPartial: true,
+        partialOpacity: partialOpacity,
+      }
+    ]
+    : fullEllipses
 
   return (
     <>
@@ -350,6 +358,105 @@ const UserStar: React.FC<UserStarProps> = ({
           height: 100%;
           object-fit: cover;
         }
+        
+        ${ellipses.map((ellipse) => `
+        .ellipse-orbit-${starId}-${ellipse.id} {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: ${ellipse.radius * 2}px;
+          height: ${ellipse.radius * 2}px;
+          transform: translate(-50%, -50%);
+          pointer-events: none;
+        }
+        
+        .ellipse-ring-${starId}-${ellipse.id} {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          border: 1.5px transparent;
+          border-image: linear-gradient(135deg, rgba(192, 192, 192, ${ellipse.isPartial ? 0.2 * ellipse.partialOpacity : 0.4}), rgba(173, 216, 230, ${ellipse.isPartial ? 0.2 * ellipse.partialOpacity : 0.4}), rgba(192, 192, 192, ${ellipse.isPartial ? 0.2 * ellipse.partialOpacity : 0.4})) 1;
+          border-radius: 50%;
+          box-shadow: 
+            0 0 10px rgba(192, 192, 192, ${ellipse.isPartial ? 0.15 * ellipse.partialOpacity : 0.3}),
+            0 0 20px rgba(173, 216, 230, ${ellipse.isPartial ? 0.1 * ellipse.partialOpacity : 0.2}),
+            inset 0 0 10px rgba(192, 192, 192, ${ellipse.isPartial ? 0.1 * ellipse.partialOpacity : 0.2}),
+            inset 0 0 20px rgba(173, 216, 230, ${ellipse.isPartial ? 0.05 * ellipse.partialOpacity : 0.1});
+          opacity: ${ellipse.isPartial ? 0.5 * ellipse.partialOpacity : 0.5};
+          animation: orbitRotate-${starId}-${ellipse.id} ${ellipse.rotationDuration}s linear infinite${ellipse.isPartial ? `, ellipsePulse-${starId}-${ellipse.id} 2s ease-in-out infinite` : ''};
+        }
+        
+        .ellipse-beam-wrapper-${starId}-${ellipse.id} {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: ${ellipse.radius * 2}px;
+          height: ${ellipse.radius * 2}px;
+          transform: translate(-50%, -50%);
+          animation: beamOrbit-${starId}-${ellipse.id} ${ellipse.rotationDuration}s linear infinite;
+        }
+        
+        .ellipse-beam-${starId}-${ellipse.id} {
+          position: absolute;
+          top: 0;
+          left: 50%;
+          width: 6px;
+          height: 6px;
+          margin-left: -3px;
+          margin-top: -3px;
+          background: radial-gradient(circle, rgba(192, 192, 192, ${ellipse.isPartial ? 0.8 * ellipse.partialOpacity : 0.8}) 0%, rgba(173, 216, 230, ${ellipse.isPartial ? 0.6 * ellipse.partialOpacity : 0.6}) 50%, transparent 100%);
+          border-radius: 50%;
+          box-shadow: 
+            0 0 8px rgba(192, 192, 192, ${ellipse.isPartial ? 0.8 * ellipse.partialOpacity : 0.8}),
+            0 0 16px rgba(173, 216, 230, ${ellipse.isPartial ? 0.6 * ellipse.partialOpacity : 0.6});
+          animation: beamPulse-${starId}-${ellipse.id} 2s ease-in-out infinite;
+          opacity: ${ellipse.isPartial ? ellipse.partialOpacity : 1};
+        }
+        
+        @keyframes orbitRotate-${starId}-${ellipse.id} {
+          from {
+            transform: translate(-50%, -50%) rotate(0deg);
+          }
+          to {
+            transform: translate(-50%, -50%) rotate(360deg);
+          }
+        }
+        
+        @keyframes beamOrbit-${starId}-${ellipse.id} {
+          from {
+            transform: translate(-50%, -50%) rotate(0deg);
+          }
+          to {
+            transform: translate(-50%, -50%) rotate(360deg);
+          }
+        }
+        
+        @keyframes beamPulse-${starId}-${ellipse.id} {
+          0%, 100% {
+            transform: scale(1);
+            opacity: 0.8;
+          }
+          50% {
+            transform: scale(1.3);
+            opacity: 1;
+          }
+        }
+        
+        ${ellipse.isPartial ? `
+        @keyframes ellipsePulse-${starId}-${ellipse.id} {
+          0%, 100% {
+            opacity: ${0.5 * ellipse.partialOpacity};
+            transform: scale(1);
+          }
+          50% {
+            opacity: ${0.7 * ellipse.partialOpacity};
+            transform: scale(1.05);
+          }
+        }
+        ` : ''}
+        `).join('')}
       `}</style>
 
       <div
@@ -364,7 +471,19 @@ const UserStar: React.FC<UserStarProps> = ({
           <Link uri={profileUri} >
             <div className="flex flex-col items-center gap-1">
               {/* Star container with glows and avatar */}
-              <div className={`star-glow-container-${starId}`}>
+              <div className={`star-glow-container-${starId} `}>
+                {/* Orbital ellipses */}
+                {ellipses.map((ellipse) => (
+                  <div key={ellipse.id} className={`ellipse-orbit-${starId}-${ellipse.id} `}>
+                    {/* Ellipse ring */}
+                    <div className={`ellipse-ring-${starId}-${ellipse.id} `} />
+                    {/* Rotating beam wrapper */}
+                    <div className={`ellipse-beam-wrapper-${starId}-${ellipse.id}`}>
+                      <div className={`ellipse-beam-${starId}-${ellipse.id} `} />
+                    </div>
+                  </div>
+                ))}
+
                 {/* Glowing layers that pulse and rotate */}
                 <div className={`star-glow-${starId}`} />
                 <div className={`star-glow-${starId} star-glow-2-${starId}`} />
@@ -381,30 +500,9 @@ const UserStar: React.FC<UserStarProps> = ({
               </div>
             </div>
           </Link>
-          {/* Stars and sunshines under the icon */}
-          <div className="flex items-center gap-2">
-            {stars !== undefined && (
-              <div className="flex items-center gap-1">
-                {getIcon({ iconType: 'star', className: 'w-3 h-3', fill: 'currentColor' })}
-                <NumberFlow
-                  value={stars}
-                  locales="en-US"
-                  format={{ style: 'decimal', maximumFractionDigits: 2 }}
-                  className="text-[10px]"
-                />
-              </div>
-            )}
-            {sunshines !== undefined && (
-              <div className="flex items-center gap-1">
-                {getIcon({ iconType: 'sunshine', className: 'w-3 h-3' })}
-                <NumberFlow
-                  value={sunshines}
-                  locales="en-US"
-                  format={{ style: 'decimal', maximumFractionDigits: 0 }}
-                  className="text-[10px]"
-                />
-              </div>
-            )}
+          {/* User name under the icon */}
+          <div className="text-center mt-1">
+            <span className="text-[10px] font-medium text-slate-700 dark:text-slate-300">{nickname}</span>
           </div>
         </Tooltip >
       </div >

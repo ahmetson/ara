@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo, useState, useRef, useCallback } from 'react'
 import Link from '@/components/custom-ui/Link'
 import Tooltip from '@/components/custom-ui/Tooltip'
 import NumberFlow from '@number-flow/react'
@@ -26,6 +26,7 @@ interface UserStarProps {
   linkedinUrl?: string
   tags?: string[] // User interests, technologies, keywords (max 5)
   animationDelay?: number // Delay for orchestrated animations (in seconds)
+  draggable?: boolean // Whether this star can be dragged
 }
 
 // 5-pointed star clip-path polygon
@@ -53,66 +54,170 @@ const UserStar: React.FC<UserStarProps> = ({
   linkedinUrl,
   tags = ["Maintainer", "Django", "Solidity", "p2p"],
   animationDelay = 0,
+  draggable = false,
 }) => {
   const defaultSrc = 'https://api.backdropbuild.com/storage/v1/object/public/avatars/9nFM8HasgS.jpeg'
   const defaultAlt = 'Avatar'
   const profileUri = nickname ? `${uri}?nickname=${nickname}` : uri
 
-  // Calculate star level (1-10) from stars prop
-  // If stars is already 1-10, use it directly; otherwise normalize from 0-5 range to 1-10
-  // If stars is undefined, default to level 1
-  const starLevel = stars !== undefined
-    ? stars >= 1 && stars <= 10
-      ? Math.round(stars)
-      : Math.max(1, Math.min(10, Math.round((stars / 5) * 10) || 1))
-    : 1
+  // Drag state
+  const [isDragging, setIsDragging] = useState(false)
+  const [dragPosition, setDragPosition] = useState({ x, y })
+  const dragOffsetRef = useRef({ x: 0, y: 0 })
+  const starElementRef = useRef<HTMLDivElement>(null)
 
-  // Determine special status
-  const isMaintainer = role === 'Maintainer'
-  const isFirstPlace = leaderboardPosition === 1
-  const isSecondPlace = leaderboardPosition === 2
-  const isThirdPlace = leaderboardPosition === 3
+  // Memoize expensive calculations
+  const { starLevel, isMaintainer, isFirstPlace, isSecondPlace, isThirdPlace, opacity, blurAmount, size } = useMemo(() => {
+    // Calculate star level (1-10) from stars prop
+    const level = stars !== undefined
+      ? stars >= 1 && stars <= 10
+        ? Math.round(stars)
+        : Math.max(1, Math.min(10, Math.round((stars / 5) * 10) || 1))
+      : 1
 
-  // Calculate level-based styling values
-  // Opacity: level 10 = 1.0, level 1 = 0.35
-  // Maintainer and first place get full opacity
-  const baseOpacity = 0.35 + ((starLevel - 1) / 9) * 0.65
-  const opacity = isMaintainer || isFirstPlace ? 1.0 : baseOpacity
+    // Determine special status
+    const maintainer = role === 'Maintainer'
+    const firstPlace = leaderboardPosition === 1
+    const secondPlace = leaderboardPosition === 2
+    const thirdPlace = leaderboardPosition === 3
 
-  // Blur: level 10 = 0px, level 1 = 12px (when not hovered)
-  // Maintainer and first place get no blur
-  const baseBlur = 12 - ((starLevel - 1) / 9) * 12
-  const blurAmount = isMaintainer || isFirstPlace ? 0 : baseBlur
+    // Calculate level-based styling values
+    const baseOpacity = 0.35 + ((level - 1) / 9) * 0.65
+    const finalOpacity = maintainer || firstPlace ? 1.0 : baseOpacity
 
-  // Size: level 10 = 48px, level 1 = 32px
-  // Maintainer: 72px (extra large), First place: 64px (large), others: normal
-  const baseSize = 32 + ((starLevel - 1) / 9) * 16
-  const size = isMaintainer ? 72 : isFirstPlace ? 64 : baseSize
+    const baseBlur = 12 - ((level - 1) / 9) * 12
+    const finalBlur = maintainer || firstPlace ? 0 : baseBlur
 
-  // Color gradients based on position
-  // Gold (default), Silver (2nd), Bronze (3rd)
-  let glowGradient1: string
-  let glowGradient2: string
-  let glowGradient3: string
+    const baseSize = 32 + ((level - 1) / 9) * 16
+    const finalSize = maintainer ? 72 : firstPlace ? 64 : baseSize
 
-  if (isSecondPlace) {
-    // Silver gradients
-    glowGradient1 = 'radial-gradient(circle, rgba(192, 192, 192, 0.9) 0%, rgba(230, 230, 230, 0.5) 50%, transparent 100%)'
-    glowGradient2 = 'radial-gradient(circle, rgba(220, 220, 220, 0.7) 0%, rgba(192, 192, 192, 0.4) 50%, transparent 100%)'
-    glowGradient3 = 'radial-gradient(circle, rgba(200, 200, 200, 0.6) 0%, rgba(240, 240, 240, 0.3) 50%, transparent 100%)'
-  } else if (isThirdPlace) {
-    // Bronze/gold gradients
-    glowGradient1 = 'radial-gradient(circle, rgba(205, 127, 50, 0.9) 0%, rgba(255, 200, 100, 0.5) 50%, transparent 100%)'
-    glowGradient2 = 'radial-gradient(circle, rgba(255, 180, 80, 0.7) 0%, rgba(205, 127, 50, 0.4) 50%, transparent 100%)'
-    glowGradient3 = 'radial-gradient(circle, rgba(220, 150, 70, 0.6) 0%, rgba(255, 220, 150, 0.3) 50%, transparent 100%)'
-  } else {
-    // Default gold gradients
-    glowGradient1 = 'radial-gradient(circle, rgba(255, 215, 0, 0.8) 0%, rgba(255, 255, 0, 0.4) 50%, transparent 100%)'
-    glowGradient2 = 'radial-gradient(circle, rgba(255, 255, 100, 0.6) 0%, rgba(255, 215, 0, 0.3) 50%, transparent 100%)'
-    glowGradient3 = 'radial-gradient(circle, rgba(255, 200, 0, 0.5) 0%, rgba(255, 255, 150, 0.2) 50%, transparent 100%)'
-  }
+    return {
+      starLevel: level,
+      isMaintainer: maintainer,
+      isFirstPlace: firstPlace,
+      isSecondPlace: secondPlace,
+      isThirdPlace: thirdPlace,
+      opacity: finalOpacity,
+      blurAmount: finalBlur,
+      size: finalSize,
+    }
+  }, [stars, role, leaderboardPosition])
 
-  const tooltipContent = (
+  // Memoize glow gradients
+  const { glowGradient1, glowGradient2, glowGradient3 } = useMemo(() => {
+    if (isSecondPlace) {
+      return {
+        glowGradient1: 'radial-gradient(circle, rgba(192, 192, 192, 0.9) 0%, rgba(230, 230, 230, 0.5) 50%, transparent 100%)',
+        glowGradient2: 'radial-gradient(circle, rgba(220, 220, 220, 0.7) 0%, rgba(192, 192, 192, 0.4) 50%, transparent 100%)',
+        glowGradient3: 'radial-gradient(circle, rgba(200, 200, 200, 0.6) 0%, rgba(240, 240, 240, 0.3) 50%, transparent 100%)',
+      }
+    } else if (isThirdPlace) {
+      return {
+        glowGradient1: 'radial-gradient(circle, rgba(205, 127, 50, 0.9) 0%, rgba(255, 200, 100, 0.5) 50%, transparent 100%)',
+        glowGradient2: 'radial-gradient(circle, rgba(255, 180, 80, 0.7) 0%, rgba(205, 127, 50, 0.4) 50%, transparent 100%)',
+        glowGradient3: 'radial-gradient(circle, rgba(220, 150, 70, 0.6) 0%, rgba(255, 220, 150, 0.3) 50%, transparent 100%)',
+      }
+    } else {
+      return {
+        glowGradient1: 'radial-gradient(circle, rgba(255, 215, 0, 0.8) 0%, rgba(255, 255, 0, 0.4) 50%, transparent 100%)',
+        glowGradient2: 'radial-gradient(circle, rgba(255, 255, 100, 0.6) 0%, rgba(255, 215, 0, 0.3) 50%, transparent 100%)',
+        glowGradient3: 'radial-gradient(circle, rgba(255, 200, 0, 0.5) 0%, rgba(255, 255, 150, 0.2) 50%, transparent 100%)',
+      }
+    }
+  }, [isSecondPlace, isThirdPlace])
+
+  // Drag handlers
+  const handleDragStart = useCallback((e: React.DragEvent) => {
+    if (!draggable) return
+    setIsDragging(true)
+    const rect = starElementRef.current?.getBoundingClientRect()
+    if (rect) {
+      dragOffsetRef.current = {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top,
+      }
+    }
+    e.dataTransfer.effectAllowed = 'move'
+    e.dataTransfer.setData('text/plain', '') // Required for Firefox
+  }, [draggable])
+
+  const handleDrag = useCallback((e: React.DragEvent) => {
+    if (!draggable || !isDragging) return
+    e.preventDefault()
+
+    const container = document.querySelector('[data-galaxy-content]')
+    if (!container) return
+
+    const containerRect = container.getBoundingClientRect()
+    // Get the transform scale from computed style
+    const computedStyle = window.getComputedStyle(container)
+    const transform = computedStyle.transform
+    let scale = 1
+    if (transform && transform !== 'none') {
+      const matrix = transform.match(/matrix\(([^)]+)\)/)
+      if (matrix) {
+        const values = matrix[1].split(',')
+        scale = parseFloat(values[0]) || 1
+      }
+    }
+
+    // Account for scale when calculating position
+    const newX = (e.clientX - containerRect.left - dragOffsetRef.current.x) / scale
+    const newY = (e.clientY - containerRect.top - dragOffsetRef.current.y) / scale
+
+    setDragPosition({ x: newX, y: newY })
+  }, [draggable, isDragging])
+
+  const handleDragEnd = useCallback((e: React.DragEvent) => {
+    if (!draggable) return
+    setIsDragging(false)
+
+    const container = document.querySelector('[data-galaxy-content]')
+    if (!container) return
+
+    const containerRect = container.getBoundingClientRect()
+    // Get the transform scale from computed style
+    const computedStyle = window.getComputedStyle(container)
+    const transform = computedStyle.transform
+    let scale = 1
+    if (transform && transform !== 'none') {
+      const matrix = transform.match(/matrix\(([^)]+)\)/)
+      if (matrix) {
+        const values = matrix[1].split(',')
+        scale = parseFloat(values[0]) || 1
+      }
+    }
+
+    // Account for scale when calculating final position
+    const finalX = (e.clientX - containerRect.left - dragOffsetRef.current.x) / scale
+    const finalY = (e.clientY - containerRect.top - dragOffsetRef.current.y) / scale
+
+    // Dispatch event to update star position
+    const event = new CustomEvent('user-star-moved', {
+      detail: {
+        nickname,
+        x: finalX,
+        y: finalY,
+      },
+    })
+    window.dispatchEvent(event)
+
+    setDragPosition({ x: finalX, y: finalY })
+  }, [draggable, nickname])
+
+  // Update position when x or y prop changes (but not during drag)
+  React.useEffect(() => {
+    if (!isDragging) {
+      setDragPosition({ x, y })
+    }
+  }, [x, y, isDragging])
+
+  // Tooltip content based on draggable state
+  const tooltipContent = draggable ? (
+    <div className="text-sm">
+      <p className="font-medium">Drag and drop around the page to move the location</p>
+    </div>
+  ) : (
     <div className="text-sm space-y-3">
       <div className="flex items-center gap-2">
         <div
@@ -219,76 +324,81 @@ const UserStar: React.FC<UserStarProps> = ({
     </div>
   )
 
-  const starId = `user-star-${nickname.replace(/\s+/g, '-').toLowerCase()}`
+  const starId = useMemo(() => `user-star-${nickname.replace(/\s+/g, '-').toLowerCase()}`, [nickname])
 
-  // Calculate number of ellipses (1 per 100 sunshines)
-  const totalSunshines = sunshines || 0
-  const fullEllipseCount = Math.floor(totalSunshines / 100)
-  const remainingSunshines = totalSunshines % 100
+  // Memoize ellipse calculations
+  const { ellipses, tagsEllipseRadius, tagsEllipseRotationDuration } = useMemo(() => {
+    const totalSunshines = sunshines || 0
+    const fullEllipseCount = Math.floor(totalSunshines / 100)
+    const remainingSunshines = totalSunshines % 100
 
-  // Create full ellipses
-  const fullEllipses = Array.from({ length: fullEllipseCount }, (_, i) => ({
-    id: i,
-    radius: size / 2 + 15 + (i * 20), // Base radius + spacing between ellipses
-    rotationDuration: 20 + (i * 5), // Varying rotation speeds
-    isPartial: false,
-    partialOpacity: 1,
-  }))
+    const fullEllipses = Array.from({ length: fullEllipseCount }, (_, i) => ({
+      id: i,
+      radius: size / 2 + 15 + (i * 20),
+      rotationDuration: 20 + (i * 5),
+      isPartial: false,
+      partialOpacity: 1,
+    }))
 
-  // Add partial ellipse if there are remaining sunshines
-  const partialOpacity = remainingSunshines > 0 ? Math.min(1.0, (remainingSunshines / 100) * 2) : 0
-  const ellipses = remainingSunshines > 0
-    ? [
-      ...fullEllipses,
-      {
-        id: fullEllipseCount,
-        radius: size / 2 + 15 + (fullEllipseCount * 20),
-        rotationDuration: 20 + (fullEllipseCount * 5),
-        isPartial: true,
-        partialOpacity: partialOpacity,
-      }
-    ]
-    : fullEllipses
+    const partialOpacity = remainingSunshines > 0 ? Math.min(1.0, (remainingSunshines / 100) * 2) : 0
+    const ellipseList = remainingSunshines > 0
+      ? [
+        ...fullEllipses,
+        {
+          id: fullEllipseCount,
+          radius: size / 2 + 15 + (fullEllipseCount * 20),
+          rotationDuration: 20 + (fullEllipseCount * 5),
+          isPartial: true,
+          partialOpacity: partialOpacity,
+        }
+      ]
+      : fullEllipses
 
-  // Calculate tags ellipse (outermost, transparent)
-  const maxEllipseRadius = ellipses.length > 0
-    ? Math.max(...ellipses.map(e => e.radius))
-    : size / 2
-  const tagsEllipseRadius = maxEllipseRadius + 25 // Position outside all sunshines ellipses
-  const tagsEllipseRotationDuration = 30 // Slow rotation for tags ellipse
+    const maxEllipseRadius = ellipseList.length > 0
+      ? Math.max(...ellipseList.map(e => e.radius))
+      : size / 2
+    const tagsRadius = maxEllipseRadius + 25
 
-  // Warm muted color palette (10% opacity)
-  const warmMutedColors = [
-    'rgba(255, 183, 127, 0.1)', // Muted orange
-    'rgba(255, 159, 100, 0.1)', // Muted orange 2
-    'rgba(255, 182, 193, 0.1)', // Soft pink
-    'rgba(255, 160, 180, 0.1)', // Soft pink 2
-    'rgba(245, 222, 179, 0.1)', // Warm beige
-    'rgba(238, 203, 173, 0.1)', // Warm beige 2
-    'rgba(255, 127, 80, 0.1)',  // Muted coral
-    'rgba(250, 128, 114, 0.1)', // Muted coral 2
-    'rgba(255, 218, 185, 0.1)', // Peach puff
-    'rgba(255, 192, 203, 0.1)', // Light pink
-  ]
-
-  // Generate random badge positions for tags
-  const validTags = tags ? tags.slice(0, 5) : []
-  const badgePositions = validTags.map((tag, index) => {
-    // Generate deterministic random angle based on tag string
-    const hash = tag.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)
-    const angle = (hash % 360) + (index * 72) // Spread badges, with some randomness
-    const normalizedAngle = angle % 360
-    // Assign random color from palette based on tag hash
-    const colorIndex = hash % warmMutedColors.length
     return {
-      tag,
-      angle: normalizedAngle,
-      x: tagsEllipseRadius * Math.cos((normalizedAngle - 90) * (Math.PI / 180)),
-      y: tagsEllipseRadius * Math.sin((normalizedAngle - 90) * (Math.PI / 180)),
-      rotationSpeed: 15 + (index * 5), // Different speeds: 15s, 20s, 25s, 30s, 35s
-      color: warmMutedColors[colorIndex],
+      ellipses: ellipseList,
+      tagsEllipseRadius: tagsRadius,
+      tagsEllipseRotationDuration: 30,
     }
-  })
+  }, [sunshines, size])
+
+  // Memoize badge positions
+  const { validTags, badgePositions } = useMemo(() => {
+    const warmMutedColors = [
+      'rgba(255, 183, 127, 0.1)',
+      'rgba(255, 159, 100, 0.1)',
+      'rgba(255, 182, 193, 0.1)',
+      'rgba(255, 160, 180, 0.1)',
+      'rgba(245, 222, 179, 0.1)',
+      'rgba(238, 203, 173, 0.1)',
+      'rgba(255, 127, 80, 0.1)',
+      'rgba(250, 128, 114, 0.1)',
+      'rgba(255, 218, 185, 0.1)',
+      'rgba(255, 192, 203, 0.1)',
+    ]
+
+    const valid = tags ? tags.slice(0, 5) : []
+    const positions = valid.map((tag, index) => {
+      const hash = tag.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)
+      const angle = (hash % 360) + (index * 72)
+      const normalizedAngle = angle % 360
+      const colorIndex = hash % warmMutedColors.length
+      return {
+        tag,
+        angle: normalizedAngle,
+        x: tagsEllipseRadius * Math.cos((normalizedAngle - 90) * (Math.PI / 180)),
+        y: tagsEllipseRadius * Math.sin((normalizedAngle - 90) * (Math.PI / 180)),
+        rotationSpeed: 15 + (index * 5),
+        color: warmMutedColors[colorIndex],
+      }
+    })
+
+    return { validTags: valid, badgePositions: positions }
+  }, [tags, tagsEllipseRadius])
 
   return (
     <>
@@ -603,15 +713,21 @@ const UserStar: React.FC<UserStarProps> = ({
       `}</style>
 
       <div
-        className={`absolute ${className || ''}`}
+        ref={starElementRef}
+        className={`absolute ${className || ''} ${draggable ? 'cursor-move' : ''} ${isDragging ? 'opacity-50 z-[1000]' : ''}`}
         style={{
-          left: `${x}px`,
-          top: `${y}px`,
-          zIndex: isMaintainer ? 100 : isFirstPlace ? 50 : undefined
+          left: `${isDragging ? dragPosition.x : x}px`,
+          top: `${isDragging ? dragPosition.y : y}px`,
+          zIndex: isDragging ? 1000 : (isMaintainer ? 100 : isFirstPlace ? 50 : undefined),
+          willChange: draggable ? 'transform' : undefined,
         }}
+        draggable={draggable}
+        onDragStart={handleDragStart}
+        onDrag={handleDrag}
+        onDragEnd={handleDragEnd}
       >
         <Tooltip content={tooltipContent}>
-          <Link uri={profileUri} >
+          {draggable ? (
             <div className="flex flex-col items-center gap-1">
               {/* Star container with glows and avatar */}
               <div className={`star-glow-container-${starId} `}>
@@ -664,7 +780,62 @@ const UserStar: React.FC<UserStarProps> = ({
                 </div>
               </div>
             </div>
-          </Link>
+          ) : (
+            <Link uri={profileUri}>
+              <div className="flex flex-col items-center gap-1">
+                {/* Star container with glows and avatar */}
+                <div className={`star-glow-container-${starId} `}>
+                  {/* Tags ellipse (transparent, outermost) */}
+                  {validTags.length > 0 && (
+                    <div className={`tags-ellipse-${starId}`}>
+                      <div className={`tags-ellipse-ring-${starId}`} />
+                    </div>
+                  )}
+
+                  {/* Orbital ellipses */}
+                  {ellipses.map((ellipse) => (
+                    <div key={ellipse.id} className={`ellipse-orbit-${starId}-${ellipse.id} `}>
+                      {/* Ellipse ring */}
+                      <div className={`ellipse-ring-${starId}-${ellipse.id} `} />
+                      {/* Rotating beam wrapper */}
+                      <div className={`ellipse-beam-wrapper-${starId}-${ellipse.id}`}>
+                        <div className={`ellipse-beam-${starId}-${ellipse.id} `} />
+                      </div>
+                    </div>
+                  ))}
+
+                  {/* Tag badges */}
+                  {badgePositions.map((badge, index) => (
+                    <div
+                      key={`${badge.tag}-${index}`}
+                      className={`tag-badge-${starId}-${index}`}
+                    >
+                      <Tooltip content={badge.tag}>
+                        <div className={`tag-badge-content-${starId}-${index}`}>
+                          {getIcon({ iconType: 'star', className: 'w-3 h-3', fill: 'currentColor' })}
+                          <span className="text-[10px] font-medium">{badge.tag}</span>
+                        </div>
+                      </Tooltip>
+                    </div>
+                  ))}
+
+                  {/* Glowing layers that pulse and rotate */}
+                  <div className={`star-glow-${starId}`} />
+                  <div className={`star-glow-${starId} star-glow-2-${starId}`} />
+                  <div className={`star-glow-${starId} star-glow-3-${starId}`} />
+
+                  {/* Avatar inside the star */}
+                  <div className={`star-avatar-${starId} hover:opacity-80 transition-opacity p-3 border-2 border-red-500 hover:bg-teal-300 bg-blue-200 dark:bg-blue-400! dark:hover:bg-teal-300! dark:hover:blur-sm`}>
+                    <img
+                      src={src || defaultSrc}
+                      alt={alt || defaultAlt}
+                      className={imgClassName || ''}
+                    />
+                  </div>
+                </div>
+              </div>
+            </Link>
+          )}
           {/* User name under the icon */}
           <div className="text-center mt-1">
             <span className="text-[10px] font-medium text-slate-700 dark:text-slate-300">{nickname}</span>

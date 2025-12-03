@@ -19,6 +19,7 @@ export interface UserStarData {
   githubUrl?: string
   linkedinUrl?: string
   tags?: string[]
+  draggable?: boolean
 }
 
 interface SpaceProps {
@@ -71,6 +72,7 @@ const Space: React.FC<SpaceProps> = ({ users, className = '' }) => {
             githubUrl={user.githubUrl || 'https://github.com/ara-foundation/cascadefund-frontend'}
             linkedinUrl={user.linkedinUrl || 'https://www.linkedin.com/in/ara-foundation/'}
             tags={user.tags}
+            draggable={user.draggable}
             animationDelay={index * 0.5} // Orchestrate: stagger each star's animation by 0.5s
           />
         </div>

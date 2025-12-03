@@ -3,11 +3,18 @@ import { motion } from 'motion/react';
 import Button from '@/components/custom-ui/Button';
 import Tooltip from '@/components/custom-ui/Tooltip';
 import { getIcon } from '@/components/icon';
-import Badge from '@/components/badge/Badge';
 import { cn } from '@/lib/utils';
 
 const ProjectCTAPanel: React.FC = () => {
   const [isHovered, setIsHovered] = useState(false);
+
+  const handleViewAllPage = () => {
+    // Dispatch custom event to trigger zoom animation to 26
+    const event = new CustomEvent('galaxy-zoom-to', {
+      detail: { targetZoom: 26 }
+    });
+    window.dispatchEvent(event);
+  };
 
   const tooltipContent = (
     <div className="text-sm max-w-xs">
@@ -15,6 +22,7 @@ const ProjectCTAPanel: React.FC = () => {
     </div>
   );
 
+  // Default UI
   return (
     <motion.div
       className={cn(

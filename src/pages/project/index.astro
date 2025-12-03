@@ -5,12 +5,22 @@ import { MenuName } from "@/components/navbar/WorkNavbar.astro";
 import { ProjectInfoProps } from "@/components/project/ProjectLink";
 import ProjectLandingHero from "@/components/project/ProjectLandingHero";
 import ProjectCTAPanel from "@/components/project/ProjectCTAPanel";
+import PlaceCtaPanel from "@/components/project/PlaceCtaPanel";
 import ProjectGoalPanel from "@/components/project/ProjectGoalPanel";
 // import ProjectPeople from "@/components/project/ProjectPeoplePanel";
 // import HighlightedInteraction from "@/components/project/HighlightedInteractionPanel";
 import BackButton from "@/components/custom-ui/BackButton";
 import AllStarsContest from "@/components/galactic/AllStarsContest";
 import { mockUserStars } from "@/data/mock-data";
+
+// Read place query parameter
+const isPlaceMode = Astro.url.searchParams.get("place") === "true";
+
+// Set draggable property on current user's star (for demo, using first star as current user)
+const starsWithDraggable = mockUserStars.map((star, index) => ({
+  ...star,
+  draggable: isPlaceMode && index === 0, // First star is the current user's star
+}));
 
 const projectData: ProjectInfoProps = {
   uri: "/project",
@@ -48,7 +58,7 @@ const projectData: ProjectInfoProps = {
       top: 10,
     },
   },
-  stars: mockUserStars,
+  stars: starsWithDraggable,
   originalProjectUrl: "",
   followers: 0,
   createdTime: 0,
@@ -117,7 +127,8 @@ const projectData: ProjectInfoProps = {
     documentationUrl="https://docs.example.com"
     client:only="react"
   />
-  <ProjectCTAPanel slot="center" client:only="react" />
+  {isPlaceMode && <PlaceCtaPanel slot="center" client:only="react" />}
+  {!isPlaceMode && <ProjectCTAPanel slot="center" client:only="react" />}
 
   <ProjectGoalPanel
     slot="right"

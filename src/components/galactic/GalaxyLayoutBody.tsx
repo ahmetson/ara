@@ -128,6 +128,46 @@ const GalaxyZoomWrapper: React.FC<GalaxyZoomWrapperProps> = ({
     hasShownDialogRef.current = false;
   };
 
+  // Smooth zoom animation function
+  const animateZoomTo = (targetZoom: number, duration: number = 1500) => {
+    const startZoom = zoom;
+    const startTime = Date.now();
+
+    const animate = () => {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+
+      // Easing function (ease-in-out)
+      const easeInOut = progress < 0.5
+        ? 2 * progress * progress
+        : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+
+      const currentZoom = startZoom + (targetZoom - startZoom) * easeInOut;
+      setZoom(currentZoom);
+
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      }
+    };
+
+    requestAnimationFrame(animate);
+  };
+
+  // Listen for zoom-to events
+  useEffect(() => {
+    const handleZoomTo = (event: CustomEvent) => {
+      const { targetZoom } = event.detail;
+      if (typeof targetZoom === 'number') {
+        animateZoomTo(targetZoom);
+      }
+    };
+
+    window.addEventListener('galaxy-zoom-to', handleZoomTo as EventListener);
+    return () => {
+      window.removeEventListener('galaxy-zoom-to', handleZoomTo as EventListener);
+    };
+  }, [zoom]);
+
   return (
     <>
       {/* Galaxy Measurements - Not scaled, always at 100% */}

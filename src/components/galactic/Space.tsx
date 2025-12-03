@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { DndProvider, useDrop } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import UserStar from './UserStar'
+import { cn } from '@/lib/utils'
 
 export interface UserStarData {
   x: number
@@ -75,7 +76,7 @@ const SpaceContent: React.FC<SpaceProps> = ({ users: initialUsers, className = '
   }, [initialUsers])
 
   // Make Space a drop target
-  const [{ isOver }, drop] = useDrop({
+  const [{ isOver, canDrop }, drop] = useDrop({
     accept: 'user-star',
     drop: (item: UserStarData, monitor) => {
       const container = document.querySelector('[data-galaxy-content]')
@@ -106,8 +107,11 @@ const SpaceContent: React.FC<SpaceProps> = ({ users: initialUsers, className = '
     },
     collect: (monitor) => ({
       isOver: monitor.isOver(),
+      canDrop: monitor.canDrop(),
     }),
   })
+
+  const isDragging = canDrop
 
   // Combine refs
   const combinedRef = (node: HTMLDivElement | null) => {
@@ -118,7 +122,11 @@ const SpaceContent: React.FC<SpaceProps> = ({ users: initialUsers, className = '
   return (
     <div
       ref={combinedRef}
-      className={`absolute top-0 left-0 w-full h-full ${className} `}
+      className={cn(
+        "absolute top-0 left-0 w-full h-full",
+        className,
+        isDragging && "z-[9999]"
+      )}
       style={{
         // Positioned absolutely relative to the parent content container
         // Children use absolute positioning relative to this container's top-left (0,0)
@@ -126,6 +134,18 @@ const SpaceContent: React.FC<SpaceProps> = ({ users: initialUsers, className = '
         ...(isOver && { pointerEvents: 'auto' }),
       }}
     >
+      {/* Background blur fog overlay when dragging */}
+      {isDragging && (
+        <div
+          className="absolute inset-0 pointer-events-none transition-opacity duration-300"
+          style={{
+            background: 'rgba(100, 100, 100, 0.3)',
+            backdropFilter: 'blur(8px)',
+            WebkitBackdropFilter: 'blur(8px)',
+            zIndex: -1,
+          }}
+        />
+      )}
       {users.map((user, index) => (
         <div key={`${user.nickname}-${index}`} style={{ pointerEvents: 'auto' }}>
           <UserStar

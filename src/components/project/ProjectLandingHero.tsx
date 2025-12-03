@@ -34,7 +34,6 @@ const ProjectLandingHero: React.FC<ProjectLandingHeroProps> = ({ projectData }) 
 
       {/* Icons for Sunshines, Stars, and Energy */}
       <div className="flex items-center justify-center gap-6 flex-wrap">
-        {/* Sunshines */}
         {sunshines !== undefined && (
           <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 dark:bg-slate-900/10 backdrop-blur-sm border border-slate-200/20 dark:border-slate-700/20">
             {getIcon({ iconType: 'sunshine', className: 'w-6 h-6 text-yellow-500' })}
@@ -44,29 +43,6 @@ const ProjectLandingHero: React.FC<ProjectLandingHeroProps> = ({ projectData }) 
               format={{ style: 'decimal', maximumFractionDigits: 0 }}
               className="text-lg font-semibold text-slate-800 dark:text-slate-200"
             />
-          </div>
-        )}
-
-        {/* Stars */}
-        {stars !== undefined && (
-          <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 dark:bg-slate-900/10 backdrop-blur-sm border border-slate-200/20 dark:border-slate-700/20">
-            {getIcon({ iconType: 'star', className: 'w-6 h-6 text-orange-500' })}
-            <NumberFlow
-              value={stars}
-              locales="en-US"
-              format={{ style: 'decimal', maximumFractionDigits: 2 }}
-              className="text-lg font-semibold text-slate-800 dark:text-slate-200"
-            />
-          </div>
-        )}
-
-        {/* Energy */}
-        {sunshines !== undefined && stars !== undefined && (
-          <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 dark:bg-slate-900/10 backdrop-blur-sm border border-slate-200/20 dark:border-slate-700/20">
-            {getIcon({ iconType: 'energy', className: 'w-6 h-6 text-purple-500' })}
-            <span className="text-lg font-semibold text-purple-600 dark:text-purple-400">
-              {energyPercentage.toFixed(1)}%
-            </span>
           </div>
         )}
       </div>

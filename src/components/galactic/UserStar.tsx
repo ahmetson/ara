@@ -24,6 +24,8 @@ interface UserStarProps {
   walletAddress?: string
   githubUrl?: string
   linkedinUrl?: string
+  tags?: string[] // User interests, technologies, keywords (max 5)
+  animationDelay?: number // Delay for orchestrated animations (in seconds)
 }
 
 // 5-pointed star clip-path polygon
@@ -49,6 +51,8 @@ const UserStar: React.FC<UserStarProps> = ({
   walletAddress,
   githubUrl,
   linkedinUrl,
+  tags = ["Maintainer", "Django", "Solidity", "p2p"],
+  animationDelay = 0,
 }) => {
   const defaultSrc = 'https://api.backdropbuild.com/storage/v1/object/public/avatars/9nFM8HasgS.jpeg'
   const defaultAlt = 'Avatar'
@@ -245,6 +249,46 @@ const UserStar: React.FC<UserStarProps> = ({
       }
     ]
     : fullEllipses
+
+  // Calculate tags ellipse (outermost, transparent)
+  const maxEllipseRadius = ellipses.length > 0
+    ? Math.max(...ellipses.map(e => e.radius))
+    : size / 2
+  const tagsEllipseRadius = maxEllipseRadius + 25 // Position outside all sunshines ellipses
+  const tagsEllipseRotationDuration = 30 // Slow rotation for tags ellipse
+
+  // Warm muted color palette (10% opacity)
+  const warmMutedColors = [
+    'rgba(255, 183, 127, 0.1)', // Muted orange
+    'rgba(255, 159, 100, 0.1)', // Muted orange 2
+    'rgba(255, 182, 193, 0.1)', // Soft pink
+    'rgba(255, 160, 180, 0.1)', // Soft pink 2
+    'rgba(245, 222, 179, 0.1)', // Warm beige
+    'rgba(238, 203, 173, 0.1)', // Warm beige 2
+    'rgba(255, 127, 80, 0.1)',  // Muted coral
+    'rgba(250, 128, 114, 0.1)', // Muted coral 2
+    'rgba(255, 218, 185, 0.1)', // Peach puff
+    'rgba(255, 192, 203, 0.1)', // Light pink
+  ]
+
+  // Generate random badge positions for tags
+  const validTags = tags ? tags.slice(0, 5) : []
+  const badgePositions = validTags.map((tag, index) => {
+    // Generate deterministic random angle based on tag string
+    const hash = tag.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)
+    const angle = (hash % 360) + (index * 72) // Spread badges, with some randomness
+    const normalizedAngle = angle % 360
+    // Assign random color from palette based on tag hash
+    const colorIndex = hash % warmMutedColors.length
+    return {
+      tag,
+      angle: normalizedAngle,
+      x: tagsEllipseRadius * Math.cos((normalizedAngle - 90) * (Math.PI / 180)),
+      y: tagsEllipseRadius * Math.sin((normalizedAngle - 90) * (Math.PI / 180)),
+      rotationSpeed: 15 + (index * 5), // Different speeds: 15s, 20s, 25s, 30s, 35s
+      color: warmMutedColors[colorIndex],
+    }
+  })
 
   return (
     <>
@@ -457,6 +501,105 @@ const UserStar: React.FC<UserStarProps> = ({
         }
         ` : ''}
         `).join('')}
+        
+        ${validTags.length > 0 ? `
+        .tags-ellipse-${starId} {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: ${tagsEllipseRadius * 2}px;
+          height: ${tagsEllipseRadius * 2}px;
+          margin-top: -${tagsEllipseRadius}px;
+          margin-left: -${tagsEllipseRadius}px;
+          pointer-events: none;
+        }
+        
+        .tags-ellipse-ring-${starId} {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          border: 1px solid;
+          border-color: rgba(192, 192, 192, 0.1);
+          border-radius: 50%;
+          opacity: 0.2;
+          animation: tagsEllipseRotate-${starId} ${tagsEllipseRotationDuration}s linear infinite;
+          animation-delay: ${animationDelay}s;
+        }
+        
+        @keyframes tagsEllipseRotate-${starId} {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
+        }
+        ` : ''}
+        
+        ${badgePositions.map((badge, index) => `
+        .tag-badge-${starId}-${index} {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 0;
+          height: 0;
+          animation: badgeRotate-${starId}-${index} ${badge.rotationSpeed}s linear infinite;
+          animation-delay: ${animationDelay + (index * 0.2)}s;
+          pointer-events: auto;
+          z-index: 10;
+        }
+        
+        .tag-badge-content-${starId}-${index} {
+          position: absolute;
+          top: ${badge.y}px;
+          left: ${badge.x}px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 4px;
+          width: auto;
+          min-width: 24px;
+          height: 24px;
+          padding: 4px 8px;
+          border-radius: 50%;
+          background: ${badge.color};
+          backdrop-filter: blur(8px);
+          -webkit-backdrop-filter: blur(8px);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          opacity: 0.6;
+          transition: opacity 0.3s ease, transform 0.3s ease;
+          cursor: pointer;
+          transform: translate(-50%, -50%);
+          animation: badgeContentCounterRotate-${starId}-${index} ${badge.rotationSpeed}s linear infinite;
+          animation-delay: ${animationDelay + (index * 0.2)}s;
+        }
+        
+        .tag-badge-content-${starId}-${index}:hover {
+          opacity: 0.9;
+          transform: translate(-50%, -50%) scale(1.1);
+        }
+        
+        @keyframes badgeRotate-${starId}-${index} {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
+        }
+        
+        @keyframes badgeContentCounterRotate-${starId}-${index} {
+          from {
+            transform: translate(-50%, -50%) rotate(0deg);
+          }
+          to {
+            transform: translate(-50%, -50%) rotate(-360deg);
+          }
+        }
+        `).join('')}
       `}</style>
 
       <div
@@ -472,6 +615,13 @@ const UserStar: React.FC<UserStarProps> = ({
             <div className="flex flex-col items-center gap-1">
               {/* Star container with glows and avatar */}
               <div className={`star-glow-container-${starId} `}>
+                {/* Tags ellipse (transparent, outermost) */}
+                {validTags.length > 0 && (
+                  <div className={`tags-ellipse-${starId}`}>
+                    <div className={`tags-ellipse-ring-${starId}`} />
+                  </div>
+                )}
+
                 {/* Orbital ellipses */}
                 {ellipses.map((ellipse) => (
                   <div key={ellipse.id} className={`ellipse-orbit-${starId}-${ellipse.id} `}>
@@ -481,6 +631,21 @@ const UserStar: React.FC<UserStarProps> = ({
                     <div className={`ellipse-beam-wrapper-${starId}-${ellipse.id}`}>
                       <div className={`ellipse-beam-${starId}-${ellipse.id} `} />
                     </div>
+                  </div>
+                ))}
+
+                {/* Tag badges */}
+                {badgePositions.map((badge, index) => (
+                  <div
+                    key={`${badge.tag}-${index}`}
+                    className={`tag-badge-${starId}-${index}`}
+                  >
+                    <Tooltip content={badge.tag}>
+                      <div className={`tag-badge-content-${starId}-${index}`}>
+                        {getIcon({ iconType: 'star', className: 'w-3 h-3', fill: 'currentColor' })}
+                        <span className="text-[10px] font-medium">{badge.tag}</span>
+                      </div>
+                    </Tooltip>
                   </div>
                 ))}
 

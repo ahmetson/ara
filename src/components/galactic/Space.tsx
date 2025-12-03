@@ -18,6 +18,7 @@ export interface UserStarData {
   walletAddress?: string
   githubUrl?: string
   linkedinUrl?: string
+  tags?: string[]
 }
 
 interface SpaceProps {
@@ -69,6 +70,8 @@ const Space: React.FC<SpaceProps> = ({ users, className = '' }) => {
             walletAddress={user.walletAddress || '0x1027298987234987234987234987234987234987'}
             githubUrl={user.githubUrl || 'https://github.com/ara-foundation/cascadefund-frontend'}
             linkedinUrl={user.linkedinUrl || 'https://www.linkedin.com/in/ara-foundation/'}
+            tags={user.tags}
+            animationDelay={index * 0.5} // Orchestrate: stagger each star's animation by 0.5s
           />
         </div>
       ))}

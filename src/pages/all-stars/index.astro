@@ -26,13 +26,14 @@ const selectedGalaxy = galaxyId
 const currentStarsunshines = 0;
 
 // Prepare all galaxies for display in the virtual screen
-const allGalaxies = mockTopGalaxies.map((galaxy) => ({
+const allGalaxies = mockTopGalaxies.map((galaxy, index) => ({
   x: galaxy.x,
   y: galaxy.y,
   projectName: galaxy.name,
   projectId: galaxy.id,
   galaxyData: galaxy,
   tags: galaxy.tags,
+  leaderboardPosition: index + 1,
 }));
 ---
 

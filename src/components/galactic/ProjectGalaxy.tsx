@@ -12,6 +12,7 @@ interface ProjectGalaxyProps {
   projectId?: string
   galaxyData?: GalaxyData
   tags?: string[]
+  leaderboardPosition?: number
   className?: string
 }
 
@@ -22,6 +23,7 @@ const ProjectGalaxy: React.FC<ProjectGalaxyProps> = ({
   projectId,
   galaxyData,
   tags,
+  leaderboardPosition,
   className,
 }) => {
   const galaxyId = useMemo(() => `project-galaxy-${projectName.replace(/\s+/g, '-').toLowerCase()}`, [projectName])
@@ -91,9 +93,14 @@ const ProjectGalaxy: React.FC<ProjectGalaxyProps> = ({
   const tooltipContent = galaxyData ? (
     <div className="text-sm space-y-3 max-w-xs">
       <div>
-        <h3 className="text-lg font-bold text-slate-800 dark:text-slate-200 mb-2">
+        <h3 className="text-lg font-bold text-slate-800 dark:text-slate-200 mb-1">
           {projectName}
         </h3>
+        {leaderboardPosition !== undefined && (
+          <div className="text-xs text-slate-500 dark:text-slate-400 mb-2">
+            Leaderboard: #{leaderboardPosition} galaxy
+          </div>
+        )}
         <p className="text-xs text-slate-600 dark:text-slate-400 line-clamp-3">
           {galaxyData.description}
         </p>
@@ -156,6 +163,17 @@ const ProjectGalaxy: React.FC<ProjectGalaxyProps> = ({
           }
         }
         
+        @keyframes galaxyPulse-${galaxyId} {
+          0%, 100% {
+            transform: scale(1);
+            opacity: 0.7;
+          }
+          50% {
+            transform: scale(1.1);
+            opacity: 1;
+          }
+        }
+        
         .galaxy-spiral-container-${galaxyId} {
           position: relative;
           width: 96px;
@@ -165,6 +183,11 @@ const ProjectGalaxy: React.FC<ProjectGalaxyProps> = ({
           justify-content: center;
           z-index: 10;
           animation: galaxyRotate-${galaxyId} 90s linear infinite;
+          transition: transform 0.3s ease;
+        }
+        
+        .galaxy-wrapper-${galaxyId}:hover .galaxy-spiral-container-${galaxyId} {
+          animation: galaxyRotate-${galaxyId} 90s linear infinite, galaxyPulse-${galaxyId} 2s ease-in-out infinite;
         }
         
         .galaxy-core-${galaxyId} {
@@ -197,6 +220,7 @@ const ProjectGalaxy: React.FC<ProjectGalaxyProps> = ({
           fill: none;
           stroke-width: 2;
           stroke-linecap: round;
+          transition: stroke 0.3s ease, opacity 0.3s ease;
         }
         
         .galaxy-spiral-arm-1-${galaxyId} path {
@@ -209,6 +233,21 @@ const ProjectGalaxy: React.FC<ProjectGalaxyProps> = ({
         
         .galaxy-spiral-arm-3-${galaxyId} path {
           stroke: url(#spiralGradient3-${galaxyId});
+        }
+        
+        .galaxy-wrapper-${galaxyId}:hover .galaxy-spiral-arm-1-${galaxyId} path {
+          stroke: url(#spiralGradientHover1-${galaxyId});
+          opacity: 1;
+        }
+        
+        .galaxy-wrapper-${galaxyId}:hover .galaxy-spiral-arm-2-${galaxyId} path {
+          stroke: url(#spiralGradientHover2-${galaxyId});
+          opacity: 1;
+        }
+        
+        .galaxy-wrapper-${galaxyId}:hover .galaxy-spiral-arm-3-${galaxyId} path {
+          stroke: url(#spiralGradientHover3-${galaxyId});
+          opacity: 1;
         }
         
         .galaxy-name-${galaxyId} {
@@ -334,7 +373,7 @@ const ProjectGalaxy: React.FC<ProjectGalaxyProps> = ({
       >
         <Tooltip content={tooltipContent}>
           <Link uri={projectUrl}>
-            <div className="flex flex-col items-center gap-1 cursor-pointer relative">
+            <div className={`flex flex-col items-center gap-1 cursor-pointer relative galaxy-wrapper-${galaxyId}`}>
               {/* Galaxy spiral container */}
               <div className={`galaxy-spiral-container-${galaxyId}`}>
                 {/* SVG for spiral arms */}
@@ -346,6 +385,7 @@ const ProjectGalaxy: React.FC<ProjectGalaxyProps> = ({
                   style={{ overflow: 'visible' }}
                 >
                   <defs>
+                    {/* Default gradients */}
                     <linearGradient id={`spiralGradient1-${galaxyId}`} x1="0%" y1="0%" x2="100%" y2="100%">
                       <stop offset="0%" stopColor="rgba(255, 255, 255, 0.9)" />
                       <stop offset="30%" stopColor="rgba(255, 200, 100, 0.6)" />
@@ -363,6 +403,26 @@ const ProjectGalaxy: React.FC<ProjectGalaxyProps> = ({
                       <stop offset="30%" stopColor="rgba(255, 160, 60, 0.4)" />
                       <stop offset="60%" stopColor="rgba(160, 100, 255, 0.25)" />
                       <stop offset="100%" stopColor="rgba(80, 30, 160, 0.1)" />
+                    </linearGradient>
+
+                    {/* Hover gradients (brighter, more vibrant) */}
+                    <linearGradient id={`spiralGradientHover1-${galaxyId}`} x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="rgba(255, 255, 255, 1)" />
+                      <stop offset="30%" stopColor="rgba(255, 220, 120, 0.9)" />
+                      <stop offset="60%" stopColor="rgba(220, 170, 255, 0.7)" />
+                      <stop offset="100%" stopColor="rgba(120, 70, 220, 0.4)" />
+                    </linearGradient>
+                    <linearGradient id={`spiralGradientHover2-${galaxyId}`} x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="rgba(255, 255, 220, 1)" />
+                      <stop offset="30%" stopColor="rgba(255, 200, 100, 0.8)" />
+                      <stop offset="60%" stopColor="rgba(200, 140, 255, 0.6)" />
+                      <stop offset="100%" stopColor="rgba(110, 60, 200, 0.3)" />
+                    </linearGradient>
+                    <linearGradient id={`spiralGradientHover3-${galaxyId}`} x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="rgba(255, 255, 180, 0.95)" />
+                      <stop offset="30%" stopColor="rgba(255, 180, 80, 0.7)" />
+                      <stop offset="60%" stopColor="rgba(180, 120, 255, 0.5)" />
+                      <stop offset="100%" stopColor="rgba(100, 50, 200, 0.25)" />
                     </linearGradient>
                   </defs>
 

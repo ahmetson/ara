@@ -55,7 +55,7 @@ const ProjectCTAPanel: React.FC = () => {
         {/* Title with Info Badge */}
         <div className="flex items-center gap-3">
           <h3 className="text-xl font-bold text-slate-800 dark:text-slate-200">
-            Show your star
+            Show your star on blockchain
           </h3>
           <Tooltip content={tooltipContent}>
             <span className="flex items-center gap-1 cursor-help">

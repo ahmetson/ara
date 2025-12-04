@@ -184,7 +184,7 @@ export const WithStats: Story = {
     }
 }
 
-// Cascadefund issue
+// Ara issue
 export const AraIssue: Story = {
     args: {
         uri: '/arada-/issues/404',
@@ -480,17 +480,17 @@ export const AuthorShowcase: Story = {
             </div>
 
             <div>
-                <h3 className="text-lg font-semibold mb-2">Cascadefund Author</h3>
+                <h3 className="text-lg font-semibold mb-2">Ara Author</h3>
                 <IssueLink
                     uri="/arada-/issues/104"
                     number="#104"
-                    title="Cascadefund issue with author"
-                    description="This shows a Cascadefund issue with author information"
+                    title="Ara issue with author"
+                    description="This shows a Ara issue with author information"
                     type="improvement"
                     storage="arada-"
                     author={{
-                        uri: 'https://github.com/cascadefunduser',
-                        name: 'Cascade User',
+                        uri: 'https://github.com/arauser',
+                        name: 'Ara User',
                         avatar: 'https://github.com/cascadefunduser.png'
                     }}
                     projectId="proj456"

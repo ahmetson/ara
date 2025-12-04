@@ -26,3 +26,6 @@ debug.log
 src/stories/
 *storybook.log
 storybook-static
+
+# Docker volumes
+.docker/

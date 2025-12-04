@@ -1,14 +1,18 @@
 {
-  "name": "@ara--foundation/app",
+  "name": "@ara-foundation/app",
   "type": "module",
+  "description": "A github UI to collaborate with the users on the open-source projects, fund, collaborate and grow together.",
   "version": "0.0.1",
   "scripts": {
-    "dev": "NODE_ENV=development astro dev",
+    "dev": "./scripts/check-docker.sh && docker compose up -d && ./scripts/wait-for-mongo.sh && MONGODB_URI='mongodb://root:password@localhost:27017/Ara?authSource=admin' NODE_ENV=development astro dev",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "db:up": "./scripts/check-docker.sh && docker compose up -d",
+    "db:down": "./scripts/check-docker.sh && docker compose down",
+    "db:stats": "./scripts/check-docker.sh && docker compose ps"
   },
   "dependencies": {
     "@astrojs/react": "^4.4.1",

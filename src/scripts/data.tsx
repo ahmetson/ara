@@ -177,7 +177,7 @@ export const socialLinks: Record<SocialLinkType, SocialLink> = {
         useCustomIcon: false,
     },
     bluesky: {
-        url: 'https://bsky.app/profile/cascadefund.bsky.social',
+        url: 'https://bsky.app/profile/ara.foundation.bsky.social',
         type: 'bluesky',
         useCustomIcon: true,
     },

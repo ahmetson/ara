@@ -80,17 +80,14 @@ const allGalaxies = mockTopGalaxies.map((galaxy, index) => ({
   />
 
   <UniverseResearchPanel
+    slot="footer"
     client:only="react"
     starsunshines={currentStarsunshines}
   />
 
-  {
-    selectedGalaxy && (
-      <GalaxyAutoZoom
-        client:only="react"
-        galaxyX={selectedGalaxy.x}
-        galaxyY={selectedGalaxy.y}
-      />
-    )
-  }
+  <GalaxyAutoZoom
+    client:only="react"
+    galaxyX={selectedGalaxy?.x || 0}
+    galaxyY={selectedGalaxy?.y || 0}
+  />
 </GalaxyLayout>

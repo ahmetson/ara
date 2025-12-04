@@ -36,6 +36,7 @@ interface SpaceProps {
     projectName: string
     projectId?: string
     galaxyData?: GalaxyData
+    tags?: string[]
   }
   projectGalaxies?: Array<{
     x: number
@@ -43,6 +44,7 @@ interface SpaceProps {
     projectName: string
     projectId?: string
     galaxyData?: GalaxyData
+    tags?: string[]
   }>
 }
 
@@ -223,6 +225,7 @@ const SpaceContent: React.FC<SpaceProps> = ({ users: initialUsers, className = '
             projectName={projectGalaxy.projectName}
             projectId={projectGalaxy.projectId}
             galaxyData={projectGalaxy.galaxyData}
+            tags={projectGalaxy.tags || projectGalaxy.galaxyData?.tags}
           />
         </div>
       )}
@@ -234,6 +237,7 @@ const SpaceContent: React.FC<SpaceProps> = ({ users: initialUsers, className = '
             projectName={galaxy.projectName}
             projectId={galaxy.projectId}
             galaxyData={galaxy.galaxyData}
+            tags={galaxy.tags || galaxy.galaxyData?.tags}
           />
         </div>
       ))}

@@ -11,6 +11,7 @@ interface ProjectGalaxyProps {
   projectName: string
   projectId?: string
   galaxyData?: GalaxyData
+  tags?: string[]
   className?: string
 }
 
@@ -20,20 +21,60 @@ const ProjectGalaxy: React.FC<ProjectGalaxyProps> = ({
   projectName,
   projectId,
   galaxyData,
+  tags,
   className,
 }) => {
   const galaxyId = useMemo(() => `project-galaxy-${projectName.replace(/\s+/g, '-').toLowerCase()}`, [projectName])
-  
+
   // Generate projectId from name if not provided
   const finalProjectId = projectId || projectName.toLowerCase().replace(/\s+/g, '-')
   const projectUrl = `/project?galaxy=${finalProjectId}`
+
+  // Galaxy size (96px diameter, 48px radius)
+  const galaxySize = 96
+  const galaxyRadius = 48
+  const tagsEllipseRadius = galaxyRadius + 30 // 30px beyond galaxy edge
+
+  // Memoize badge positions
+  const { validTags, badgePositions } = useMemo(() => {
+    const warmMutedColors = [
+      'rgba(255, 183, 127, 0.1)',
+      'rgba(255, 159, 100, 0.1)',
+      'rgba(255, 182, 193, 0.1)',
+      'rgba(255, 160, 180, 0.1)',
+      'rgba(245, 222, 179, 0.1)',
+      'rgba(238, 203, 173, 0.1)',
+      'rgba(255, 127, 80, 0.1)',
+      'rgba(250, 128, 114, 0.1)',
+      'rgba(255, 218, 185, 0.1)',
+      'rgba(255, 192, 203, 0.1)',
+    ]
+
+    const valid = tags ? tags.slice(0, 5) : []
+    const positions = valid.map((tag, index) => {
+      const hash = tag.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)
+      const angle = (hash % 360) + (index * 72)
+      const normalizedAngle = angle % 360
+      const colorIndex = hash % warmMutedColors.length
+      return {
+        tag,
+        angle: normalizedAngle,
+        x: tagsEllipseRadius * Math.cos((normalizedAngle - 90) * (Math.PI / 180)),
+        y: tagsEllipseRadius * Math.sin((normalizedAngle - 90) * (Math.PI / 180)),
+        rotationSpeed: 15 + (index * 5),
+        color: warmMutedColors[colorIndex],
+      }
+    })
+
+    return { validTags: valid, badgePositions: positions }
+  }, [tags, tagsEllipseRadius])
 
   // Create spiral path data for SVG
   const createSpiralPath = (startAngle: number, turns: number = 2.5) => {
     const points: string[] = []
     const center = 48 // Half of 96px
     const steps = 100
-    
+
     for (let i = 0; i <= steps; i++) {
       const t = i / steps
       const angle = startAngle + (t * turns * Math.PI * 2)
@@ -42,7 +83,7 @@ const ProjectGalaxy: React.FC<ProjectGalaxyProps> = ({
       const y = center + Math.sin(angle) * radius
       points.push(`${i === 0 ? 'M' : 'L'} ${x} ${y}`)
     }
-    
+
     return points.join(' ')
   }
 
@@ -57,7 +98,7 @@ const ProjectGalaxy: React.FC<ProjectGalaxyProps> = ({
           {galaxyData.description}
         </p>
       </div>
-      
+
       <div className="flex items-center justify-between gap-4 pt-2 border-t border-slate-200 dark:border-slate-700">
         <div className="flex items-center gap-1">
           {getIcon({ iconType: 'star', className: 'w-4 h-4 text-yellow-500' })}
@@ -87,7 +128,7 @@ const ProjectGalaxy: React.FC<ProjectGalaxyProps> = ({
           />
         </div>
       </div>
-      
+
       <div className="pt-2 border-t border-slate-200 dark:border-slate-700">
         <p className="text-xs text-slate-700 dark:text-slate-300 font-medium">
           View the galaxy page. Join it.
@@ -184,6 +225,104 @@ const ProjectGalaxy: React.FC<ProjectGalaxyProps> = ({
             0 0 12px rgba(0, 0, 0, 0.4);
           pointer-events: none;
         }
+        
+        ${validTags.length > 0 ? `
+        .tags-ellipse-${galaxyId} {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: ${tagsEllipseRadius * 2}px;
+          height: ${tagsEllipseRadius * 2}px;
+          margin-top: -${tagsEllipseRadius}px;
+          margin-left: -${tagsEllipseRadius}px;
+          pointer-events: none;
+        }
+        
+        .tags-ellipse-ring-${galaxyId} {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          border: 1px solid;
+          border-color: rgba(192, 192, 192, 0.1);
+          border-radius: 50%;
+          opacity: 0.2;
+          animation: tagsEllipseRotate-${galaxyId} 30s linear infinite;
+        }
+        
+        @keyframes tagsEllipseRotate-${galaxyId} {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
+        }
+        ` : ''}
+        
+        ${badgePositions.map((badge, index) => `
+        .tag-badge-${galaxyId}-${index} {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 0;
+          height: 0;
+          animation: badgeRotate-${galaxyId}-${index} ${badge.rotationSpeed}s linear infinite;
+          animation-delay: ${index * 0.2}s;
+          pointer-events: auto;
+          z-index: 10;
+        }
+        
+        .tag-badge-content-${galaxyId}-${index} {
+          position: absolute;
+          top: ${badge.y}px;
+          left: ${badge.x}px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 4px;
+          width: auto;
+          min-width: 24px;
+          height: 24px;
+          padding: 4px 8px;
+          border-radius: 50%;
+          background: ${badge.color};
+          backdrop-filter: blur(8px);
+          -webkit-backdrop-filter: blur(8px);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          opacity: 0.6;
+          transition: opacity 0.3s ease, transform 0.3s ease;
+          cursor: pointer;
+          transform: translate(-50%, -50%);
+          animation: badgeContentCounterRotate-${galaxyId}-${index} ${badge.rotationSpeed}s linear infinite;
+          animation-delay: ${index * 0.2}s;
+        }
+        
+        .tag-badge-content-${galaxyId}-${index}:hover {
+          opacity: 0.9;
+          transform: translate(-50%, -50%) scale(1.1);
+        }
+        
+        @keyframes badgeRotate-${galaxyId}-${index} {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
+        }
+        
+        @keyframes badgeContentCounterRotate-${galaxyId}-${index} {
+          from {
+            transform: translate(-50%, -50%) rotate(0deg);
+          }
+          to {
+            transform: translate(-50%, -50%) rotate(-360deg);
+          }
+        }
+        `).join('')}
       `}</style>
 
       <div
@@ -195,7 +334,7 @@ const ProjectGalaxy: React.FC<ProjectGalaxyProps> = ({
       >
         <Tooltip content={tooltipContent}>
           <Link uri={projectUrl}>
-            <div className="flex flex-col items-center gap-1 cursor-pointer">
+            <div className="flex flex-col items-center gap-1 cursor-pointer relative">
               {/* Galaxy spiral container */}
               <div className={`galaxy-spiral-container-${galaxyId}`}>
                 {/* SVG for spiral arms */}
@@ -226,7 +365,7 @@ const ProjectGalaxy: React.FC<ProjectGalaxyProps> = ({
                       <stop offset="100%" stopColor="rgba(80, 30, 160, 0.1)" />
                     </linearGradient>
                   </defs>
-                  
+
                   {/* Three spiral arms with different starting angles */}
                   <g className={`galaxy-spiral-arm-${galaxyId} galaxy-spiral-arm-1-${galaxyId}`}>
                     <path d={createSpiralPath(0, 2.5)} />
@@ -238,10 +377,33 @@ const ProjectGalaxy: React.FC<ProjectGalaxyProps> = ({
                     <path d={createSpiralPath((Math.PI * 4) / 3, 2.5)} />
                   </g>
                 </svg>
-                
+
                 {/* Bright core */}
                 <div className={`galaxy-core-${galaxyId}`} />
               </div>
+
+              {/* Tags ellipse (transparent, outermost) */}
+              {validTags.length > 0 && (
+                <div className={`tags-ellipse-${galaxyId}`}>
+                  <div className={`tags-ellipse-ring-${galaxyId}`} />
+                </div>
+              )}
+
+              {/* Tag badges */}
+              {badgePositions.map((badge, index) => (
+                <div
+                  key={`${badge.tag}-${index}`}
+                  className={`tag-badge-${galaxyId}-${index}`}
+                >
+                  <Tooltip content={badge.tag}>
+                    <div className={`tag-badge-content-${galaxyId}-${index}`}>
+                      {getIcon({ iconType: 'star', className: 'w-3 h-3', fill: 'currentColor' })}
+                      <span className="text-[10px] font-medium">{badge.tag}</span>
+                    </div>
+                  </Tooltip>
+                </div>
+              ))}
+
               {/* Project name with black shadow */}
               <div className={`galaxy-name-${galaxyId}`}>
                 {projectName}

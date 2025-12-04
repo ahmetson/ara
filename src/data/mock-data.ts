@@ -229,6 +229,7 @@ export interface GalaxyData {
   donationAmount: number;
   x: number;
   y: number;
+  tags?: string[];
 }
 
 export interface ContestData {
@@ -268,6 +269,7 @@ export const mockTopGalaxies: GalaxyData[] = [
     donationAmount: 450000,
     x: 800,
     y: 600,
+    tags: ['Payment', 'Protocol', 'Blockchain', 'Solidity', 'P2P'],
   },
   {
     id: 'reflect',
@@ -279,6 +281,7 @@ export const mockTopGalaxies: GalaxyData[] = [
     donationAmount: 320000,
     x: 1200,
     y: 400,
+    tags: ['TypeScript', 'JavaScript', 'Library', 'Reflection', 'Meta'],
   },
   {
     id: 'cascadefund-app',
@@ -290,6 +293,7 @@ export const mockTopGalaxies: GalaxyData[] = [
     donationAmount: 280000,
     x: 600,
     y: 800,
+    tags: ['Frontend', 'React', 'Astro', 'Web3', 'Open Source'],
   },
   {
     id: 'blockchain-verify',
@@ -301,6 +305,7 @@ export const mockTopGalaxies: GalaxyData[] = [
     donationAmount: 240000,
     x: 1000,
     y: 200,
+    tags: ['Blockchain', 'Verification', 'Security', 'Tool', 'Ethereum'],
   },
   {
     id: 'galaxy-engine',
@@ -312,6 +317,7 @@ export const mockTopGalaxies: GalaxyData[] = [
     donationAmount: 210000,
     x: 400,
     y: 500,
+    tags: ['Graphics', 'WebGL', 'Visualization', '3D', 'Rendering'],
   },
 ];
 

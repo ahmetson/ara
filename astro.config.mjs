@@ -23,6 +23,13 @@ export default defineConfig({
     ssr: {
       noExternal: ['timeago-react']
     },
+    ssr: {
+      noExternal: ['timeago-react'],
+      external: ['util'],
+    },
+    resolve: {
+      conditions: ['import', 'module', 'browser', 'default'],
+    },
     server: {
       https: {
         key: './localhost-key.pem',

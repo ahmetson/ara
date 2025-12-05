@@ -1,45 +1,88 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import Button from '@/components/custom-ui/Button';
 import { cn } from '@/lib/utils';
+import { useDemoStart } from '@/hooks/use-demo-start';
+import DemoCongratulationsDialog from './DemoCongratulationsDialog';
+import { useDemoClient } from '@/scripts/demo-client';
 
 const DemoCtaPanel: React.FC = () => {
     const [isHovered, setIsHovered] = useState(false);
     const [email, setEmail] = useState('');
     const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const [isVisible, setIsVisible] = useState(true);
+    const { showDialog, demoUsers, setShowDialog, handleSuccess } = useDemoStart();
+    const { startDemo, hasDemo } = useDemoClient();
 
-    const handleStart = () => {
-        // Validate email
+    // Listen for demo-user-created event (only once on mount)
+    useEffect(() => {
+        const handleDemoUserCreated = () => {
+            // Hide panel with animation
+            setIsVisible(false);
+        };
+
+        window.addEventListener('demo-user-created', handleDemoUserCreated as EventListener);
+
+        return () => {
+            window.removeEventListener('demo-user-created', handleDemoUserCreated as EventListener);
+        };
+    }, []);
+
+    // Hide panel if demo already exists
+    useEffect(() => {
+        if (hasDemo) {
+            setIsVisible(false);
+        }
+    }, [hasDemo]);
+
+    const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setEmail(e.target.value);
+    };
+
+    const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter' && email.trim()) {
+            const form = e.currentTarget.closest('form');
+            if (form) {
+                form.requestSubmit();
+            }
+        }
+    };
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
         if (!email || !email.trim()) {
             setError('please write email address');
             return;
         }
-
-        // Basic email validation
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email.trim())) {
             setError('please write email address');
             return;
         }
 
-        // Clear error and show alert
+        setIsLoading(true);
         setError('');
-        alert(`Todo, demo play by ${email.trim()}`);
-    };
 
-    const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setEmail(e.target.value);
-        // Clear error when user starts typing
-        if (error) {
-            setError('');
+        try {
+            const result = await startDemo(email.trim());
+
+            if (result.success && 'users' in result && result.users && Array.isArray(result.users)) {
+                // Show congratulations dialog with confetti
+                handleSuccess(result.users, email.trim());
+            } else {
+                setError('error' in result ? result.error || 'Failed to start demo' : 'Failed to start demo');
+            }
+        } catch (err: any) {
+            setError(err.message || 'An error occurred. Please try again.');
+        } finally {
+            setIsLoading(false);
         }
     };
 
-    const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter') {
-            handleStart();
-        }
-    };
+    // Don't render if not visible
+    if (!isVisible) {
+        return null;
+    }
 
     return (
         <motion.div
@@ -58,7 +101,11 @@ const DemoCtaPanel: React.FC = () => {
             onMouseLeave={() => setIsHovered(false)}
             animate={{
                 scale: isHovered ? 1.02 : 1,
-                y: isHovered ? -4 : 0,
+                y: isVisible ? (isHovered ? -4 : 0) : -20,
+            }}
+            exit={{
+                opacity: 0,
+                y: -20,
             }}
             transition={{
                 type: "spring",
@@ -85,10 +132,11 @@ const DemoCtaPanel: React.FC = () => {
                 </h3>
 
                 {/* Email Input with Button */}
-                <div className="w-full space-y-3">
+                <form onSubmit={handleSubmit} className="w-full space-y-3">
                     <div className="flex gap-2">
                         <input
                             type="email"
+                            name="email"
                             value={email}
                             onChange={handleEmailChange}
                             onKeyPress={handleKeyPress}
@@ -105,14 +153,17 @@ const DemoCtaPanel: React.FC = () => {
                                 error && "border-red-500/50 focus:ring-red-500/50 focus:border-red-500/50"
                             )}
                         />
-                        <Button
-                            variant="primary"
-                            size="lg"
-                            className="h-12 px-6 whitespace-nowrap"
-                            onClick={handleStart}
+                        <button
+                            type="submit"
+                            disabled={isLoading}
+                            className={cn(
+                                "h-12 px-6 whitespace-nowrap rounded-lg font-medium transition-colors",
+                                "bg-rose-500 text-white hover:bg-sky-500",
+                                "disabled:opacity-50 disabled:cursor-not-allowed"
+                            )}
                         >
-                            Start
-                        </Button>
+                            {isLoading ? 'Starting...' : 'Start'}
+                        </button>
                     </div>
 
                     {/* Error Message */}
@@ -125,11 +176,11 @@ const DemoCtaPanel: React.FC = () => {
                                 transition={{ duration: 0.2 }}
                                 className="text-sm text-red-500 dark:text-red-400 text-center"
                             >
-                                {error}
+                                {typeof error === 'string' ? error : 'An error occurred'}
                             </motion.p>
                         )}
                     </AnimatePresence>
-                </div>
+                </form>
 
                 {/* Info Paragraph */}
                 <motion.p
@@ -141,6 +192,13 @@ const DemoCtaPanel: React.FC = () => {
                     You will start immediately.
                 </motion.p>
             </div>
+
+            {/* Congratulations Dialog */}
+            <DemoCongratulationsDialog
+                isOpen={showDialog}
+                users={demoUsers}
+                onClose={() => setShowDialog(false)}
+            />
         </motion.div>
     );
 };

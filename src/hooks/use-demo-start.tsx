@@ -22,7 +22,6 @@ export function useDemoStart(): UseDemoStartResult {
   const [hasTriggeredConfetti, setHasTriggeredConfetti] = useState(false)
 
   const handleSuccess = (users: UserModel[], email: string) => {
-    console.log('useDemoStart handleSuccess', users, email)
     // Set cookies
     const emailValue = email.trim()
     const usersValue = JSON.stringify(users)
@@ -40,7 +39,6 @@ export function useDemoStart(): UseDemoStartResult {
     // Show congratulations dialog
     setDemoUsers(users)
     setShowDialog(true)
-    console.log('useDemoStart handleSuccess showDialog to true, now:', showDialog)
   }
 
   const triggerConfetti = () => {

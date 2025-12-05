@@ -16,6 +16,10 @@ export interface UserModel {
     balance?: number
 }
 
+
+export const emailToNickname = (email: string): string => {
+    return email.split('@')[0]
+}
 /**
  * Get user by email
  */
@@ -31,6 +35,38 @@ export async function getUserByEmail(email: string): Promise<UserModel | null> {
 }
 
 /**
+ * Get user by ID
+ */
+export async function getUserById(id: string | ObjectId): Promise<UserModel | null> {
+    try {
+        const collection = await getCollection<UserModel>('users')
+        const objectId = typeof id === 'string' ? new ObjectId(id) : id
+        const result = await collection.findOne({ _id: objectId })
+        return result
+    } catch (error) {
+        console.error('Error getting user by id:', error)
+        return null
+    }
+}
+
+/**
+ * Get multiple users by IDs
+ */
+export async function getUserByIds(ids: ObjectId[]): Promise<UserModel[]> {
+    try {
+        if (ids.length === 0) {
+            return []
+        }
+        const collection = await getCollection<UserModel>('users')
+        const result = await collection.find({ _id: { $in: ids } }).toArray()
+        return result
+    } catch (error) {
+        console.error('Error getting users by ids:', error)
+        return []
+    }
+}
+
+/**
  * Create a new user
  */
 export async function createUser(user: UserModel): Promise<ObjectId> {
@@ -40,6 +76,23 @@ export async function createUser(user: UserModel): Promise<ObjectId> {
         return result.insertedId
     } catch (error) {
         console.error('Error creating user:', error)
+        throw error
+    }
+}
+
+/**
+ * Create multiple users in bulk
+ */
+export async function createUsers(users: UserModel[]): Promise<ObjectId[]> {
+    try {
+        if (users.length === 0) {
+            return []
+        }
+        const collection = await getCollection<UserModel>('users')
+        const result = await collection.insertMany(users as any)
+        return Object.values(result.insertedIds)
+    } catch (error) {
+        console.error('Error creating users:', error)
         throw error
     }
 }
@@ -59,7 +112,7 @@ export async function getOrCreateUserByEmail(email: string): Promise<ObjectId> {
         const newUser: UserModel = {
             email,
             role: 'maintainer',
-            nickname: email.split('@')[0],
+            nickname: emailToNickname(email),
         }
         const insertedId = await createUser(newUser)
         return insertedId

@@ -1,12 +1,13 @@
 import { getCollection, create } from './db'
-import { UserModel } from './user'
+import { getUserById, UserModel } from './user'
 import { DEMO_COOKIE_NAMES } from './demo-constants'
+import { ObjectId } from 'mongodb'
 
 export interface DemoModel {
     _id?: any
     email: string
     created: number
-    users: UserModel[]
+    users: ObjectId[]
 }
 
 // Re-export constants for server-side use
@@ -29,7 +30,7 @@ export async function getDemoByEmail(email: string): Promise<DemoModel | null> {
 /**
  * Create new demo entry
  */
-export async function createDemo(email: string, users: UserModel[]): Promise<boolean> {
+export async function createDemo(email: string, users: ObjectId[]): Promise<boolean> {
     try {
         const demo: DemoModel = {
             email,
@@ -43,13 +44,6 @@ export async function createDemo(email: string, users: UserModel[]): Promise<boo
     }
 }
 
-/**
- * Get users for a demo email
- */
-export async function getDemoUsers(email: string): Promise<UserModel[] | null> {
-    const demo = await getDemoByEmail(email)
-    return demo?.users || null
-}
 
 /**
  * Check if demo cookies exist (server-side)

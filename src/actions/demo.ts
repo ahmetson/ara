@@ -1,7 +1,7 @@
 import { defineAction } from 'astro:actions'
 import { z } from 'astro:schema'
 import { getDemoByEmail, createDemo } from '@/scripts/demo'
-import { UserModel, Roles } from '@/scripts/user'
+import { UserModel, Roles, emailToNickname, createUsers, getUserByIds } from '@/scripts/user'
 
 /**
  * Generate a random user with profile picture from DiceBear
@@ -45,12 +45,24 @@ function generateRandomUser(role: Roles, index: number): UserModel {
 /**
  * Create three demo users with different roles
  */
-function createDemoUsers(): UserModel[] {
-    return [
-        generateRandomUser('maintainer', 0),
-        generateRandomUser('user', 1),
-        generateRandomUser('contributor', 2),
+async function generateDemoUsers(email: string): Promise<UserModel[]> {
+    const users = [{
+        email,
+        role: 'maintainer',
+        nickname: emailToNickname(email),
+        src: `https://api.dicebear.com/9.x/avataaars/svg?seed=${email}&size=256`,
+        alt: 'Maintainer avatar',
+        uri: '/profile?nickname=' + emailToNickname(email),
+    } as UserModel,
+    generateRandomUser('user', 1) as UserModel,
+    generateRandomUser('contributor', 2) as UserModel
     ]
+    const createdIds = await createUsers(users)
+    return createdIds.map((id, index) => ({
+        ...users[index],
+        _id: id,
+    }))
+
 }
 
 export const server = {
@@ -66,15 +78,21 @@ export const server = {
 
                 if (existingDemo) {
                     // Return existing users
+                    const users = await getUserByIds(existingDemo.users)
+                    // Convert ObjectId to string for serialization
+                    const serializedUsers = users.map(user => ({
+                        ...user,
+                        _id: user._id?.toString(),
+                    }))
                     return {
                         success: true,
-                        users: existingDemo.users,
+                        users: serializedUsers,
                     }
                 }
 
                 // Create new demo with three users
-                const users = createDemoUsers()
-                const created = await createDemo(email, users)
+                const users = await generateDemoUsers(email)
+                const created = await createDemo(email, users.map(user => user._id))
 
                 if (!created) {
                     return {
@@ -83,9 +101,15 @@ export const server = {
                     }
                 }
 
+                // Convert ObjectId to string for serialization
+                const serializedUsers = users.map(user => ({
+                    ...user,
+                    _id: user._id?.toString(),
+                }))
+
                 return {
                     success: true,
-                    users: users,
+                    users: serializedUsers,
                 }
             } catch (error) {
                 console.error('Error in demo start action:', error)

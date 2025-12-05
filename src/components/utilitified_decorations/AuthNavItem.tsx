@@ -99,7 +99,6 @@ const AuthNavItem: React.FC<Props> = ({ className }) => {
       const result = await startDemo(trimmedEmail)
 
       if (result.success && 'users' in result && result.users && Array.isArray(result.users)) {
-        console.log('result.users handleSuccess', result.users)
         // Show congratulations dialog with confetti
         handleSuccess(result.users, trimmedEmail)
       } else {
@@ -199,6 +198,7 @@ const AuthNavItem: React.FC<Props> = ({ className }) => {
             </DropdownMenuContent>
           </DropdownMenu>
           <MenuAvatar
+            key={`${demoUser.role}-${demoUser.nickname}`}
             src={demoUser.src}
             alt={demoUser.alt}
             uri={demoUser.uri}

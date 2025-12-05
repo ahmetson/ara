@@ -34,4 +34,21 @@ export async function createDemo(email: string, users: ObjectId[]): Promise<bool
     }
 }
 
+/**
+ * Update demo step
+ */
+export async function updateDemoStep(email: string, step: number): Promise<boolean> {
+    try {
+        const collection = await getCollection<DemoModel>('demo')
+        const result = await collection.updateOne(
+            { email },
+            { $set: { step } }
+        )
+        return result.modifiedCount > 0
+    } catch (error) {
+        console.error('Error updating demo step:', error)
+        return false
+    }
+}
+
 

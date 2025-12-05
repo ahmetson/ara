@@ -122,3 +122,21 @@ export async function getOrCreateUserByEmail(email: string): Promise<ObjectId> {
     }
 }
 
+/**
+ * Update user sunshines by incrementing the amount
+ */
+export async function updateUserSunshines(userId: string | ObjectId, amount: number): Promise<boolean> {
+    try {
+        const collection = await getCollection<UserModel>('users')
+        const objectId = typeof userId === 'string' ? new ObjectId(userId) : userId
+        const result = await collection.updateOne(
+            { _id: objectId },
+            { $inc: { sunshines: amount } }
+        )
+        return result.modifiedCount > 0
+    } catch (error) {
+        console.error('Error updating user sunshines:', error)
+        return false
+    }
+}
+

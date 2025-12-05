@@ -19,8 +19,6 @@ export const DEMO_COOKIE_NAMES = {
     role: 'demo-role',
 } as const
 
-export const demoProjectName = 'hyperpayment'
-
 /**
  * Predefined demo steps array
  * Each step is a tuple: [stepName: string, role: Roles]

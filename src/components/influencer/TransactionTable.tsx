@@ -1,5 +1,5 @@
 import React from 'react';
-import { type Transaction } from '@/types/influencer';
+import { type Transaction } from '@/types/transaction';
 import TransactionRow from './TransactionRow';
 import Pagination from './Pagination';
 
@@ -21,7 +21,7 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
       <div className="p-6">
         <h2 className="text-xl font-semibold text-gray-900 mb-1">Transactions</h2>
         <p className="text-gray-600 text-sm mb-6">Showing 5 of 42 transactions</p>
-        
+
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
@@ -33,7 +33,7 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
                 <th className="text-left py-3 px-4 font-medium text-gray-700">
                   <div className="flex items-center space-x-1">
                     <svg className="w-4 h-4 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                      <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                     <span>VP</span>
                   </div>
@@ -50,9 +50,9 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
             </tbody>
           </table>
         </div>
-        
+
         <div className="mt-6">
-          <Pagination 
+          <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={onPageChange}

@@ -1,10 +1,11 @@
-import { type Transaction, type User } from '../types/influencer';
+import { type Transaction } from '../types/transaction';
 import { type UserStarData } from '../components/galactic/Space';
+import { UserModel } from '@/scripts/user';
 
-export const mockUser: User = {
-  name: 'Ahmeton',
-  avatar: 'https://dummyimage.com/32x32/4A90E2/ffffff?text=A',
-  points: 230
+export const mockUser: UserModel = {
+  nickname: 'Ahmeton',
+  src: 'https://dummyimage.com/32x32/4A90E2/ffffff?text=A',
+  sunshines: 230
 };
 
 export const mockTransactions: Transaction[] = [

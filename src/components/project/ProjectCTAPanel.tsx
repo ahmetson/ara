@@ -71,7 +71,7 @@ const ProjectCTAPanel: React.FC = () => {
           <Button
             variant="primary"
             size="lg"
-            className="w-full"
+            className="w-full text-shadow-lg"
             onClick={() => {
               // Handle CTA click
               console.log('Show your star clicked');

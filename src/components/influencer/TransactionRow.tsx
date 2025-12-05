@@ -1,5 +1,5 @@
 import React from 'react';
-import { type Transaction } from '@/types/influencer';
+import { type Transaction } from '@/types/transaction';
 
 interface TransactionRowProps {
   transaction: Transaction;
@@ -9,7 +9,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({ transaction }) => {
   return (
     <tr className="border-b border-gray-100 hover:bg-gray-50">
       <td className="py-4 px-4 text-sm text-gray-900">{transaction.date}</td>
-      
+
       <td className="py-4 px-4">
         <div className="text-sm text-gray-600 italic">
           {transaction.comment === 'No comment' ? (
@@ -26,7 +26,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({ transaction }) => {
           )}
         </div>
       </td>
-      
+
       <td className="py-4 px-4">
         <div className="flex items-center space-x-2">
           <span className="text-sm text-gray-600">"{transaction.reply}"</span>
@@ -35,8 +35,8 @@ const TransactionRow: React.FC<TransactionRowProps> = ({ transaction }) => {
               <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
             </svg>
           </button>
-          <img 
-            src={transaction.user.avatar} 
+          <img
+            src={transaction.user.avatar}
             alt={transaction.user.name}
             className="w-6 h-6 rounded-full"
             referrerPolicy="no-referrer"
@@ -46,29 +46,29 @@ const TransactionRow: React.FC<TransactionRowProps> = ({ transaction }) => {
           </span>
         </div>
       </td>
-      
+
       <td className="py-4 px-4 text-sm font-medium text-gray-900">
         ${transaction.given.toLocaleString()}
       </td>
-      
+
       <td className="py-4 px-4">
         <span className="text-sm font-medium text-green-600">
           +{transaction.vp} (+2 bonus)
         </span>
       </td>
-      
+
       <td className="py-4 px-4">
         <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
           {transaction.issues}
         </span>
       </td>
-      
+
       <td className="py-4 px-4">
         <span className="text-sm text-blue-600 hover:underline cursor-pointer">
           {transaction.transactionId}
         </span>
       </td>
-      
+
       <td className="py-4 px-4">
         <div className="flex items-center space-x-1">
           <svg className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">

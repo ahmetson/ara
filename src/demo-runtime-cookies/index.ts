@@ -6,6 +6,7 @@ export interface DemoModel {
     email: string
     created: number
     users: ObjectId[]
+    step?: number
 }
 
 /**
@@ -19,6 +20,24 @@ export const DEMO_COOKIE_NAMES = {
 } as const
 
 export const demoProjectName = 'hyperpayment'
+
+/**
+ * Predefined demo steps array
+ * Each step is a tuple: [stepName: string, role: Roles]
+ * The step index in DemoModel references this array
+ */
+export const DemoSteps = [
+    ['obtain_sunshine', 'user'], // index 0 - default
+    ['create_issue', 'user'],
+    ['assign_contributor', 'maintainer'],
+    ['move_to_roadmap', 'maintainer'],
+    ['create_patch', 'maintainer'],
+    ['mark_version_complete', 'maintainer'],
+    ['test_completed', 'user'],
+    ['place_star_in_galaxy', 'user'],
+    ['place_star_in_galaxy', 'maintainer'],
+    ['place_star_in_galaxy', 'contributor'],
+] as const
 
 export const DEMO_EVENT_TYPES = {
     USER_CREATED: 'demo-user-created',

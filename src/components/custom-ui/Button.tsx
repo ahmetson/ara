@@ -21,15 +21,15 @@ interface ButtonProps {
 export const getAnimationColors = (variant: ButtonVariant): { colorFrom: string, colorTo: string } => {
   switch (variant) {
     case 'primary':
-      return { colorFrom: '#f43f5e', colorTo: '#0ea5e9' } // bg-rose-500, hover:bg-sky-600
+      return { colorFrom: '#4f46e5', colorTo: '#2563eb' } // indigo-600 to blue-600
     case 'secondary':
-      return { colorFrom: '#9ca3af', colorTo: '#5eead4' } // bg-gray-400, hover:bg-teal-300
+      return { colorFrom: '#64748b', colorTo: '#475569' } // slate-500 to slate-600 (subtle)
     case 'danger':
-      return { colorFrom: '#f97316', colorTo: '#8b5cf6' } // bg-orange-500, hover:bg-violet-600
+      return { colorFrom: '#dc2626', colorTo: '#b91c1c' } // red-600 to red-700
     case 'success':
-      return { colorFrom: '#22c55e', colorTo: '#4f46e5' } // bg-green-500, hover:bg-indigo-600
+      return { colorFrom: '#059669', colorTo: '#047857' } // emerald-600 to emerald-700
     default:
-      return { colorFrom: '#f0fdfa', colorTo: '#d1d5db' } // bg-teal-50, hover:bg-gray-200
+      return { colorFrom: '#94a3b8', colorTo: '#cbd5e1' } // slate-400 to slate-300 (very subtle)
   }
 }
 
@@ -51,17 +51,17 @@ const Button: React.FC<ButtonProps> = ({
 }) => {
 
   const getDisabledButtonStyles = () => {
-    const defaultStyle = 'border! text-white! border-gray-300! bg-blue-500! hover:bg-gray-200! dark:border-gray-700! dark:bg-blue-600! dark:hover:bg-gray-700!'
+    const defaultStyle = 'border! text-slate-400! border-slate-300! bg-slate-200! hover:bg-slate-200! dark:border-slate-600! dark:bg-slate-700! dark:text-slate-500! dark:hover:bg-slate-700!'
 
     switch (variant) {
       case 'primary':
-        return 'text-white! bg-sky-400! text-gray-100! dark:bg-sky-400! dark:text-slate-100! dark:hover:bg-sky-700!'
+        return 'text-white! bg-indigo-400! opacity-60! cursor-not-allowed! dark:bg-indigo-600! dark:opacity-60!'
       case 'secondary':
-        return 'text-gray-100! bg-gray-500! dark:bg-gray-700! dark:text-slate-100! dark:hover:bg-teal-700!'
+        return 'text-slate-300! bg-slate-400! opacity-60! cursor-not-allowed! dark:bg-slate-600! dark:text-slate-400! dark:opacity-60!'
       case 'danger':
-        return 'text-gray-100! bg-orange-500! dark:bg-orange-700! dark:text-slate-100! dark:hover:bg-violet-700!'
+        return 'text-white! bg-red-400! opacity-60! cursor-not-allowed! dark:bg-red-600! dark:opacity-60!'
       case 'success':
-        return 'text-gray-100! bg-green-500! dark:bg-green-700! dark:text-slate-100! dark:hover:bg-indigo-700!'
+        return 'text-white! bg-emerald-400! opacity-60! cursor-not-allowed! dark:bg-emerald-600! dark:opacity-60!'
       default:
         return defaultStyle
     }
@@ -69,17 +69,21 @@ const Button: React.FC<ButtonProps> = ({
 
 
   const getVariantStyles = () => {
-    const defaultStyle = 'border text-white border-gray-300 bg-blue-500 hover:bg-gray-200 dark:border-gray-700 dark:bg-blue-600 dark:text-white dark:hover:bg-gray-700'
+    const defaultStyle = 'border text-slate-700 border-slate-300 bg-slate-200 hover:bg-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600'
 
     switch (variant) {
       case 'primary':
-        return 'bg-rose-500 text-white hover:bg-sky-500 dark:bg-rose-700 dark:text-slate-300/80 text-shadow-sm text-shadow-gray-900/50 dark:hover:bg-sky-700'
+        // Professional blue with high contrast white text
+        return 'bg-indigo-600 text-white font-semibold hover:bg-indigo-700 dark:bg-indigo-500 dark:text-white dark:hover:bg-indigo-600 shadow-sm hover:shadow-md transition-all'
       case 'secondary':
-        return 'bg-gray-500 text-white hover:bg-teal-500 dark:bg-gray-700 dark:text-slate-300/80 text-shadow-sm text-shadow-gray-900/50 dark:hover:bg-teal-700'
+        // Subtle gray, less attention-grabbing
+        return 'bg-slate-500 text-slate-100 hover:bg-slate-600 dark:bg-slate-600 dark:text-slate-200 dark:hover:bg-slate-500'
       case 'danger':
-        return 'bg-orange-500 text-white hover:bg-violet-500 dark:bg-orange-700 dark:text-slate-300/80 text-shadow-sm text-shadow-gray-900/50 dark:hover:bg-violet-700'
+        // Attention-grabbing red with bright white text
+        return 'bg-red-600 text-white font-semibold hover:bg-red-700 dark:bg-red-500 dark:text-white dark:hover:bg-red-600 shadow-sm hover:shadow-md transition-all'
       case 'success':
-        return 'bg-green-500 text-white hover:bg-indigo-500 dark:bg-green-700 dark:text-slate-300/80 text-shadow-sm text-shadow-gray-900/50 dark:hover:bg-indigo-700'
+        // Vibrant green with white text for attention
+        return 'bg-emerald-600 text-white font-semibold hover:bg-emerald-700 dark:bg-emerald-500 dark:text-white dark:hover:bg-emerald-600 shadow-sm hover:shadow-md transition-all'
       default:
         return defaultStyle
     }
@@ -89,23 +93,23 @@ const Button: React.FC<ButtonProps> = ({
     if (!outline) {
       return ''
     }
-    let outlineStyle = 'bg-transparent! text-gray-700! dark:text-gray-300! hover:text-stone-700 dark:hover:text-gray-300 border-1 border-gray-300! dark:border-teal-700! '
+    let outlineStyle = 'bg-transparent! text-slate-600! dark:text-slate-300! hover:text-slate-700 dark:hover:text-slate-200 border-1 border-slate-300! dark:border-slate-600! '
 
     switch (variant) {
       case 'primary':
-        outlineStyle += 'border-rose-300 hover:border-sky-600! hover:bg-sky-100/10!';
+        outlineStyle += 'border-indigo-500! text-indigo-600! hover:border-indigo-600! hover:bg-indigo-50! dark:border-indigo-400! dark:text-indigo-400! dark:hover:bg-indigo-950/20!';
         break;
       case 'secondary':
-        outlineStyle += 'border-gray-300 hover:border-teal-500! hover:bg-teal-100/10!';
+        outlineStyle += 'border-slate-400! text-slate-600! hover:border-slate-500! hover:bg-slate-50! dark:border-slate-500! dark:text-slate-400! dark:hover:bg-slate-800/30!';
         break;
       case 'danger':
-        outlineStyle += 'border-orange-300 hover:border-violet-600! hover:bg-violet-100/10!';
+        outlineStyle += 'border-red-500! text-red-600! hover:border-red-600! hover:bg-red-50! dark:border-red-400! dark:text-red-400! dark:hover:bg-red-950/20!';
         break;
       case 'success':
-        outlineStyle += 'border-green-300 hover:border-indigo-600! hover:bg-indigo-100/10!';
+        outlineStyle += 'border-emerald-500! text-emerald-600! hover:border-emerald-600! hover:bg-emerald-50! dark:border-emerald-400! dark:text-emerald-400! dark:hover:bg-emerald-950/20!';
         break;
       default:
-        outlineStyle += 'border-gray-300 hover:border-gray-600 hover:bg-teal-100/10!';
+        outlineStyle += 'border-slate-300! text-slate-500! hover:border-slate-400! hover:bg-slate-50! dark:border-slate-600! dark:text-slate-400! dark:hover:bg-slate-800/30!';
         break;
     }
 

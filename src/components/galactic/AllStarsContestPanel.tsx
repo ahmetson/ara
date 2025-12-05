@@ -13,7 +13,6 @@ interface AllStarsLeaderboardPanelProps {
     contestFromDate?: Date;
     contestToDate?: Date;
     contestDescription?: string;
-    leaderboardPosition?: number;
     winProbability?: number; // Probability percentage (0-100)
 }
 
@@ -22,7 +21,6 @@ const AllStarsLeaderboardPanel: React.FC<AllStarsLeaderboardPanelProps> = ({
     contestFromDate,
     contestToDate,
     contestDescription,
-    leaderboardPosition = 5,
     winProbability = 1.5, // Default probability percentage
 }) => {
     const [currentTime, setCurrentTime] = useState(new Date());

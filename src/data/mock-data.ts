@@ -217,6 +217,7 @@ export interface UniverseStats {
   totalGalaxies: number;
   totalStars: number;
   totalUsers: number;
+  totalSunshines?: number;
 }
 
 export interface GalaxyData {
@@ -249,6 +250,7 @@ export const mockUniverseStats: UniverseStats = {
   totalGalaxies: 1247,
   totalStars: 45678.5,
   totalUsers: 8923,
+  totalSunshines: 16444260, // Example: sum of all sunshines across all galaxies
 };
 
 export const mockContestData: ContestData = {

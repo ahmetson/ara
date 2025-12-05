@@ -3,7 +3,7 @@ import GalaxyLayout from "@/layouts/GalaxyLayout.astro";
 import { MenuName } from "@/components/navbar/WorkNavbar.astro";
 
 import UniverseHero from "@/components/galactic/UniverseHero";
-import AllStarsLeaderboardPanel from "@/components/galactic/AllStarsLeaderboardPanel";
+import AllStarsContestPanel from "@/components/galactic/AllStarsContestPanel";
 import AllStarsLeaderboardPanels from "@/components/galactic/AllStarsLeaderboardPanels";
 import UniverseResearchPanel from "@/components/galactic/UniverseResearchPanel";
 import GalaxyAutoZoom from "@/components/galactic/GalaxyAutoZoom";
@@ -78,17 +78,17 @@ const allGalaxies = mockTopGalaxies.map((galaxy, index) => ({
     totalGalaxies={mockUniverseStats.totalGalaxies}
     totalStars={mockUniverseStats.totalStars}
     totalUsers={mockUniverseStats.totalUsers}
+    totalSunshines={mockUniverseStats.totalSunshines}
   />
   {shouldShowDemoCta && <DemoCtaPanel slot="center" client:only="react" />}
 
-  <AllStarsLeaderboardPanel
+  <AllStarsContestPanel
     slot="right"
     client:only="react"
     prizePool={mockContestData.prizePool}
     contestFromDate={mockContestData.fromDate}
     contestToDate={mockContestData.toDate}
     contestDescription={mockContestData.description}
-    leaderboardPosition={5}
   />
 
   <AllStarsLeaderboardPanels

@@ -2,18 +2,23 @@ import React from 'react';
 import BlurText from '@/components/BlurText';
 import { getIcon } from '@/components/icon';
 import NumberFlow from '@number-flow/react';
+import Tooltip from '@/components/custom-ui/Tooltip';
 
 interface UniverseHeroProps {
     totalGalaxies: number;
     totalStars: number;
     totalUsers: number;
+    totalSunshines?: number;
 }
 
 const UniverseHero: React.FC<UniverseHeroProps> = ({
     totalGalaxies,
     totalStars,
     totalUsers,
+    totalSunshines = 0,
 }) => {
+    // Calculate funds amount from sunshines
+    const fundsAmount = totalSunshines / 1.80;
     return (
         <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-8 px-4">
             {/* Ara Title with Blur Text Animation */}
@@ -30,44 +35,78 @@ const UniverseHero: React.FC<UniverseHeroProps> = ({
 
             {/* Universe Stats */}
             <div className="flex items-center justify-center gap-8 flex-wrap">
-                <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 dark:bg-slate-900/10 backdrop-blur-sm border border-slate-200/20 dark:border-slate-700/20">
-                    {getIcon({ iconType: 'project', className: 'w-5 h-5 text-blue-500' })}
-                    <div className="flex flex-col items-start">
-                        <span className="text-xs text-slate-600 dark:text-slate-400">Galaxies</span>
-                        <NumberFlow
-                            value={totalGalaxies}
-                            locales="en-US"
-                            format={{ style: 'decimal', maximumFractionDigits: 0 }}
-                            className="text-lg font-semibold text-slate-800 dark:text-slate-200"
-                        />
+                <Tooltip content="open-source projects total amount">
+                    <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 dark:bg-slate-900/10 backdrop-blur-sm border border-slate-200/20 dark:border-slate-700/20 cursor-help">
+                        {getIcon({ iconType: 'project', className: 'w-5 h-5 text-blue-500' })}
+                        <div className="flex flex-col items-start">
+                            <span className="text-xs text-slate-600 dark:text-slate-400">Galaxies</span>
+                            <NumberFlow
+                                value={totalGalaxies}
+                                locales="en-US"
+                                format={{ style: 'decimal', maximumFractionDigits: 0 }}
+                                className="text-lg font-semibold text-slate-800 dark:text-slate-200"
+                            />
+                        </div>
                     </div>
-                </div>
+                </Tooltip>
 
-                <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 dark:bg-slate-900/10 backdrop-blur-sm border border-slate-200/20 dark:border-slate-700/20">
-                    {getIcon({ iconType: 'star', className: 'w-5 h-5 text-yellow-500' })}
-                    <div className="flex flex-col items-start">
-                        <span className="text-xs text-slate-600 dark:text-slate-400">Stars</span>
-                        <NumberFlow
-                            value={totalStars}
-                            locales="en-US"
-                            format={{ style: 'decimal', maximumFractionDigits: 2 }}
-                            className="text-lg font-semibold text-slate-800 dark:text-slate-200"
-                        />
+                <Tooltip content="collaboration rewards">
+                    <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 dark:bg-slate-900/10 backdrop-blur-sm border border-slate-200/20 dark:border-slate-700/20 cursor-help">
+                        {getIcon({ iconType: 'star', className: 'w-5 h-5 text-yellow-500' })}
+                        <div className="flex flex-col items-start">
+                            <span className="text-xs text-slate-600 dark:text-slate-400">Stars</span>
+                            <NumberFlow
+                                value={totalStars}
+                                locales="en-US"
+                                format={{ style: 'decimal', maximumFractionDigits: 2 }}
+                                className="text-lg font-semibold text-slate-800 dark:text-slate-200"
+                            />
+                        </div>
                     </div>
-                </div>
+                </Tooltip>
 
-                <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 dark:bg-slate-900/10 backdrop-blur-sm border border-slate-200/20 dark:border-slate-700/20">
-                    {getIcon({ iconType: 'user', className: 'w-5 h-5 text-blue-500' })}
-                    <div className="flex flex-col items-start">
-                        <span className="text-xs text-slate-600 dark:text-slate-400">Users</span>
-                        <NumberFlow
-                            value={totalUsers}
-                            locales="en-US"
-                            format={{ style: 'decimal', maximumFractionDigits: 0 }}
-                            className="text-lg font-semibold text-slate-800 dark:text-slate-200"
-                        />
+                <Tooltip content="demo users (who created 3 demo)">
+                    <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 dark:bg-slate-900/10 backdrop-blur-sm border border-slate-200/20 dark:border-slate-700/20 cursor-help">
+                        {getIcon({ iconType: 'user', className: 'w-5 h-5 text-blue-500' })}
+                        <div className="flex flex-col items-start">
+                            <span className="text-xs text-slate-600 dark:text-slate-400">Users</span>
+                            <NumberFlow
+                                value={totalUsers}
+                                locales="en-US"
+                                format={{ style: 'decimal', maximumFractionDigits: 0 }}
+                                className="text-lg font-semibold text-slate-800 dark:text-slate-200"
+                            />
+                        </div>
                     </div>
-                </div>
+                </Tooltip>
+
+                <Tooltip
+                    content={
+                        <div className="text-sm">
+                            Total amount of funds (about{' '}
+                            <NumberFlow
+                                value={fundsAmount}
+                                locales="en-US"
+                                format={{ style: 'currency', currency: 'USD', maximumFractionDigits: 2 }}
+                                className="inline font-semibold"
+                            />
+                            )
+                        </div>
+                    }
+                >
+                    <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 dark:bg-slate-900/10 backdrop-blur-sm border border-slate-200/20 dark:border-slate-700/20 cursor-help">
+                        {getIcon({ iconType: 'sunshine', className: 'w-5 h-5 text-yellow-400' })}
+                        <div className="flex flex-col items-start">
+                            <span className="text-xs text-slate-600 dark:text-slate-400">Sunshines</span>
+                            <NumberFlow
+                                value={totalSunshines}
+                                locales="en-US"
+                                format={{ style: 'decimal', maximumFractionDigits: 0 }}
+                                className="text-lg font-semibold text-slate-800 dark:text-slate-200"
+                            />
+                        </div>
+                    </div>
+                </Tooltip>
             </div>
 
             <div className="w-full max-w-4xl">

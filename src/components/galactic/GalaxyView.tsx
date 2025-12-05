@@ -3,10 +3,10 @@ import { getIcon } from '@/components/icon';
 import NumberFlow from '@number-flow/react';
 import Tooltip from '@/components/custom-ui/Tooltip';
 import Link from '@/components/custom-ui/Link';
-import { GalaxyData } from '@/data/mock-data';
+import { GalaxyModel } from '@/scripts/galaxy';
 
 interface GalaxyViewProps {
-    galaxy: GalaxyData;
+    galaxy: GalaxyModel;
 }
 
 const GalaxyView: React.FC<GalaxyViewProps> = ({ galaxy }) => {

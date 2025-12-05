@@ -4,7 +4,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend'
 import UserStar from './UserStar'
 import ProjectGalaxy from './ProjectGalaxy'
 import { cn } from '@/lib/utils'
-import { GalaxyData } from '@/data/mock-data'
+import { GalaxyModel } from '@/scripts/galaxy'
 
 export interface UserStarData {
   x: number
@@ -35,7 +35,7 @@ interface SpaceProps {
     y: number
     projectName: string
     projectId?: string
-    galaxyData?: GalaxyData
+    galaxyData?: GalaxyModel
     tags?: string[]
     leaderboardPosition?: number
   }>

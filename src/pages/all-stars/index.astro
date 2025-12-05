@@ -14,15 +14,20 @@ import { isCookieExist } from "@/scripts/demo";
 import {
   mockUniverseStats,
   mockContestData,
-  mockTopGalaxies,
   mockTopLibraries,
 } from "@/data/mock-data";
+import { getAllGalaxies, getGalaxyById } from "@/scripts/galaxy";
+import { setupDemoGalaxies } from "@/scripts/setup-demo";
+
+// Setup demo galaxies (creates first 5 if they don't exist)
+await setupDemoGalaxies();
 
 // Read galaxy query parameter
 const galaxyId = Astro.url.searchParams.get("galaxy");
-const selectedGalaxy = galaxyId
-  ? mockTopGalaxies.find((g) => g.id === galaxyId)
-  : null;
+const selectedGalaxy = galaxyId ? await getGalaxyById(galaxyId) : null;
+
+// Get all galaxies from database
+const allGalaxiesData = await getAllGalaxies();
 
 // Get current user's starsunshines (for demo, using 0 to show locked state)
 const currentStarsunshines = 0;
@@ -31,15 +36,9 @@ const currentStarsunshines = 0;
 const demoCookiesExist = await isCookieExist(Astro.cookies);
 
 const shouldShowDemoCta = !demoCookiesExist;
-console.log(
-  "/page/all-stars: is demo cookies exist? ",
-  demoCookiesExist,
-  "should show demo cta? ",
-  shouldShowDemoCta,
-);
 
 // Prepare all galaxies for display in the virtual screen
-const allGalaxies = mockTopGalaxies.map((galaxy, index) => ({
+const allGalaxies = allGalaxiesData.map((galaxy, index) => ({
   x: galaxy.x,
   y: galaxy.y,
   projectName: galaxy.name,
@@ -94,7 +93,7 @@ const allGalaxies = mockTopGalaxies.map((galaxy, index) => ({
   <AllStarsLeaderboardPanels
     slot="left"
     client:only="react"
-    topGalaxies={mockTopGalaxies}
+    topGalaxies={allGalaxiesData}
     topLibraries={mockTopLibraries}
   />
 

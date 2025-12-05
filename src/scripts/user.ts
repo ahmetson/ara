@@ -1,6 +1,11 @@
+import { ObjectId } from 'mongodb'
+import { getCollection } from './db'
+
 export type Roles = 'user' | 'maintainer' | 'contributor'
 
 export interface UserModel {
+    _id?: any
+    email?: string
     src?: string
     alt?: string
     uri?: string
@@ -9,5 +14,58 @@ export interface UserModel {
     stars?: number
     role?: Roles
     balance?: number
+}
+
+/**
+ * Get user by email
+ */
+export async function getUserByEmail(email: string): Promise<UserModel | null> {
+    try {
+        const collection = await getCollection<UserModel>('users')
+        const result = await collection.findOne({ email })
+        return result
+    } catch (error) {
+        console.error('Error getting user by email:', error)
+        return null
+    }
+}
+
+/**
+ * Create a new user
+ */
+export async function createUser(user: UserModel): Promise<ObjectId> {
+    try {
+        const collection = await getCollection<UserModel>('users')
+        const result = await collection.insertOne(user as any)
+        return result.insertedId
+    } catch (error) {
+        console.error('Error creating user:', error)
+        throw error
+    }
+}
+
+/**
+ * Get or create user by email (returns ObjectId)
+ */
+export async function getOrCreateUserByEmail(email: string): Promise<ObjectId> {
+    try {
+        // Try to get existing user
+        const existingUser = await getUserByEmail(email)
+        if (existingUser && existingUser._id) {
+            return existingUser._id
+        }
+
+        // Create new user if doesn't exist
+        const newUser: UserModel = {
+            email,
+            role: 'maintainer',
+            nickname: email.split('@')[0],
+        }
+        const insertedId = await createUser(newUser)
+        return insertedId
+    } catch (error) {
+        console.error('Error getting or creating user by email:', error)
+        throw error
+    }
 }
 

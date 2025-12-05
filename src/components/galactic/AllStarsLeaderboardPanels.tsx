@@ -5,12 +5,13 @@ import { getIcon } from '@/components/icon';
 import Link from '@/components/custom-ui/Link';
 import Tooltip from '@/components/custom-ui/Tooltip';
 import NumberFlow from '@number-flow/react';
-import { GalaxyData, LibraryData } from '@/data/mock-data';
+import { LibraryData } from '@/data/mock-data';
+import { GalaxyModel } from '@/scripts/galaxy';
 import { BorderSize } from '@/types/eventTypes';
 import { cn } from '@/lib/utils';
 
 interface AllStarsLeaderboardPanelsProps {
-    topGalaxies?: GalaxyData[];
+    topGalaxies?: GalaxyModel[];
     topLibraries?: LibraryData[];
 }
 
@@ -179,7 +180,7 @@ const AllStarsLeaderboardPanels: React.FC<AllStarsLeaderboardPanelsProps> = ({
             >
                 <Accordion
                     value={expandedPanel === 'biggest' ? 'biggest' : undefined}
-                    onValueChange={(value) => setExpandedPanel(value === 'biggest' ? 'biggest' : undefined)}
+                    onValueChange={(value) => setExpandedPanel(value === 'biggest' ? 'biggest' as string : null)}
                     type='single'
                     collapsible={true}
 
@@ -210,7 +211,7 @@ const AllStarsLeaderboardPanels: React.FC<AllStarsLeaderboardPanelsProps> = ({
             >
                 <Accordion
                     value={expandedPanel === 'brightest' ? 'brightest' : undefined}
-                    onValueChange={(value) => setExpandedPanel(value === 'brightest' ? 'brightest' : undefined)}
+                    onValueChange={(value) => setExpandedPanel(value === 'brightest' ? 'brightest' as string : null)}
                     type='single'
                     collapsible={true}
                 >
@@ -240,7 +241,7 @@ const AllStarsLeaderboardPanels: React.FC<AllStarsLeaderboardPanelsProps> = ({
             >
                 <Accordion
                     value={expandedPanel === 'libraries' ? 'libraries' : undefined}
-                    onValueChange={(value) => setExpandedPanel(value === 'libraries' ? 'libraries' : undefined)}
+                    onValueChange={(value) => setExpandedPanel(value === 'libraries' ? 'libraries' as string : null)}
                     type='single'
                     collapsible={true}
                 >

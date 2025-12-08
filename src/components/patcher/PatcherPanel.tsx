@@ -1,11 +1,12 @@
 'use client';
 
 import React, { useState, useEffect, useLayoutEffect, useCallback, useRef } from 'react';
+import { motion } from 'motion/react';
 import { HoleBackground } from '@/components/animate-ui/components/backgrounds/hole';
 import { getIcon } from '@/components/icon';
 import { actions } from 'astro:actions';
 import { getDemo } from '@/demo-runtime-cookies/client-side';
-import { ISSUE_EVENT_TYPES, IssueTabKey } from '@/types/issue';
+import { ISSUE_EVENT_TYPES, ISSUE_TAB_TITLES, IssueTabKey, isPatchable } from '@/types/issue';
 import type { Issue } from '@/types/issue';
 import { cn } from '@/lib/utils';
 import Button from '@/components/custom-ui/Button';
@@ -38,7 +39,6 @@ const PatcherContainer: React.FC<PatcherContainerProps> = () => {
         const galaxy = currentGalaxyId || galaxyIdRef.current;
 
         if (!tab || !galaxy) {
-            console.warn(`fetchPatchedIssues: missing tabType (${tab}) or galaxyId (${galaxy})`);
             return;
         }
 
@@ -47,7 +47,8 @@ const PatcherContainer: React.FC<PatcherContainerProps> = () => {
             const patched = allIssues.filter(
                 issue => issue.listHistory?.includes('patcher')
             ) as PatchedIssue[];
-            setIsVisible(patched.length > 0);
+            const hasPatchableIssues = allIssues.some(issue => isPatchable(issue));
+            setIsVisible(patched.length > 0 || hasPatchableIssues);
             setPatchedIssues(patched);
         } catch (error) {
             console.error('Error fetching patched issues:', error);
@@ -114,7 +115,6 @@ const PatcherContainer: React.FC<PatcherContainerProps> = () => {
 
     // Handle drop
     const handleDrop = useCallback(async (item: { id: string; title: string }) => {
-        console.log('handleDrop>>>>', item);
         const demo = getDemo();
         if (!demo.email) {
             console.error('No email found in demo');
@@ -137,8 +137,6 @@ const PatcherContainer: React.FC<PatcherContainerProps> = () => {
                 email: demo.email,
             });
 
-            console.error(`patch result ${result.data?.success} for issue ${issue.title} on tab ${activeTabType}`, result);
-
             if (result.data?.success) {
                 // Add to local state
                 const patchedIssue: PatchedIssue = {
@@ -153,7 +151,6 @@ const PatcherContainer: React.FC<PatcherContainerProps> = () => {
                     return [...prev, patchedIssue];
                 });
 
-                console.log(`Issue updated as its moved to the Issue Update: ${issue.title} on tab ${activeTabType}`);
                 // Dispatch issue-update event
                 window.dispatchEvent(new CustomEvent(ISSUE_EVENT_TYPES.ISSUE_UPDATE));
             }
@@ -195,10 +192,6 @@ const PatcherContainer: React.FC<PatcherContainerProps> = () => {
         }
     }, []);
 
-    if (!isVisible) {
-        return null;
-    }
-
     const truncateTitle = (title: string, maxLength: number = 58) => {
         if (title.length <= maxLength) return title;
         return title.substring(0, maxLength) + '...';
@@ -206,22 +199,28 @@ const PatcherContainer: React.FC<PatcherContainerProps> = () => {
 
 
     return (
-        <div
+        <motion.div
             className={cn(
                 'fixed right-4 top-1/2 -translate-y-1/2 z-20 w-80',
-                'pointer-events-auto'
+                'pointer-events-auto',
+                isVisible ? 'visible' : 'invisible'
             )}
         >
             <div className="relative h-full min-h-[400px]">
                 <HoleBackground className="w-full h-[400px]">
                     {/* Floating "Patcher" label above the hole */}
-                    <div className="absolute top-16 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2">
-                        <h2 className="text-2xl font-semibold text-slate-700 dark:text-slate-200 shadow-2xl">
-                            Patcher
+                    <div className="absolute top-16 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-2">
+                        <h2 className="w-[300px] text-center text-2xl font-semibold text-slate-700 dark:text-slate-200 shadow-2xl">
+                            {activeTabType ? ISSUE_TAB_TITLES[activeTabType] : 'Issues'}
                         </h2>
-                        <Tooltip content="Issues with contributors and maintainers can be converted into patches here.">
-                            {getIcon({ iconType: 'info', className: 'w-6 h-6 text-slate-600 dark:text-slate-300', fill: 'none' })}
-                        </Tooltip>
+                        <div className="flex items-center gap-2">
+                            <h2 className="text-xl font-semibold text-slate-700 dark:text-slate-200 shadow-2xl">
+                                Patcher
+                            </h2>
+                            <Tooltip content="Issues with contributors and maintainers can be converted into patches here.">
+                                {getIcon({ iconType: 'info', className: 'w-6 h-6 text-slate-600 dark:text-slate-300', fill: 'none' })}
+                            </Tooltip>
+                        </div>
                     </div>
                     <div className="absolute top-30 left-1/2 -translate-x-1/2 z-30 flex items-center justify-center w-36 h-48 rounded-full shadow-lg overflow-hidden">
                         <DropTarget
@@ -265,7 +264,7 @@ const PatcherContainer: React.FC<PatcherContainerProps> = () => {
                     </div>
                 </HoleBackground>
             </div>
-        </div>
+        </motion.div>
     );
 };
 

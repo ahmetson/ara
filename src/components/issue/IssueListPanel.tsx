@@ -3,11 +3,10 @@ import FilterableList from '@/components/list/FilterableList'
 import IssueLink from '@/components/issue/IssueLink'
 import BasePanel from '@/components/panel/Panel'
 import type { Issue } from '@/types/issue'
-import { IssueTag, ISSUE_EVENT_TYPES, IssueTabKey, ISSUE_TAB_TITLES } from '@/types/issue'
+import { IssueTag, ISSUE_EVENT_TYPES, IssueTabKey, ISSUE_TAB_TITLES, isPatchable } from '@/types/issue'
 import DraggableIssueLink from './DraggableIssueLink'
 import { FilterOption } from '@/components/list/FilterToggle'
 import { getIcon } from '../icon'
-import { actions } from 'astro:actions'
 import type { ActionProps } from '@/types/eventTypes'
 import { getIssues } from './client-side'
 
@@ -226,11 +225,10 @@ const IssueListPanel: React.FC<Props> = ({ tabType, draggable = false, filterabl
 
   const decoratedIssues = useMemo(() => {
     return issues.map(issue => {
-      const isPatchable = Boolean(issue.contributor && issue.maintainer);
       return {
         ...issue,
         draggable: draggable,
-        patchable: isPatchable,
+        patchable: isPatchable(issue),
       };
     });
   }, [draggable, issues]);

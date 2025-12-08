@@ -66,3 +66,10 @@ export const ISSUE_EVENT_TYPES = {
     ISSUES_TAB_CHANGED: 'patchable-tab-changed',
 } as const
 
+/**
+ * Check if an issue is patchable (has both contributor and maintainer)
+ */
+export function isPatchable(issue: Issue): boolean {
+    return Boolean(issue.contributor && issue.maintainer);
+}
+

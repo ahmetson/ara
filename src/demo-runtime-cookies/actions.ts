@@ -307,6 +307,8 @@ export const server = {
                         description: issue.description,
                         tags: issue.tags,
                         maintainer: issue.maintainer?.toString() || '',
+                        author: issue.author?.toString() || '',
+                        contributor: issue.contributor?.toString() || '',
                         stats: issue.stats ? Object.entries(issue.stats).reduce((acc, [key, stat]) => {
                             if (stat) {
                                 acc[key as IssueStatType] = {

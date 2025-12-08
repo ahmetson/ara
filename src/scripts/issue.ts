@@ -181,15 +181,21 @@ export async function createIssue(issue: Issue): Promise<boolean> {
 }
 
 /**
- * Get shining issues (issues with sunshines > 0)
+ * Get shining issues (issues with sunshines > 0 and no tab keys in listHistory)
  */
 export async function getShiningIssues(galaxyId: string | ObjectId): Promise<Issue[]> {
     try {
         const collection = await getCollection<IssueModel>('issues');
         const objectId = typeof galaxyId === 'string' ? new ObjectId(galaxyId) : galaxyId;
+        const tabKeys = ['interesting', 'boring', 'closed'];
         const result = await collection.find({
             galaxy: objectId,
-            sunshines: { $gt: 0 }
+            sunshines: { $gt: 0 },
+            $or: [
+                { listHistory: { $exists: false } },
+                { listHistory: { $size: 0 } },
+                { listHistory: { $nin: tabKeys } }
+            ]
         }).toArray();
         return result.map(issueModelToIssue).filter((i): i is Issue => i !== null);
     } catch (error) {
@@ -199,15 +205,21 @@ export async function getShiningIssues(galaxyId: string | ObjectId): Promise<Iss
 }
 
 /**
- * Get public backlog issues (issues with sunshines === 0)
+ * Get public backlog issues (issues with sunshines === 0 and empty listHistory)
  */
 export async function getPublicBacklogIssues(galaxyId: string | ObjectId): Promise<Issue[]> {
     try {
         const collection = await getCollection<IssueModel>('issues');
         const objectId = typeof galaxyId === 'string' ? new ObjectId(galaxyId) : galaxyId;
+        const tabKeys = ['interesting', 'boring', 'closed'];
         const result = await collection.find({
             galaxy: objectId,
-            sunshines: 0
+            sunshines: 0,
+            $or: [
+                { listHistory: { $exists: false } },
+                { listHistory: { $size: 0 } },
+                { listHistory: { $nin: tabKeys } }
+            ]
         }).toArray();
         return result.map(issueModelToIssue).filter((i): i is Issue => i !== null);
     } catch (error) {

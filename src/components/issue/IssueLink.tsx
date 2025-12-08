@@ -10,14 +10,23 @@ import MenuAvatar from '../MenuAvatar'
 import TimeAgo from 'timeago-react';
 import { ActionProps } from '@/types/eventTypes'
 import PanelAction from '../panel/PanelAction'
-import ProfileRating from '../rating/ProfileRating'
 import { actions } from 'astro:actions'
 import type { User } from '@/types/user'
 import { Spinner } from '@/components/ui/shadcn-io/spinner'
+import SunshinesPopover from './SunshinesPopover'
+import { getDemo } from '@/demo-runtime-cookies/client-side'
 
-const IssueLinkPanel4: React.FC<Issue & { actions?: ActionProps[] }> = (issue) => {
+interface IssueLinkProps extends Issue {
+  actions?: ActionProps[];
+  draggable?: boolean;
+}
+
+const IssueLinkPanel4: React.FC<IssueLinkProps> = (issue) => {
   const [authorUser, setAuthorUser] = useState<User | null>(null);
   const [isLoadingAuthor, setIsLoadingAuthor] = useState(false);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [availableSunshines, setAvailableSunshines] = useState(0);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   // Determine if issue is shining (has sunshines > 0)
   const isShining = issue.sunshines > 0;
@@ -46,6 +55,71 @@ const IssueLinkPanel4: React.FC<Issue & { actions?: ActionProps[] }> = (issue) =
         });
     }
   }, [issue.author]);
+
+  // Fetch current user and available sunshines (for non-draggable mode)
+  useEffect(() => {
+    if (!issue.draggable) {
+      const demo = getDemo();
+      if (demo.email && demo.users && demo.role) {
+        const user = demo.users.find(u => u.role === demo.role) || demo.users[0];
+        if (user && user._id) {
+          actions.getUserById({ userId: user._id.toString() })
+            .then((result) => {
+              if (result.data?.success && result.data.data) {
+                setCurrentUser(result.data.data);
+                setAvailableSunshines(result.data.data.sunshines || 0);
+              }
+            })
+            .catch((error) => {
+              console.error('Error fetching current user:', error);
+            });
+        }
+      }
+    }
+  }, [issue.draggable]);
+
+  // Handle sunshines update
+  const handleSunshinesUpdate = async (newSunshines: number) => {
+    if (!currentUser || !issue._id || !issue.galaxy) return;
+
+    const sunshinesToAdd = newSunshines - issue.sunshines;
+    if (sunshinesToAdd <= 0) return;
+
+    setIsUpdating(true);
+    try {
+      const demo = getDemo();
+      if (!demo.email) {
+        alert('Please log in to add sunshines');
+        return;
+      }
+
+      const result = await actions.updateIssueSunshines({
+        issueId: issue._id,
+        userId: currentUser._id!.toString(),
+        email: demo.email,
+        sunshinesToAdd,
+      });
+
+      if (result.data?.success) {
+        // Refresh the issues list
+        window.dispatchEvent(new CustomEvent('issue-created'));
+        // Also update available sunshines
+        if (currentUser._id) {
+          const updatedUser = await actions.getUserById({ userId: currentUser._id.toString() });
+          if (updatedUser.data?.success && updatedUser.data.data) {
+            setAvailableSunshines(updatedUser.data.data.sunshines || 0);
+          }
+        }
+      } else {
+        alert(result.data?.error || 'Failed to update sunshines');
+      }
+    } catch (error) {
+      console.error('Error updating sunshines:', error);
+      alert('An error occurred while updating sunshines');
+    } finally {
+      setIsUpdating(false);
+    }
+  };
 
   return (
     <div className='flex flex-row gap-1 items-start w-full'>
@@ -111,16 +185,41 @@ const IssueLinkPanel4: React.FC<Issue & { actions?: ActionProps[] }> = (issue) =
             <div className="flex items-center gap-2">
               {issue.actions && <PanelAction className='' actions={issue.actions} />}
             </div>
-            {/* Display sunshines */}
+            {/* Display sunshines - clickable when not draggable */}
             {issue.sunshines >= 0 && (
-              <PanelStat
-                triggerClassName='text-sm'
-                iconType="sunshine"
-                hint="Total sunshines"
-                fill={true}
-              >
-                {issue.sunshines}
-              </PanelStat>
+              !issue.draggable && currentUser ? (
+                <SunshinesPopover
+                  availableSunshines={availableSunshines}
+                  currentSunshines={issue.sunshines}
+                  issueId={issue._id || ''}
+                  galaxyId={issue.galaxy}
+                  userId={currentUser._id!.toString()}
+                  onApply={handleSunshinesUpdate}
+                />
+              ) : (
+                <PanelStat
+                  triggerClassName='text-sm cursor-pointer hover:opacity-80 transition-opacity'
+                  iconType="sunshine"
+                  hint={
+                    <div className="text-sm space-y-3">
+                      <div className="font-semibold">Total sunshines: {issue.sunshines}</div>
+                      <div className="flex items-center gap-3 pt-2 border-t border-gray-200 dark:border-gray-700">
+                        <div className="text-4xl">
+                          {getIcon({ iconType: 'star', className: 'w-10 h-10 text-yellow-400 dark:text-yellow-500', fill: 'currentColor' })}
+                        </div>
+                        <div>
+                          <div className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">{Math.floor(issue.sunshines / 360)}</div>
+                          <div className="text-xs text-gray-500 dark:text-gray-400">Potential Stars</div>
+                          <div className="text-xs text-gray-400 dark:text-gray-500 mt-1">({issue.sunshines} ÷ 360)</div>
+                        </div>
+                      </div>
+                    </div>
+                  }
+                  fill={true}
+                >
+                  {issue.sunshines}
+                </PanelStat>
+              )
             )}
             {/* Display users count if available */}
             {issue.users && issue.users.length > 0 && (

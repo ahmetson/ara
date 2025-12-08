@@ -204,3 +204,73 @@ export async function getPublicBacklogIssues(galaxyId: string | ObjectId): Promi
     }
 }
 
+/**
+ * Update issue sunshines and add/update user contribution
+ */
+export async function updateIssueSunshines(
+    issueId: string | ObjectId,
+    userId: string | ObjectId,
+    username: string,
+    sunshinesToAdd: number
+): Promise<boolean> {
+    try {
+        const collection = await getCollection<IssueModel>('issues');
+        const issueObjectId = typeof issueId === 'string' ? new ObjectId(issueId) : issueId;
+        const userObjectId = typeof userId === 'string' ? new ObjectId(userId) : userId;
+
+        // Get current issue
+        const issue = await collection.findOne({ _id: issueObjectId });
+        if (!issue) {
+            return false;
+        }
+
+        // Find existing user contribution
+        const existingUserIndex = issue.users.findIndex(
+            (u) => u.username === username
+        );
+
+        const newSunshines = issue.sunshines + sunshinesToAdd;
+        const transactionDate = new Date();
+
+        if (existingUserIndex >= 0) {
+            // Update existing user contribution
+            const updatedUsers = [...issue.users];
+            updatedUsers[existingUserIndex] = {
+                username,
+                starshineAmount: updatedUsers[existingUserIndex].starshineAmount + sunshinesToAdd,
+                transactionDate,
+            };
+
+            const result = await collection.updateOne(
+                { _id: issueObjectId },
+                {
+                    $set: {
+                        sunshines: newSunshines,
+                        users: updatedUsers,
+                    },
+                }
+            );
+            return result.modifiedCount > 0;
+        } else {
+            // Add new user contribution
+            const newUser: IssueUserServer = {
+                username,
+                starshineAmount: sunshinesToAdd,
+                transactionDate,
+            };
+
+            const result = await collection.updateOne(
+                { _id: issueObjectId },
+                {
+                    $set: { sunshines: newSunshines },
+                    $push: { users: newUser },
+                }
+            );
+            return result.modifiedCount > 0;
+        }
+    } catch (error) {
+        console.error('Error updating issue sunshines:', error);
+        return false;
+    }
+}
+

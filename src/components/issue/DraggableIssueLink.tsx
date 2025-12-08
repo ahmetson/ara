@@ -22,7 +22,7 @@ const IssueCard: React.FC<Issue & { actions?: ActionProps[] }> = memo((props) =>
       ref={drag as any} data-testid={props._id}
       className={`cursor-move! opacity-${opacity} border-1 border-blue-100/50 hover:border-blue-200 dark:border-blue-500/50 dark:hover:border-blue-500/90 transition-colors p-2 border-dashed`}
     >
-      <IssueLink {...props} />
+      <IssueLink {...props} draggable={true} />
     </div>
   </>
   )

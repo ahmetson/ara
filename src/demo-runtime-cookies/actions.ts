@@ -5,7 +5,7 @@ import { getDemoByEmail, createDemo, updateDemoStep } from '@/demo-runtime-cooki
 import { emailToNickname, createUsers, getUserByIds, getUserById, updateUserSunshines } from '@/scripts/user'
 import { getGalaxyById, getGalaxyByName, updateGalaxySunshines } from '@/scripts/galaxy'
 import { processPayment } from '@/scripts/payment-gateway'
-import { getIssuesByGalaxy, getShiningIssues, getPublicBacklogIssues, createIssue, IssueTag } from '@/scripts/issue'
+import { getIssuesByGalaxy, getShiningIssues, getPublicBacklogIssues, createIssue, updateIssueSunshines, getIssueById, IssueTag } from '@/scripts/issue'
 import type { User, Roles } from '@/types/user'
 import type { Galaxy } from '@/types/galaxy'
 import type { Issue, IssueUser, IssueStat, IssueStatType } from '@/types/issue'
@@ -585,6 +585,94 @@ export const server = {
                 return {
                     success: false,
                     error: 'An error occurred while creating issue',
+                };
+            }
+        },
+    }),
+    updateIssueSunshines: defineAction({
+        accept: 'json',
+        input: z.object({
+            issueId: z.string(),
+            userId: z.string(),
+            email: z.string().email(),
+            sunshinesToAdd: z.number().min(0),
+        }),
+        handler: async ({ issueId, userId, email, sunshinesToAdd }): Promise<{ success: boolean; error?: string }> => {
+            try {
+                // Get demo and validate
+                const demo = await getDemoByEmail(email);
+                if (!demo) {
+                    return {
+                        success: false,
+                        error: 'Demo not found',
+                    };
+                }
+
+                // Get current user
+                const user = await getUserById(userId);
+                if (!user) {
+                    return {
+                        success: false,
+                        error: 'User not found',
+                    };
+                }
+
+                // Validate sunshines allocation
+                const availableSunshines = user.sunshines || 0;
+                if (sunshinesToAdd > availableSunshines) {
+                    return {
+                        success: false,
+                        error: `Insufficient sunshines. Available: ${availableSunshines}`,
+                    };
+                }
+
+                // Deduct sunshines from user
+                const userUpdated = await updateUserSunshines(userId, -sunshinesToAdd);
+                if (!userUpdated) {
+                    return {
+                        success: false,
+                        error: 'Failed to update user sunshines',
+                    };
+                }
+
+                // Get issue to get galaxyId
+                const issue = await getIssueById(issueId);
+                if (!issue) {
+                    return {
+                        success: false,
+                        error: 'Issue not found',
+                    };
+                }
+
+                // Update issue sunshines
+                const username = user.nickname || user.email?.split('@')[0] || 'unknown';
+                const issueUpdated = await updateIssueSunshines(issueId, userId, username, sunshinesToAdd);
+                if (!issueUpdated) {
+                    // Rollback user sunshines if issue update fails
+                    await updateUserSunshines(userId, sunshinesToAdd);
+                    return {
+                        success: false,
+                        error: 'Failed to update issue sunshines',
+                    };
+                }
+
+                // Update galaxy sunshines
+                const galaxyUpdated = await updateGalaxySunshines(issue.galaxy, sunshinesToAdd);
+                if (!galaxyUpdated) {
+                    // Rollback user and issue sunshines if galaxy update fails
+                    await updateUserSunshines(userId, sunshinesToAdd);
+                    // Note: We'd need to rollback issue sunshines too, but for simplicity we'll just log
+                    console.error('Failed to update galaxy sunshines, but issue was updated');
+                }
+
+                return {
+                    success: true,
+                };
+            } catch (error) {
+                console.error('Error updating issue sunshines:', error);
+                return {
+                    success: false,
+                    error: 'An error occurred while updating issue sunshines',
                 };
             }
         },

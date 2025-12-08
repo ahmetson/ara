@@ -43,10 +43,25 @@ export interface Issue {
     contributor?: string; // ID of the user assigned as contributor
 }
 
+export enum IssueTabKey {
+    SHINING = 'shining',
+    PUBLIC = 'public',
+    INTERESTING = 'interesting',
+    BORING = 'boring',
+    CLOSED = 'closed',
+}
+
+export const ISSUE_TAB_TITLES: Record<IssueTabKey, string> = {
+    [IssueTabKey.SHINING]: 'Shining Issues',
+    [IssueTabKey.PUBLIC]: 'Public Backlog',
+    [IssueTabKey.INTERESTING]: 'Interesting Issues',
+    [IssueTabKey.BORING]: 'Boring Issues',
+    [IssueTabKey.CLOSED]: 'Closed Issues',
+}
+
 export const ISSUE_EVENT_TYPES = {
     ISSUE_CREATED: 'issue-created',
     ISSUE_UPDATE: 'issue-update',
-    PATCHABLE_ISSUES_EXIST: 'patchable-issues-exist',
     ISSUE_UNPATCHED: 'issue-unpatched',
     ISSUES_TAB_CHANGED: 'patchable-tab-changed',
 } as const

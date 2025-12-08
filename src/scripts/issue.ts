@@ -414,7 +414,7 @@ export async function patchIssue(
             { _id: issueObjectId },
             { $set: updateOps }
         );
-        return result.modifiedCount > 0;
+        return result.acknowledged;
     } catch (error) {
         console.error('Error patching issue:', error);
         return false;

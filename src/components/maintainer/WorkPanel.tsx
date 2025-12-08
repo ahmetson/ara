@@ -9,7 +9,7 @@ import { getDemo } from '@/demo-runtime-cookies/client-side'
 import { DEMO_EVENT_TYPES } from '@/demo-runtime-cookies/index'
 import { actions } from 'astro:actions'
 import type { User } from '@/types/user'
-import { ISSUE_EVENT_TYPES } from '@/types/issue'
+import { ISSUE_EVENT_TYPES, IssueTabKey } from '@/types/issue'
 
 interface WorkPanelProps {
   galaxyId: string
@@ -18,7 +18,7 @@ interface WorkPanelProps {
 const C: React.FC<WorkPanelProps> = ({ galaxyId }) => {
   const [, setCurrentUser] = useState<User | null>(null);
   const [isMaintainer, setIsMaintainer] = useState(false);
-  const [activeTab, setActiveTab] = useState<'shining' | 'public' | 'interesting' | 'boring' | 'closed'>('shining');
+  const [activeTab, setActiveTab] = useState<IssueTabKey>(IssueTabKey.SHINING);
 
   // Check user role and listen for changes
   useEffect(() => {
@@ -49,86 +49,93 @@ const C: React.FC<WorkPanelProps> = ({ galaxyId }) => {
     };
   }, []);
 
-  const dispatchTabChanged = (tabKey: string) => {
+  useEffect(() => {
+    // Use a small delay to ensure all listeners are set up before dispatching
+    // This is especially important for PatcherPanel which might mount after WorkPanel
+    const timeoutId = setTimeout(() => {
+      dispatchTabChanged(activeTab);
+    }, 0);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [activeTab]);
+
+  const dispatchTabChanged = (tabType: IssueTabKey) => {
     window.dispatchEvent(new CustomEvent(ISSUE_EVENT_TYPES.ISSUES_TAB_CHANGED, {
-      detail: { title: tabKey, galaxyId },
-    }));
-    // Reset patchable state for new tab until it reports
-    window.dispatchEvent(new CustomEvent(ISSUE_EVENT_TYPES.PATCHABLE_ISSUES_EXIST, {
-      detail: { exists: false, galaxyId, title: tabKey },
+      detail: { tabType, galaxyId },
     }));
   }
 
   const tabs: TabProps[] = isMaintainer ? [
     {
       label: <><span className="text-amber-600 dark:text-amber-400 font-semibold">Shining issues</span></>,
-      key: "shining",
+      key: IssueTabKey.SHINING,
       content: <DndProvider backend={HTML5Backend}>
-        <IssueListPanel title={'Shining Issues'} draggable={true} galaxyId={galaxyId} />
+        <IssueListPanel tabType={IssueTabKey.SHINING} draggable={true} galaxyId={galaxyId} />
       </DndProvider>,
       className: 'bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20',
     },
     {
       label: <>Public Backlog</>,
-      key: "public",
+      key: IssueTabKey.PUBLIC,
       content: <DndProvider backend={HTML5Backend}>
-        <IssueListPanel title={'Public Backlog'} draggable={true} galaxyId={galaxyId} />
+        <IssueListPanel tabType={IssueTabKey.PUBLIC} draggable={true} galaxyId={galaxyId} />
       </DndProvider>
     },
     {
-      label: <DndProvider backend={HTML5Backend}><DropTarget id="detailize-list" accept={["issue"]} onDrop={(e) => console.log(e)}>Interesting Issues</DropTarget></DndProvider>,
-      key: "interesting",
+      label: <DndProvider backend={HTML5Backend}><DropTarget id={IssueTabKey.INTERESTING} accept={["issue"]} onDrop={(e) => console.log(e)}>Interesting Issues</DropTarget></DndProvider>,
+      key: IssueTabKey.INTERESTING,
       content: <DndProvider backend={HTML5Backend}>
-        <IssueListPanel title={'Interesting Issues'} draggable={true} description="Interesting issues for the maintainer. It could mean anything, but basically its worth maintainer's attention" galaxyId={galaxyId} />
+        <IssueListPanel tabType={IssueTabKey.INTERESTING} draggable={true} description="Interesting issues for the maintainer. It could mean anything, but basically its worth maintainer's attention" galaxyId={galaxyId} />
       </DndProvider>,
       className: ' p-0!',
     },
     {
-      label: <DndProvider backend={HTML5Backend}><DropTarget id="hard-list" accept={["issue"]} onDrop={(e) => console.log(e)}>Boring Issues</DropTarget></DndProvider>,
-      key: "boring",
+      label: <DndProvider backend={HTML5Backend}><DropTarget id={IssueTabKey.BORING} accept={["issue"]} onDrop={(e) => console.log(e)}>Boring Issues</DropTarget></DndProvider>,
+      key: IssueTabKey.BORING,
       content: <DndProvider backend={HTML5Backend}>
-        <IssueListPanel title={'Boring Issues'} draggable={true} description="Issues that are boring for the maintainer. It could be for any reason, but basically maintainer will not spend time on them." galaxyId={galaxyId} />
+        <IssueListPanel tabType={IssueTabKey.BORING} draggable={true} description="Issues that are boring for the maintainer. It could be for any reason, but basically maintainer will not spend time on them." galaxyId={galaxyId} />
       </DndProvider>
     },
     {
-      label: <DndProvider backend={HTML5Backend}><DropTarget id="closed-list" accept={["issue"]} onDrop={(e) => console.log(e)}><span className="flex items-center gap-1.5">{getIcon({ iconType: 'lock', className: 'w-4 h-4' })}Closed</span></DropTarget></DndProvider>,
-      key: "closed",
-      content: <IssueListPanel title={'Closed Issues'} galaxyId={galaxyId} />
+      label: <DndProvider backend={HTML5Backend}><DropTarget id={IssueTabKey.CLOSED} accept={["issue"]} onDrop={(e) => console.log(e)}><span className="flex items-center gap-1.5">{getIcon({ iconType: 'lock', className: 'w-4 h-4' })}Closed</span></DropTarget></DndProvider>,
+      key: IssueTabKey.CLOSED,
+      content: <IssueListPanel tabType={IssueTabKey.CLOSED} galaxyId={galaxyId} />
     },
   ] : [
     {
       label: <><span className="text-amber-600 dark:text-amber-400 font-semibold">Shining issues</span></>,
-      key: "shining",
-      content: <IssueListPanel title={'Shining Issues'} draggable={false} galaxyId={galaxyId} />,
+      key: IssueTabKey.SHINING,
+      content: <IssueListPanel tabType={IssueTabKey.SHINING} draggable={false} galaxyId={galaxyId} />,
       className: 'bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20',
     },
     {
       label: <>Public Backlog</>,
-      key: "public",
-      content: <IssueListPanel title={'Public Backlog'} draggable={false} galaxyId={galaxyId} />
+      key: IssueTabKey.PUBLIC,
+      content: <IssueListPanel tabType={IssueTabKey.PUBLIC} draggable={false} galaxyId={galaxyId} />
     },
     {
       label: <>Interesting Issues</>,
-      key: "interesting",
-      content: <IssueListPanel title={'Interesting Issues'} draggable={false} description="Interesting issues for the maintainer. It could mean anything, but basically its worth maintainer's attention" galaxyId={galaxyId} />
+      key: IssueTabKey.INTERESTING,
+      content: <IssueListPanel tabType={IssueTabKey.INTERESTING} draggable={false} description="Interesting issues for the maintainer. It could mean anything, but basically its worth maintainer's attention" galaxyId={galaxyId} />
     },
     {
       label: <>Boring Issues</>,
-      key: "boring",
-      content: <IssueListPanel title={'Boring Issues'} draggable={false} description="Issues that are boring for the maintainer. It could be for any reason, but basically maintainer will not spend time on them." galaxyId={galaxyId} />
+      key: IssueTabKey.BORING,
+      content: <IssueListPanel tabType={IssueTabKey.BORING} draggable={false} description="Issues that are boring for the maintainer. It could be for any reason, but basically maintainer will not spend time on them." galaxyId={galaxyId} />
     },
     {
       label: <>Closed Issues</>,
-      key: "closed",
-      content: <IssueListPanel title={'Closed Issues'} galaxyId={galaxyId} />
+      key: IssueTabKey.CLOSED,
+      content: <IssueListPanel tabType={IssueTabKey.CLOSED} galaxyId={galaxyId} />
     }
   ]
 
   return (
     <Tabs
       onTabChange={(newTab => {
-        setActiveTab(newTab as any);
-        dispatchTabChanged(newTab);
+        setActiveTab(newTab as IssueTabKey);
       })}
       activeTab={activeTab}
       tabs={tabs}

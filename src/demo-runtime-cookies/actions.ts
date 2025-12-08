@@ -396,7 +396,8 @@ export const server = {
                             username: user.username,
                             starshineAmount: user.starshineAmount,
                             transactionDate: typeof user.transactionDate === 'number' ? user.transactionDate : Math.floor(new Date(user.transactionDate as any).getTime() / 1000)
-                        } as IssueUser)) || []
+                        } as IssueUser)) || [],
+                        listHistory: issue.listHistory || [],
                     };
 
                     return baseIssue;
@@ -478,7 +479,8 @@ export const server = {
                         users: issue.users?.map(user => ({
                             username: user.username,
                             starshineAmount: user.starshineAmount,
-                            transactionDate: typeof user.transactionDate === 'number' ? user.transactionDate : Math.floor(new Date(user.transactionDate as any).getTime() / 1000)
+                            transactionDate: typeof user.transactionDate === 'number' ? user.transactionDate : Math.floor(new Date(user.transactionDate as any).getTime() / 1000),
+                            listHistory: issue.listHistory || [],
                         } as IssueUser)) || []
                     };
 

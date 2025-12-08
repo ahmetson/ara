@@ -1,4 +1,5 @@
-import { ISSUE_EVENT_TYPES, Issue } from '@/types/issue'
+import { ISSUE_EVENT_TYPES, Issue, IssueTabKey } from '@/types/issue'
+import { actions } from 'astro:actions';
 
 /**
  * Emit issue-update event to notify components of issue changes
@@ -9,3 +10,22 @@ export function emitIssueUpdate(data?: Issue): void {
     }))
 }
 
+
+export async function getIssues(galaxyId: string, tabType: IssueTabKey): Promise<Issue[]> {
+    // Actions return serialized Issue data directly
+    let fetchedIssues: Issue[] = [];
+
+    if (tabType === IssueTabKey.SHINING) {
+        const result = await actions.getShiningIssues({ galaxyId });
+        fetchedIssues = result.data?.data || [];
+    } else if (tabType === IssueTabKey.PUBLIC) {
+        const result = await actions.getPublicBacklogIssues({ galaxyId });
+        fetchedIssues = result.data?.data || [];
+    } else {
+        // For other tabs, fetch all issues (can be filtered later)
+        const result = await actions.getIssuesByGalaxy({ galaxyId });
+        fetchedIssues = result.data?.issues || [];
+    }
+
+    return fetchedIssues;
+}

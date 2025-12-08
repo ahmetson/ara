@@ -1,11 +1,11 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useCallback, useRef } from 'react';
 import { HoleBackground } from '@/components/animate-ui/components/backgrounds/hole';
 import { getIcon } from '@/components/icon';
 import { actions } from 'astro:actions';
 import { getDemo } from '@/demo-runtime-cookies/client-side';
-import { ISSUE_EVENT_TYPES } from '@/types/issue';
+import { ISSUE_EVENT_TYPES, IssueTabKey } from '@/types/issue';
 import type { Issue } from '@/types/issue';
 import { cn } from '@/lib/utils';
 import Button from '@/components/custom-ui/Button';
@@ -13,6 +13,7 @@ import Tooltip from '@/components/custom-ui/Tooltip';
 import DropTarget from '@/components/DropTarget';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { getIssues } from '../issue/client-side';
 
 interface PatchedIssue extends Issue {
     originalListTitle?: string;
@@ -25,65 +26,91 @@ const PatcherContainer: React.FC<PatcherContainerProps> = () => {
     const [patchedIssues, setPatchedIssues] = useState<PatchedIssue[]>([]);
     const [isVisible, setIsVisible] = useState(false);
     const [galaxyId, setGalaxyId] = useState<string>('');
-    const [activeTabTitle, setActiveTabTitle] = useState<string>('shining');
+    const [activeTabType, setActiveTabType] = useState<IssueTabKey | undefined>(undefined);
 
-    // Listen for patchable-issues-exist event
-    useEffect(() => {
-        const handleTabChanged = (event: Event) => {
-            const customEvent = event as CustomEvent<{ title: string; galaxyId: string }>;
-            setActiveTabTitle(customEvent.detail.title);
-        };
+    // Use refs to track current values for callbacks
+    const galaxyIdRef = useRef<string>('');
+    const activeTabTypeRef = useRef<IssueTabKey | undefined>(undefined);
 
-        const handlePatchableIssuesExist = (event: Event) => {
-            const customEvent = event as CustomEvent<{ exists: boolean; galaxyId: string; title: string }>;
-            if (customEvent.detail.title !== activeTabTitle) {
-                return;
-            }
-            setIsVisible(customEvent.detail.exists);
-            if (galaxyId !== customEvent.detail.galaxyId) {
-                setGalaxyId(customEvent.detail.galaxyId);
-            }
-        };
+    // Fetch patched issues - accepts parameters directly to avoid stale closures
+    const fetchPatchedIssues = useCallback(async (tabType?: IssueTabKey, currentGalaxyId?: string) => {
+        const tab = tabType || activeTabTypeRef.current;
+        const galaxy = currentGalaxyId || galaxyIdRef.current;
 
-        window.addEventListener(ISSUE_EVENT_TYPES.ISSUES_TAB_CHANGED, handleTabChanged);
-        window.addEventListener(ISSUE_EVENT_TYPES.PATCHABLE_ISSUES_EXIST, handlePatchableIssuesExist);
-        return () => {
-            window.removeEventListener(ISSUE_EVENT_TYPES.ISSUES_TAB_CHANGED, handleTabChanged);
-            window.removeEventListener(ISSUE_EVENT_TYPES.PATCHABLE_ISSUES_EXIST, handlePatchableIssuesExist);
-        };
-    }, [activeTabTitle]);
-
-    // Fetch patched issues on mount and when galaxyId changes
-    useEffect(() => {
-        if (!galaxyId) {
+        if (!tab || !galaxy) {
+            console.warn(`fetchPatchedIssues: missing tabType (${tab}) or galaxyId (${galaxy})`);
             return;
         }
 
-        const fetchPatchedIssues = async () => {
-            try {
-                const result = await actions.getIssuesByGalaxy({ galaxyId });
-                const allIssues = result.data?.issues || [];
-                const patched = allIssues.filter(
-                    issue => issue.listHistory?.includes('patcher')
-                ) as PatchedIssue[];
-                setPatchedIssues(patched);
-            } catch (error) {
-                console.error('Error fetching patched issues:', error);
-            }
-        };
+        try {
+            const allIssues = await getIssues(galaxy, tab);
+            const patched = allIssues.filter(
+                issue => issue.listHistory?.includes('patcher')
+            ) as PatchedIssue[];
+            setIsVisible(patched.length > 0);
+            setPatchedIssues(patched);
+        } catch (error) {
+            console.error('Error fetching patched issues:', error);
+        }
+    }, []);
 
-        fetchPatchedIssues();
+    // Listen for tab changes and issue updates - use useLayoutEffect to catch events early
+    useLayoutEffect(() => {
+        let hasReceivedEvent = false;
+
+        const handleTabChanged = async (event: Event) => {
+            hasReceivedEvent = true;
+            const customEvent = event as CustomEvent<{ tabType: IssueTabKey; galaxyId: string }>;
+            const newTabType = customEvent.detail.tabType;
+            const newGalaxyId = customEvent.detail.galaxyId;
+
+            // Update refs immediately
+            activeTabTypeRef.current = newTabType;
+            galaxyIdRef.current = newGalaxyId;
+
+            // Update state
+            setActiveTabType(newTabType);
+            if (galaxyIdRef.current !== newGalaxyId) {
+                setGalaxyId(newGalaxyId);
+            }
+
+            // Fetch using values from event (not state, which might be stale)
+            await fetchPatchedIssues(newTabType, newGalaxyId);
+        };
 
         // Listen for issue updates
-        const handleIssueUpdate = () => {
-            fetchPatchedIssues();
+        const handleIssueUpdate = async () => {
+            // Use refs to get current values
+            await fetchPatchedIssues(activeTabTypeRef.current, galaxyIdRef.current);
         };
 
+        // Set up listeners synchronously before paint
+        window.addEventListener(ISSUE_EVENT_TYPES.ISSUES_TAB_CHANGED, handleTabChanged);
         window.addEventListener(ISSUE_EVENT_TYPES.ISSUE_UPDATE, handleIssueUpdate);
+
+        // Check if we missed the initial event (use requestAnimationFrame to allow event to fire first)
+        requestAnimationFrame(() => {
+            if (!hasReceivedEvent) {
+                // Try to get the current active tab from WorkPanel by checking if event was already dispatched
+                // This is a fallback - the event should normally fire
+                console.warn('PatcherPanel: No initial tab change event received, may need to wait for WorkPanel to mount');
+            }
+        });
+
         return () => {
+            window.removeEventListener(ISSUE_EVENT_TYPES.ISSUES_TAB_CHANGED, handleTabChanged);
             window.removeEventListener(ISSUE_EVENT_TYPES.ISSUE_UPDATE, handleIssueUpdate);
         };
+    }, [fetchPatchedIssues]);
+
+    // Update refs when state changes
+    useEffect(() => {
+        galaxyIdRef.current = galaxyId;
     }, [galaxyId]);
+
+    useEffect(() => {
+        activeTabTypeRef.current = activeTabType;
+    }, [activeTabType]);
 
     // Handle drop
     const handleDrop = useCallback(async (item: { id: string; title: string }) => {
@@ -110,6 +137,8 @@ const PatcherContainer: React.FC<PatcherContainerProps> = () => {
                 email: demo.email,
             });
 
+            console.error(`patch result ${result.data?.success} for issue ${issue.title} on tab ${activeTabType}`, result);
+
             if (result.data?.success) {
                 // Add to local state
                 const patchedIssue: PatchedIssue = {
@@ -124,6 +153,7 @@ const PatcherContainer: React.FC<PatcherContainerProps> = () => {
                     return [...prev, patchedIssue];
                 });
 
+                console.log(`Issue updated as its moved to the Issue Update: ${issue.title} on tab ${activeTabType}`);
                 // Dispatch issue-update event
                 window.dispatchEvent(new CustomEvent(ISSUE_EVENT_TYPES.ISSUE_UPDATE));
             }

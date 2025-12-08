@@ -1,96 +1,117 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useMemo, useState, useCallback, useRef } from 'react'
 import FilterableList from '@/components/list/FilterableList'
 import IssueLink from '@/components/issue/IssueLink'
 import BasePanel from '@/components/panel/Panel'
 import type { Issue } from '@/types/issue'
-import { IssueTag, ISSUE_EVENT_TYPES } from '@/types/issue'
+import { IssueTag, ISSUE_EVENT_TYPES, IssueTabKey, ISSUE_TAB_TITLES } from '@/types/issue'
 import DraggableIssueLink from './DraggableIssueLink'
 import { FilterOption } from '@/components/list/FilterToggle'
 import { getIcon } from '../icon'
 import { actions } from 'astro:actions'
 import type { ActionProps } from '@/types/eventTypes'
+import { getIssues } from './client-side'
 
 interface Props {
-  title?: string
+  tabType: IssueTabKey
   filterable?: boolean
   draggable?: boolean
   description?: string
-  galaxyId?: string
+  galaxyId: string
 }
 
-const IssueListPanel: React.FC<Props> = ({ title = 'Issues', draggable = false, filterable: filerable = false, description, galaxyId }) => {
+const IssueListPanel: React.FC<Props> = ({ tabType, draggable = false, filterable: filerable = false, description, galaxyId }) => {
   const [issues, setIssues] = useState<Issue[]>([]);
+  const [activeTab, setActiveTab] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(true);
+  const activeTabRef = useRef(false);
+  const hasReceivedEventRef = useRef(false);
 
-  // Fetch issues based on title
-  useEffect(() => {
-    const fetchIssues = async () => {
-      if (!galaxyId) {
-        setIsLoading(false);
-        return;
-      }
+  // Fetch issues based on tabType
+  const fetchIssues = useCallback(async () => {
+    if (!activeTabRef.current) {
+      return;
+    }
 
-      try {
-        // Actions return serialized Issue data directly
-        let fetchedIssues: Issue[] = [];
+    try {
+      setIsLoading(true);
+      // Actions return serialized Issue data directly
+      const fetchedIssues: Issue[] = await getIssues(galaxyId, tabType);
 
-        if (title === 'Shining Issues') {
-          const result = await actions.getShiningIssues({ galaxyId });
-          fetchedIssues = result.data?.data || [];
-        } else if (title === 'Public Backlog') {
-          const result = await actions.getPublicBacklogIssues({ galaxyId });
-          fetchedIssues = result.data?.data || [];
-        } else {
-          // For other tabs, fetch all issues (can be filtered later)
-          const result = await actions.getIssuesByGalaxy({ galaxyId });
-          fetchedIssues = result.data?.issues || [];
-        }
+      // Exclude issues that are already in the patcher list
+      const visibleIssues = fetchedIssues.filter(
+        issue => !(issue.listHistory || []).includes('patcher')
+      );
 
-        setIssues(fetchedIssues);
+      setIssues(visibleIssues);
 
-        // Check if any issue has both contributor and maintainer (patchable)
-        const hasPatchableIssues = fetchedIssues.some(
-          issue => issue.contributor && issue.maintainer
-        );
+    } catch (error) {
+      console.error('Error fetching issues:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [tabType, galaxyId]);
 
-        // Broadcast patchable-issues-exist event
-        if (galaxyId) {
-          window.dispatchEvent(new CustomEvent(ISSUE_EVENT_TYPES.PATCHABLE_ISSUES_EXIST, {
-            detail: {
-              exists: hasPatchableIssues,
-              galaxyId: galaxyId,
-              title: title,
-            },
-          }));
-        }
-      } catch (error) {
-        console.error('Error fetching issues:', error);
-      } finally {
-        setIsLoading(false);
+  // Listen for tab changes and fetch only when this tab is active
+  useLayoutEffect(() => {
+    hasReceivedEventRef.current = false;
+
+    const handleTabChanged = (event: Event) => {
+      hasReceivedEventRef.current = true;
+      const customEvent = event as CustomEvent<{ tabType: IssueTabKey; galaxyId: string }>;
+      const isThisTabActive = customEvent.detail.tabType === tabType && customEvent.detail.galaxyId === galaxyId;
+      activeTabRef.current = isThisTabActive;
+      setActiveTab(isThisTabActive);
+    };
+
+    const refetchIssues = () => {
+      if (activeTabRef.current) {
+        fetchIssues();
       }
     };
 
-    fetchIssues();
+    // Set up listeners synchronously before paint
+    window.addEventListener(ISSUE_EVENT_TYPES.ISSUES_TAB_CHANGED, handleTabChanged);
+    window.addEventListener(ISSUE_EVENT_TYPES.ISSUE_CREATED, refetchIssues);
+    window.addEventListener(ISSUE_EVENT_TYPES.ISSUE_UNPATCHED, refetchIssues);
+    window.addEventListener(ISSUE_EVENT_TYPES.ISSUE_UPDATE, refetchIssues);
 
-    // Listen for issue creation events to refresh
-    const handleIssueCreated = () => {
-      fetchIssues();
-    };
+    // Check if this is the initial active tab (SHINING is the default)
+    // Use requestAnimationFrame to check after current frame, allowing event to fire first
+    if (tabType === IssueTabKey.SHINING) {
+      requestAnimationFrame(() => {
+        if (!hasReceivedEventRef.current) {
+          activeTabRef.current = true;
+          setActiveTab(true);
+        }
+      });
+    }
 
-    window.addEventListener(ISSUE_EVENT_TYPES.ISSUE_CREATED, handleIssueCreated);
-
-    // Listen for issue-unpatched event to refresh
-    const handleIssueUnpatched = () => {
-      fetchIssues();
-    };
-
-    window.addEventListener(ISSUE_EVENT_TYPES.ISSUE_UNPATCHED, handleIssueUnpatched);
+    // Also set a timeout as a fallback
+    const timeoutId = setTimeout(() => {
+      if (!hasReceivedEventRef.current && tabType === IssueTabKey.SHINING) {
+        activeTabRef.current = true;
+        setActiveTab(true);
+      }
+    }, 100);
 
     return () => {
-      window.removeEventListener(ISSUE_EVENT_TYPES.ISSUE_CREATED, handleIssueCreated);
-      window.removeEventListener(ISSUE_EVENT_TYPES.ISSUE_UNPATCHED, handleIssueUnpatched);
+      clearTimeout(timeoutId);
+      window.removeEventListener(ISSUE_EVENT_TYPES.ISSUES_TAB_CHANGED, handleTabChanged);
+      window.removeEventListener(ISSUE_EVENT_TYPES.ISSUE_CREATED, refetchIssues);
+      window.removeEventListener(ISSUE_EVENT_TYPES.ISSUE_UNPATCHED, refetchIssues);
+      window.removeEventListener(ISSUE_EVENT_TYPES.ISSUE_UPDATE, refetchIssues);
     };
-  }, []);
+  }, [tabType, galaxyId, fetchIssues]);
+
+  // Fetch when tab becomes active
+  useEffect(() => {
+    if (activeTab) {
+      fetchIssues();
+    } else {
+      setIssues([]);
+      setIsLoading(false);
+    }
+  }, [activeTab, fetchIssues]);
 
   // Create filters based on IssueTag
   const filters: FilterOption[] = [
@@ -197,7 +218,7 @@ const IssueListPanel: React.FC<Props> = ({ title = 'Issues', draggable = false, 
       {/* Title with shadow and bigger size */}
       <div className="mb-4">
         <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-200 text-center drop-shadow-lg">
-          {title}
+          {ISSUE_TAB_TITLES[tabType]}
         </h2>
       </div>
 
@@ -206,10 +227,10 @@ const IssueListPanel: React.FC<Props> = ({ title = 'Issues', draggable = false, 
         {draggable && <p className='text-md text-gray-600 dark:text-gray-500 flex items-center gap-2'>
           {getIcon('info')} Issues are draggable. Your dragging will highlight the drop targets.
         </p>}
-        {!draggable && title.includes('Closed') && <p className='text-md mb-2 text-gray-600 dark:text-gray-500 flex items-center gap-2'>
+        {!draggable && tabType === IssueTabKey.CLOSED && <p className='text-md mb-2 text-gray-600 dark:text-gray-500 flex items-center gap-2'>
           {getIcon('lock')} Issues are closed and will never be back.
         </p>}
-        {!draggable && !title.includes('Closed') && <p className='text-md mb-2 text-gray-600 dark:text-gray-500 flex items-center gap-2'>
+        {!draggable && tabType !== IssueTabKey.CLOSED && <p className='text-md mb-2 text-gray-600 dark:text-gray-500 flex items-center gap-2'>
           {getIcon('user')} Maintainer can move them.
         </p>}
         {description && <p className='text-md text-gray-600 dark:text-gray-500'>

@@ -271,7 +271,7 @@ export const server = {
                 }
 
                 // Check if already completed (last step is 8)
-                if (currentStep >= 8) {
+                if (currentStep > 8) {
                     return {
                         success: false,
                         error: 'Already completed the demo. Enjoy',

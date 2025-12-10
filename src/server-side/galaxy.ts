@@ -131,3 +131,18 @@ export async function updateGalaxySunshines(galaxyId: string | ObjectId, amount:
     }
 }
 
+/**
+ * Get galaxies by maintainer (user ID)
+ */
+export async function getGalaxiesByMaintainer(userId: string | ObjectId): Promise<Galaxy[]> {
+    try {
+        const collection = await getCollection<GalaxyModel>('galaxies')
+        const objectId = typeof userId === 'string' ? new ObjectId(userId) : userId
+        const galaxies = await collection.find({ maintainer: objectId }).toArray()
+        return galaxies.map(galaxyModelToGalaxy).filter((g): g is Galaxy => g !== null)
+    } catch (error) {
+        console.error('Error getting galaxies by maintainer:', error)
+        return []
+    }
+}
+

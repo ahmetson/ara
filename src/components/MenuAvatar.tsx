@@ -24,7 +24,7 @@ const MenuAvatar: React.FC<MenuAvatarProps> = ({
   alt,
   className,
   imgClassName = '',
-  uri = '/data/profile',
+  uri = '/user',
   nickname = 'Ahmetson',
   sunshines,
   stars,
@@ -34,14 +34,13 @@ const MenuAvatar: React.FC<MenuAvatarProps> = ({
   // Use user object if provided, otherwise fall back to individual props
   const finalSrc = user?.src || src
   const finalAlt = user?.alt || alt
-  const finalUri = user?.uri || uri
   const finalNickname = user?.nickname || nickname
   const finalSunshines = user?.sunshines ?? sunshines
   const finalStars = user?.stars ?? stars
   const finalRole = user?.role || role
   const defaultSrc = 'https://api.backdropbuild.com/storage/v1/object/public/avatars/9nFM8HasgS.jpeg'
   const defaultAlt = 'Avatar'
-  const profileUri = finalNickname ? `${finalUri}?nickname=${finalNickname}` : finalUri
+  const profileUri = `${uri}?id=${user?._id || ''}`
 
   const tooltipContent = (
     <div className="text-sm space-y-2">

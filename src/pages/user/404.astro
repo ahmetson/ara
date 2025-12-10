@@ -4,7 +4,7 @@ import { MenuName } from "@/components/navbar/WorkNavbar.astro";
 import BackButton from "@/components/custom-ui/BackButton";
 import { mockUserStars } from "@/types/mock-data";
 
-const projectData = {
+const userData = {
     title: "404 Not Found",
     stars: mockUserStars,
     projectGoal: 1000,
@@ -14,11 +14,11 @@ const projectData = {
 <GalaxyLayout
     active={MenuName.ProjectName}
     hideLinks={Object.keys(MenuName)}
-    projectName={projectData.title}
-    stars={projectData.stars}
-    projectGoal={projectData.projectGoal}
+    projectName={userData.title}
+    stars={userData.stars}
+    projectGoal={userData.projectGoal}
 >
-    <BackButton slot="left" uri="/project/issues" />
+    <BackButton slot="left" uri="/all-stars" />
 
     <div
         slot="center"
@@ -32,8 +32,8 @@ const projectData = {
         <p
             class="text-xl md:text-3xl text-slate-600 dark:text-slate-400 leading-relaxed max-w-2xl"
         >
-            The project or galaxy you're looking for doesn't exist or has been
-            removed.
+            The user you're looking for doesn't exist or has been removed.
         </p>
     </div>
 </GalaxyLayout>
+

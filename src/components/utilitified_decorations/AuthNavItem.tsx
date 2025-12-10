@@ -262,13 +262,7 @@ const AuthNavItem: React.FC<Props> = ({ className }) => {
           </DropdownMenu>
           <MenuAvatar
             key={`${demoUser.role}-${demoUser.nickname}`}
-            src={demoUser.src}
-            alt={demoUser.alt}
-            uri={demoUser.uri}
-            nickname={demoUser.nickname}
-            sunshines={demoUser.sunshines}
-            stars={demoUser.stars}
-            role={demoUser.role}
+            user={demoUser}
           />
 
           <WalletBalance balance={demoUser.balance} />

@@ -2,7 +2,7 @@ import { ObjectId } from 'mongodb'
 import { getCollection } from './db'
 import type { Roles, User } from '@/types/user'
 
-interface UserModel {
+export interface UserModel {
     _id?: ObjectId
     email?: string
     src?: string

@@ -2,19 +2,7 @@ import { ObjectId } from 'mongodb'
 import { getCollection } from './db'
 import { getAllGalaxies } from './galaxy'
 import type { AllStarStats, SolarForgeModel } from '@/types/all-stars'
-
-interface UserModel {
-    _id?: any
-    email?: string
-    src?: string
-    alt?: string
-    uri?: string
-    nickname?: string
-    sunshines?: number
-    stars?: number
-    role?: string
-    balance?: number
-}
+import type { UserModel } from './user'
 
 /**
  * Get all star statistics by aggregating data from galaxies and users
@@ -57,10 +45,10 @@ export async function getAllStarStats(): Promise<AllStarStats> {
 export async function checkSolarForgeByIssue(issueId: string | ObjectId): Promise<boolean> {
     try {
         const collection = await getCollection<SolarForgeModel>('solarForges')
-        const objectId = typeof issueId === 'string' ? new ObjectId(issueId) : issueId
+        const issueIdStr = typeof issueId === 'string' ? issueId : issueId.toString()
         const result = await collection.findOne({
             solarForgeType: 'issue',
-            solarForgeId: objectId.toString(),
+            issueId: issueIdStr,
         })
         return result !== null
     } catch (error) {

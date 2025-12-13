@@ -1,7 +1,7 @@
 import { defineAction } from 'astro:actions'
 import { z } from 'astro:schema'
-import { getDonationsByGalaxyId } from '@/server-side/payment-gateway'
-import type { Donation } from '@/types/payment-gateway'
+import { getDonationsByGalaxyId } from '@/server-side/blockchain-gateway'
+import type { Donation } from '@/types/blockchain-gateway'
 
 export const server = {
     getDonationsByGalaxyId: defineAction({

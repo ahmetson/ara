@@ -6,7 +6,7 @@
   ],
   "exclude": [
     "dist",
-    "packages/payment-gateway"
+    "packages/blockchain-gateway"
   ],
   "compilerOptions": {
     "verbatimModuleSyntax": false,

@@ -4,7 +4,7 @@ import { ObjectId } from 'mongodb'
 import { getDemoByEmail, createDemo, updateDemoStep } from '@/server-side/demo'
 import { emailToNickname, createUsers, getUserByIds, getUserById, updateUserSunshines } from '@/server-side/user'
 import { getGalaxyById, updateGalaxySunshines } from '@/server-side/galaxy'
-import { processPayment } from '@/server-side/payment-gateway'
+import { processPayment } from '@/server-side/blockchain-gateway'
 import type { User, Roles } from '@/types/user'
 
 /**

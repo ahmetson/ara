@@ -17,6 +17,7 @@ import { getDemo } from '@/client-side/demo'
 import { updateIssueSunshines } from '@/client-side/issue'
 import { getUserById } from '@/client-side/user'
 import Tooltip from '../custom-ui/Tooltip'
+import { TheaterIcon } from 'lucide-react'
 
 interface IssueLinkProps extends Issue {
   actions?: ActionProps[];
@@ -158,6 +159,25 @@ const IssueLinkPanel4: React.FC<IssueLinkProps> = (issue) => {
         <div className='flex justify-between items-center mb-1 ml-0.5'>
           <div className="flex items-center gap-2">
             <span className="text-lg font-medium text-slate-700 dark:text-slate-300/80">{issue.title}</span>
+            {/* Smithing stamp icon - shows if issue has been solar forged */}
+            {issue.solarForgeTxid && (
+              <Tooltip
+                content={
+                  <div className="text-sm">
+                    View the Solar Forge by this issue on the blockchain explorer
+                  </div>
+                }
+              >
+                <a
+                  href={`https://sepolia.basescan.org/tx/${issue.solarForgeTxid}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center text-cyan-400 hover:text-cyan-300 transition-colors"
+                >
+                  <TheaterIcon className="w-4 h-4" />
+                </a>
+              </Tooltip>
+            )}
             {/* Shining badge - based on sunshines */}
             <Badge variant={isShining ? 'success' : 'gray'} static={true}>
               {isShining ? 'Shining' : 'Public Backlog'}
@@ -249,6 +269,39 @@ const IssueLinkPanel4: React.FC<IssueLinkProps> = (issue) => {
           <PanelFooter className='flex flex-row justify-between items-center mt-2'>
             <div className="flex items-center gap-2">
               {issue.actions && <PanelAction className='' actions={issue.actions} />}
+              {/* Solar forge button/link */}
+              {issue.solarForgeTxid ? (
+                <Tooltip
+                  content={
+                    <div className="text-sm">
+                      View solar forge transaction on blockchain explorer
+                    </div>
+                  }
+                >
+                  <a
+                    href={`https://sepolia.basescan.org/tx/${issue.solarForgeTxid}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-sm text-cyan-400 hover:text-cyan-300 transition-colors"
+                  >
+                    <TheaterIcon className="w-4 h-4" />
+                    <span>Solar Forge</span>
+                  </a>
+                </Tooltip>
+              ) : isShining && issue.sunshines > 0 ? (
+                <Tooltip
+                  content={
+                    <div className="text-sm">
+                      Solar forge this issue to convert sunshines to stars
+                    </div>
+                  }
+                >
+                  <span className="text-sm text-slate-500 dark:text-slate-400">
+                    <TheaterIcon className="w-4 h-4 inline mr-1" />
+                    Solar Forge
+                  </span>
+                </Tooltip>
+              ) : null}
             </div>
             {/* Display sunshines - clickable when not draggable */}
             {issue.sunshines >= 0 && (

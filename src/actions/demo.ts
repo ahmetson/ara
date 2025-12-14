@@ -31,18 +31,14 @@ function generateRandomUser(role: Roles, index: number, email: string): User {
 
     const randomName = names[Math.floor(Math.random() * names.length)]
 
-    // Generate random stats
-    const sunshines = Math.floor(Math.random() * 50000) + 10000
-    const stars = Math.random() * 100 + 10
-
     return {
         src: avatarUrl,
         alt: `${role} avatar`,
         uri: '/user?email=' + email,
         nickname: randomName.replace(' ', '-').toLowerCase(),
         email: email,
-        sunshines,
-        stars: Math.round(stars * 100) / 100,
+        sunshines: 0,
+        stars: 0,
         role: role as Roles,
         balance: 0,
     }

@@ -24,6 +24,7 @@ import type { User } from '@/types/user'
 import { getDemo } from '@/client-side/demo'
 import { getUserById } from '@/client-side/user'
 import { ISSUE_EVENT_TYPES } from '@/types/issue'
+import { TheaterIcon } from 'lucide-react'
 
 interface IssueContentPanelProps extends Issue {
   actions?: ActionProps[]
@@ -315,6 +316,25 @@ const IssueContentPanel: React.FC<IssueContentPanelProps> = ({
                   {canEdit && <EditableBadge showEditBar={showEditBar} setShowEditBar={setShowEditBar} />}
                 </h1>
               </Tooltip>
+              {/* Smithing stamp icon - shows if issue has been solar forged */}
+              {issueData.solarForgeTxid && (
+                <Tooltip
+                  content={
+                    <div className="text-sm">
+                      View the Solar Forge by this issue on the blockchain explorer
+                    </div>
+                  }
+                >
+                  <a
+                    href={`https://sepolia.basescan.org/tx/${issueData.solarForgeTxid}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center text-cyan-400 hover:text-cyan-300 transition-colors"
+                  >
+                    <TheaterIcon className="w-4 h-4" />
+                  </a>
+                </Tooltip>
+              )}
               {/* Shining badge */}
               <Badge variant={isShiningIssue ? 'success' : 'gray'} static={true}>
                 {isShiningIssue ? 'Shining' : 'Public Backlog'}
@@ -437,7 +457,7 @@ const IssueContentPanel: React.FC<IssueContentPanelProps> = ({
           )}
 
           {/* Footer with actions and stats */}
-          {(issueData.stats || preparedActions.length > 0 || editAction) && (
+          {(issueData.stats || preparedActions.length > 0 || editAction || issueData.solarForgeTxid || (isShiningIssue && issueData.sunshines > 0)) && (
             <PanelFooter className='flex flex-row justify-between items-center mt-2'>
               <div className="flex items-center gap-2">
                 {preparedActions.length > 0 && <PanelAction className='' actions={preparedActions} />}
@@ -459,6 +479,39 @@ const IssueContentPanel: React.FC<IssueContentPanelProps> = ({
                     </Button>
                   </Tooltip>
                 )}
+                {/* Solar forge button/link */}
+                {issueData.solarForgeTxid ? (
+                  <Tooltip
+                    content={
+                      <div className="text-sm">
+                        View solar forge transaction on blockchain explorer
+                      </div>
+                    }
+                  >
+                    <a
+                      href={`https://sepolia.basescan.org/tx/${issueData.solarForgeTxid}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-sm text-cyan-400 hover:text-cyan-300 transition-colors"
+                    >
+                      <TheaterIcon className="w-4 h-4" />
+                      <span>Solar Forge</span>
+                    </a>
+                  </Tooltip>
+                ) : isShiningIssue && issueData.sunshines > 0 ? (
+                  <Tooltip
+                    content={
+                      <div className="text-sm">
+                        Solar forge this issue to convert sunshines to stars
+                      </div>
+                    }
+                  >
+                    <span className="text-sm text-slate-500 dark:text-slate-400">
+                      <TheaterIcon className="w-4 h-4 inline mr-1" />
+                      Solar Forge
+                    </span>
+                  </Tooltip>
+                ) : null}
               </div>
               {issueData.stats && Object.values(issueData.stats).map((stat, index) => (
                 <PanelStat

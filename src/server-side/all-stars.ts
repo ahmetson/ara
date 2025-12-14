@@ -1,6 +1,7 @@
 import { ObjectId } from 'mongodb'
 import { getCollection } from './db'
 import { getAllGalaxies } from './galaxy'
+import { getIssueById } from './issue'
 import type { AllStarStats, SolarForgeModel, UserStar } from '@/types/all-stars'
 import type { UserModel } from './user'
 
@@ -156,13 +157,8 @@ export async function updateUserStarPosition(params: { galaxyId: string; userId:
  */
 export async function checkSolarForgeByIssue(issueId: string | ObjectId): Promise<boolean> {
     try {
-        const collection = await getCollection<SolarForgeModel>('solarForges')
-        const issueIdStr = typeof issueId === 'string' ? issueId : issueId.toString()
-        const result = await collection.findOne({
-            solarForgeType: 'issue',
-            issueId: issueIdStr,
-        })
-        return result !== null
+        const issue = await getIssueById(issueId)
+        return issue !== null && issue.solarForgeTxid !== undefined && issue.solarForgeTxid !== null
     } catch (error) {
         console.error('Error checking solar forge by issue:', error)
         return false

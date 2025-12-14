@@ -36,6 +36,7 @@ interface IssueModel {
     users: IssueUserServer[]; // Array of users with their contributions
     author?: ObjectId; // Reference to UserModel who created the issue
     contributor?: ObjectId; // Reference to UserModel assigned as contributor
+    solarForgeTxid?: string; // Blockchain transaction ID for solar forge
 }
 
 // Serialization functions
@@ -100,6 +101,7 @@ function issueModelToIssue(model: IssueModel | null): Issue | null {
         users: model.users.map(issueUserServerToIssueUser),
         author: model.author?.toString(),
         contributor: model.contributor?.toString(),
+        solarForgeTxid: model.solarForgeTxid,
     }
 }
 
@@ -125,6 +127,7 @@ function issueToIssueModel(issue: Issue): IssueModel {
         users: issue.users.map(issueUserToIssueUserServer),
         author: issue.author ? new ObjectId(issue.author) : undefined,
         contributor: issue.contributor ? new ObjectId(issue.contributor) : undefined,
+        solarForgeTxid: issue.solarForgeTxid,
     }
 }
 
@@ -472,6 +475,28 @@ export async function unpatchIssue(
         return result.modifiedCount > 0;
     } catch (error) {
         console.error('Error unpatching issue:', error);
+        return false;
+    }
+}
+
+/**
+ * Update issue solarForgeTxid
+ */
+export async function updateIssueSolarForgeTxid(
+    issueId: string | ObjectId,
+    txHash: string
+): Promise<boolean> {
+    try {
+        const collection = await getCollection<IssueModel>('issues');
+        const issueObjectId = typeof issueId === 'string' ? new ObjectId(issueId) : issueId;
+
+        const result = await collection.updateOne(
+            { _id: issueObjectId },
+            { $set: { solarForgeTxid: txHash } }
+        );
+        return result.modifiedCount > 0;
+    } catch (error) {
+        console.error('Error updating issue solarForgeTxid:', error);
         return false;
     }
 }

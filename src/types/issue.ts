@@ -42,6 +42,7 @@ export interface Issue {
     users: IssueUser[];
     author?: string; // ID of the user who created the issue
     contributor?: string; // ID of the user assigned as contributor
+    solarForgeTxid?: string; // Blockchain transaction ID for solar forge
 }
 
 export enum IssueTabKey {

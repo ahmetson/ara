@@ -26,9 +26,18 @@ const VersionSolarForge: React.FC = () => {
 
     // Listen for VERSION_RELEASED event
     useEffect(() => {
+        console.log('🎧 [VersionSolarForge] Setting up VERSION_RELEASED event listener')
+
         const handleVersionReleased = async (event: Event) => {
+            console.log('🎉 [VersionSolarForge] VERSION_RELEASED event received!', event)
             const customEvent = event as CustomEvent<VersionReleasedEventDetail>
             const { versionId, tag, galaxyId: eventGalaxyId } = customEvent.detail
+
+            console.log('📦 [VersionSolarForge] Event details:', {
+                versionId,
+                tag,
+                galaxyId: eventGalaxyId,
+            })
 
             // Clear any existing timeouts
             timeoutRefsRef.current.forEach(timeout => clearTimeout(timeout))
@@ -45,13 +54,22 @@ const VersionSolarForge: React.FC = () => {
             setVersionTag(tag)
             setGalaxyId(eventGalaxyId)
             setIsOpen(true)
+            console.log('✅ [VersionSolarForge] State reset and dialog opened')
 
             try {
+                console.log(`🔥 [VersionSolarForge] Calling solarForgeByVersion for versionId: ${versionId}`)
                 // Call solarForgeByVersion
                 const forgeResult = await solarForgeByVersion(versionId)
+                console.log('✅ [VersionSolarForge] solarForgeByVersion completed:', {
+                    totalIssues: forgeResult.totalIssues,
+                    totalSunshines: forgeResult.totalSunshines,
+                    totalStars: forgeResult.totalStars,
+                    usersCount: forgeResult.users.length,
+                })
                 setResult(forgeResult)
 
                 // Fetch user data for each solar user
+                console.log(`👤 [VersionSolarForge] Fetching user data for ${forgeResult.users.length} users`)
                 const userPromises = forgeResult.users.map(async (solarUser: SolarUser) => {
                     const user = await getUserById(solarUser.id)
                     return user ? { ...user, earnedStars: solarUser.stars, roles: solarUser.roles } : null
@@ -61,6 +79,12 @@ const VersionSolarForge: React.FC = () => {
                     (u): u is User & { earnedStars: number; roles: string[] } => u !== null
                 )
 
+                console.log(`✅ [VersionSolarForge] Fetched ${fetchedUsers.length} users:`, fetchedUsers.map(u => ({
+                    id: u._id,
+                    nickname: u.nickname,
+                    earnedStars: u.earnedStars,
+                    roles: u.roles,
+                })))
                 setUsers(fetchedUsers)
 
                 // Start animation sequence
@@ -90,15 +114,18 @@ const VersionSolarForge: React.FC = () => {
 
                 // Set summary step immediately
                 setCurrentStep('summary')
+                console.log('🎬 [VersionSolarForge] Animation sequence started')
             } catch (error) {
-                console.error('Error in solar forge:', error)
+                console.error('❌ [VersionSolarForge] Error in solar forge:', error)
                 setIsOpen(false)
             }
         }
 
+        console.log(`📡 [VersionSolarForge] Adding event listener for: ${ROADMAP_EVENT_TYPES.VERSION_RELEASED}`)
         window.addEventListener(ROADMAP_EVENT_TYPES.VERSION_RELEASED, handleVersionReleased as EventListener)
 
         return () => {
+            console.log('🧹 [VersionSolarForge] Cleaning up event listener')
             window.removeEventListener(ROADMAP_EVENT_TYPES.VERSION_RELEASED, handleVersionReleased as EventListener)
             // Clear all timeouts on unmount
             timeoutRefsRef.current.forEach(timeout => clearTimeout(timeout))
@@ -141,7 +168,7 @@ const VersionSolarForge: React.FC = () => {
         }
     }, [isOpen, hasTriggeredConfetti])
 
-    if (!isOpen || !result) return null
+    if (!isOpen) return null
 
     const topUser = users.length > 0 ? users[0] : null
     const linkUri = `/project?galaxy=${galaxyId}`
@@ -163,7 +190,7 @@ const VersionSolarForge: React.FC = () => {
                 <PageLikePanel title="Version Released!" titleCenter={true}>
                     <div className="space-y-6">
                         {/* Step 1: Summary - Resolved issues */}
-                        {currentStep !== 'loading' && (
+                        {result && currentStep !== 'loading' && (
                             <div className="text-center space-y-4">
                                 <div className="text-xl font-bold text-slate-700 dark:text-slate-300">
                                     Resolved{' '}
@@ -220,7 +247,7 @@ const VersionSolarForge: React.FC = () => {
                         )}
 
                         {/* Step 2: Show users one by one */}
-                        {users.length > 0 && (
+                        {result && users.length > 0 && (
                             <div className="space-y-4">
                                 <h3 className="text-lg font-semibold text-slate-700 dark:text-slate-300 text-center">
                                     Stars Distributed
@@ -279,7 +306,7 @@ const VersionSolarForge: React.FC = () => {
                         )}
 
                         {/* Step 3: Highlight top user */}
-                        {topUser && (
+                        {result && topUser && (
                             <div className="text-center space-y-4">
                                 <div className="text-lg font-semibold text-slate-700 dark:text-slate-300">
                                     Top Receiver
@@ -322,7 +349,7 @@ const VersionSolarForge: React.FC = () => {
                         )}
 
                         {/* Step 4: Action button */}
-                        {currentStep === 'complete' && (
+                        {result && currentStep === 'complete' && (
                             <div className="flex justify-center">
                                 <Link uri={linkUri}>
                                     <Button variant="primary" size="lg">
@@ -333,9 +360,16 @@ const VersionSolarForge: React.FC = () => {
                         )}
 
                         {/* Loading state */}
-                        {currentStep === 'loading' && (
+                        {(!result || currentStep === 'loading') && (
                             <div className="text-center py-8">
-                                <div className="text-lg text-slate-600 dark:text-slate-400">Processing solar forge...</div>
+                                <div className="text-lg text-slate-600 dark:text-slate-400">
+                                    {!result ? 'Processing solar forge...' : 'Loading results...'}
+                                </div>
+                                {versionTag && (
+                                    <div className="text-sm text-slate-500 dark:text-slate-500 mt-2">
+                                        Version: {versionTag}
+                                    </div>
+                                )}
                             </div>
                         )}
                     </div>

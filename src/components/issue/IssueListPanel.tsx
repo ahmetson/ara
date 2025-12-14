@@ -317,6 +317,10 @@ const IssueListPanel: React.FC<Props> = ({ tabType, draggable = false, filterabl
     if (itemProps.versionTag) {
       return <IssueLink {...itemProps} />
     }
+    // Closed issues should never be draggable (no DndProvider for CLOSED tab)
+    if (tabType === IssueTabKey.CLOSED) {
+      return <IssueLink {...itemProps} />
+    }
     if (itemProps.patchable || draggable) {
       return <DraggableIssueLink {...itemProps} patchable={itemProps.patchable} draggable={true} />
     }

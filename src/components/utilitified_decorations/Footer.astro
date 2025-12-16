@@ -1,5 +1,6 @@
 ---
 import Link from "@/components/custom-ui/Link";
+import { companyInfo } from "@/types/ara";
 ---
 
 <footer
@@ -23,11 +24,11 @@ import Link from "@/components/custom-ui/Link";
     >
   </div>
 
-  <div class="">
-    by <Link
-      uri="https://ara.foundation"
-      className=" text-slate-600 dark:text-slate-400 transition-colors"
-      >Ara Foundation</Link
-    >
+  <div class="text-sm">
+    (c) {companyInfo.copyrightYear}, <a
+      href={"mailto:" + companyInfo.email}
+      class="text-slate-600 dark:text-slate-400 transition-colors hover:text-blue-600 dark:hover:text-blue-400"
+      >{companyInfo.email}</a
+    >, registered: {companyInfo.registeredName}, {companyInfo.address}
   </div>
 </footer>

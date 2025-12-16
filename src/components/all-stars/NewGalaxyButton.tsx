@@ -47,8 +47,9 @@ const NewGalaxyButton: React.FC = () => {
                             <div className="flex items-center justify-center gap-4 mb-6">
                                 <SocialLink link={socialLinks.github} className="flex rounded-sm w-10 h-10 items-center justify-center hover:opacity-80 transition-opacity" />
                                 <SocialLink link={socialLinks.twitter} className="flex rounded-sm w-10 h-10 items-center justify-center hover:opacity-80 transition-opacity" />
-                                <SocialLink link={socialLinks.telegram} className="flex rounded-sm w-10 h-10 items-center justify-center hover:opacity-80 transition-opacity" />
                                 <SocialLink link={socialLinks.bluesky} className="flex rounded-sm w-10 h-10 items-center justify-center hover:opacity-80 transition-opacity" />
+                                <SocialLink link={socialLinks.telegram} className="flex rounded-sm w-10 h-10 items-center justify-center hover:opacity-80 transition-opacity" />
+                                <SocialLink link={socialLinks.discord} className="flex rounded-sm w-10 h-10 items-center justify-center hover:opacity-80 transition-opacity" />
                             </div>
 
                             <div className="flex gap-3 justify-center">

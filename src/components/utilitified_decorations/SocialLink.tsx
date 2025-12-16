@@ -1,5 +1,5 @@
 import React from 'react'
-import { FaGithub, FaTwitter, FaTelegram } from 'react-icons/fa'
+import { FaGithub, FaTwitter, FaTelegram, FaDiscord, FaLinkedin } from 'react-icons/fa'
 import { getIcon } from '../icon'
 import { SocialLink as SocialLinkType, SocialLinkType as LinkType } from '@/types/ara'
 import Link from '../custom-ui/Link'
@@ -18,6 +18,8 @@ const SocialLink: React.FC<SocialLinkProps> = ({ link,
     telegram: '#0088cc', // Telegram blue
     twitter: '#00acee', // Twitter/X black
     bluesky: '#00A3FF', // Bluesky blue
+    discord: '#5865F2', // Discord blurple
+    linkedin: '#0077B5', // LinkedIn blue
   }
 
   // Tailwind color classes for custom icons (bluesky)
@@ -26,6 +28,8 @@ const SocialLink: React.FC<SocialLinkProps> = ({ link,
     telegram: 'text-[#0088cc] w-5 h-5', // Telegram blue
     twitter: 'text-blue-500 w-5 h-5', // Twitter/X black
     bluesky: 'text-[#00A3FF] w-5 h-5', // Bluesky blue
+    discord: 'text-[#5865F2] w-5 h-5', // Discord blurple
+    linkedin: 'text-[#0077B5] w-5 h-5', // LinkedIn blue
   }
 
   const renderIcon = () => {
@@ -41,6 +45,8 @@ const SocialLink: React.FC<SocialLinkProps> = ({ link,
       telegram: <FaTelegram color={brandColors.telegram} size={20} className={brandColorClasses.telegram} />,
       twitter: <FaTwitter color={brandColors.twitter} size={20} className={brandColorClasses.twitter} />,
       bluesky: getIcon({ iconType: 'bluesky', className: brandColorClasses.bluesky }),
+      discord: <FaDiscord color={brandColors.discord} size={20} className={brandColorClasses.discord} />,
+      linkedin: <FaLinkedin color={brandColors.linkedin} size={20} className={brandColorClasses.linkedin} />,
     }
 
     return iconMap[link.type]

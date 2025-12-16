@@ -24,7 +24,7 @@ const UniverseResearchPanel: React.FC<UniverseResearchPanelProps> = ({
     const lockTooltipContent = (
         <div className="flex items-center gap-2 text-sm">
             {getIcon({ iconType: 'lock', className: 'w-4 h-4' })}
-            <span>Obtain Stars or Starsunshines from any galaxy to unlock this panel</span>
+            <span>Join our community, to try when this panel is ready</span>
         </div>
     );
 

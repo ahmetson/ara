@@ -7,6 +7,8 @@ import { actions } from 'astro:actions';
 import { type AllStarStats } from '@/types/all-stars';
 import { demoExists } from '@/client-side/demo';
 import { DEMO_EVENT_TYPES } from '@/types/demo';
+import { getCommunityLinks } from '@/types/ara';
+import SocialLink from '@/components/utilitified_decorations/SocialLink';
 
 /**
  * Custom hook to fetch and poll all star stats every 10 seconds
@@ -194,11 +196,21 @@ const UniverseHero: React.FC = () => {
 
             {/* Demo CTA - shown when demo panel is hidden */}
             {showDemoCta && (
-                <div className="w-full max-w-2xl mt-6">
+                <div className="w-full max-w-2xl mt-6 space-y-4">
                     <div className="backdrop-blur-md bg-white/20 dark:bg-slate-900/20 border border-slate-200/40 dark:border-slate-700/40 rounded-lg p-6 text-center">
-                        <p className="text-base md:text-lg text-slate-700 dark:text-slate-300 leading-relaxed">
+                        <p className="text-base md:text-lg text-slate-700 dark:text-slate-300 leading-relaxed mb-4">
                             This is a Demo. Join our community to get early version. We will appreciate your feedback as well.
                         </p>
+                        {/* Social Links */}
+                        <div className="flex items-center justify-center gap-4 mt-4">
+                            {getCommunityLinks().map((link) => (
+                                <SocialLink
+                                    key={link.type}
+                                    link={link}
+                                    className="flex items-center justify-center rounded-lg w-10 h-10 backdrop-blur-sm bg-white/30 dark:bg-slate-900/30 border border-slate-200/40 dark:border-slate-700/40 hover:bg-white/40 dark:hover:bg-slate-900/40 transition-all"
+                                />
+                            ))}
+                        </div>
                     </div>
                 </div>
             )}

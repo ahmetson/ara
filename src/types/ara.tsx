@@ -152,33 +152,88 @@ export const accentToUrl: Record<Accent, string> = {
     // [Accent.visionaryAccent]: '/meta/vision',
 }
 
-export type SocialLinkType = 'github' | 'telegram' | 'twitter' | 'bluesky'
+export type SocialLinkType = 'github' | 'telegram' | 'twitter' | 'bluesky' | 'discord' | 'linkedin'
+
+export type SocialLinkCategory = 'news' | 'community' | 'external'
 
 export interface SocialLink {
     url: string
     type: SocialLinkType
+    category: SocialLinkCategory
     useCustomIcon?: boolean // true for bluesky (uses getIcon), false for react-icons
+    label: string // Display name for the link
 }
 
+// All Ara social links organized by category
 export const socialLinks: Record<SocialLinkType, SocialLink> = {
-    github: {
-        url: 'https://github.com/ara-foundation/app',
-        type: 'github',
-        useCustomIcon: false,
-    },
-    telegram: {
-        url: 'https://t.me/arasangha',
-        type: 'telegram',
-        useCustomIcon: false,
-    },
+    // News links
     twitter: {
         url: 'https://x.com/ara_foundation_',
         type: 'twitter',
+        category: 'news',
         useCustomIcon: false,
+        label: 'X (Twitter)',
     },
     bluesky: {
-        url: 'https://bsky.app/profile/ara.foundation.bsky.social',
+        url: 'https://bsky.app/profile/ara.foundation',
         type: 'bluesky',
+        category: 'news',
         useCustomIcon: true,
+        label: 'Bluesky',
     },
+    // Community links
+    telegram: {
+        url: 'https://t.me/arasangha',
+        type: 'telegram',
+        category: 'community',
+        useCustomIcon: false,
+        label: 'Telegram',
+    },
+    discord: {
+        url: 'https://discord.gg/u4dMgVsq',
+        type: 'discord',
+        category: 'community',
+        useCustomIcon: false,
+        label: 'Discord',
+    },
+    // External links
+    github: {
+        url: 'https://github.com/ara-foundation/app',
+        type: 'github',
+        category: 'external',
+        useCustomIcon: false,
+        label: 'GitHub',
+    },
+    linkedin: {
+        url: 'https://www.linkedin.com/company/ara-foundation',
+        type: 'linkedin',
+        category: 'external',
+        useCustomIcon: false,
+        label: 'LinkedIn',
+    },
+} as const
+
+// Helper functions to get links by category
+export const getSocialLinksByCategory = (category: SocialLinkCategory): SocialLink[] => {
+    return Object.values(socialLinks).filter(link => link.category === category)
+}
+
+export const getNewsLinks = (): SocialLink[] => getSocialLinksByCategory('news')
+export const getCommunityLinks = (): SocialLink[] => getSocialLinksByCategory('community')
+export const getExternalLinks = (): SocialLink[] => getSocialLinksByCategory('external')
+export const getAllSocialLinks = (): SocialLink[] => Object.values(socialLinks)
+
+// Company information
+export interface CompanyInfo {
+    copyrightYear: number
+    email: string
+    registeredName: string
+    address: string
+}
+
+export const companyInfo: CompanyInfo = {
+    copyrightYear: 2026,
+    email: 'info@ara.foundation',
+    registeredName: 'Pak Unity Ltd.',
+    address: '11 vong ha, hanoi, vietnam',
 } as const

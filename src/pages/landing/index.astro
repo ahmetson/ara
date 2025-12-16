@@ -2,6 +2,28 @@
 import GalaxyLayout from "@/layouts/GalaxyLayout.astro";
 import { MenuName } from "@/components/navbar/WorkNavbar.astro";
 import { socialLinks } from "@/types/ara";
+import ProjectGalaxy from "@/components/all-stars/ProjectGalaxy";
+import UserStar from "@/components/all-stars/UserStar";
+import { mockUserStars } from "@/types/mock-data";
+import type { Galaxy } from "@/types/galaxy";
+import AraGradientText from "@/components/AraGradientText";
+import LandingVideoPanel from "@/components/landing/LandingVideoPanel";
+
+// Create a mock Galaxy object for the hero panel
+const mockGalaxy: Galaxy = {
+  _id: "hero-galaxy",
+  maintainer: "hero-maintainer",
+  projectLink: "hero-project",
+  name: "Ara App",
+  description: "The frontend application for Ara platform",
+  stars: 1250,
+  sunshines: 8500,
+  users: 42,
+  donationAmount: 125000,
+  x: 0,
+  y: 0,
+  tags: ["Frontend", "React", "Astro", "Web3", "Open Source"],
+};
 ---
 
 <GalaxyLayout
@@ -18,19 +40,16 @@ import { socialLinks } from "@/types/ara";
     class="flex flex-col items-center justify-center min-h-[60vh] text-center px-4 py-20"
   >
     <div class="w-full max-w-4xl mx-auto space-y-6">
-      <div class="flex justify-center mb-6">
+      <div class="flex items-center justify-center gap-4 mb-6">
         <img
           src="/ara_logo.png"
           alt="Ara Logo"
           class="w-24 h-24 md:w-32 md:h-32"
         />
+        <div class="text-6xl md:text-7xl lg:text-8xl font-bold">
+          <AraGradientText client:only="react" className="font-bold" />
+        </div>
       </div>
-
-      <h1
-        class="text-6xl md:text-7xl lg:text-8xl font-bold text-slate-800 dark:text-slate-200"
-      >
-        Ara
-      </h1>
 
       <p
         class="text-2xl md:text-3xl font-semibold text-slate-700 dark:text-slate-300"
@@ -41,128 +60,35 @@ import { socialLinks } from "@/types/ara";
       <p
         class="text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto"
       >
-        Ara is a visual social media for open source projects, that tracks
-        projects on blockchain.
+        That tracks project ownership, collaboration, and funds on blockchain.
       </p>
 
-      <!-- Visual Diagram: Galaxy, Stars, and Connections -->
-      <div class="w-full max-w-2xl mx-auto my-12">
-        <svg
-          viewBox="0 0 400 200"
-          class="w-full h-auto"
-          aria-label="Visual representation of projects as galaxies, people as stars, and their connections"
-        >
-          <!-- Background circle for galaxy -->
-          <circle
-            cx="100"
-            cy="100"
-            r="50"
-            fill="none"
-            stroke="rgb(59, 130, 246)"
-            stroke-width="2"
-            stroke-opacity="0.3"
-            class="dark:stroke-blue-400"></circle>
-          <circle
-            cx="100"
-            cy="100"
-            r="35"
-            fill="none"
-            stroke="rgb(59, 130, 246)"
-            stroke-width="2"
-            stroke-opacity="0.5"
-            class="dark:stroke-blue-400"></circle>
-          <!-- Stars (people) -->
-          <circle
-            cx="80"
-            cy="80"
-            r="4"
-            fill="rgb(234, 179, 8)"
-            class="dark:fill-yellow-400"></circle>
-          <circle
-            cx="120"
-            cy="80"
-            r="4"
-            fill="rgb(234, 179, 8)"
-            class="dark:fill-yellow-400"></circle>
-          <circle
-            cx="100"
-            cy="120"
-            r="4"
-            fill="rgb(234, 179, 8)"
-            class="dark:fill-yellow-400"></circle>
-          <circle
-            cx="85"
-            cy="110"
-            r="3"
-            fill="rgb(234, 179, 8)"
-            class="dark:fill-yellow-400"></circle>
-          <circle
-            cx="115"
-            cy="110"
-            r="3"
-            fill="rgb(234, 179, 8)"
-            class="dark:fill-yellow-400"></circle>
-          <!-- Connection lines -->
-          <line
-            x1="100"
-            y1="100"
-            x2="300"
-            y2="100"
-            stroke="rgb(168, 85, 247)"
-            stroke-width="2"
-            stroke-opacity="0.4"
-            stroke-dasharray="5,5"
-            class="dark:stroke-purple-400"></line>
-          <!-- Second galaxy -->
-          <circle
-            cx="300"
-            cy="100"
-            r="50"
-            fill="none"
-            stroke="rgb(59, 130, 246)"
-            stroke-width="2"
-            stroke-opacity="0.3"
-            class="dark:stroke-blue-400"></circle>
-          <circle
-            cx="300"
-            cy="100"
-            r="35"
-            fill="none"
-            stroke="rgb(59, 130, 246)"
-            stroke-width="2"
-            stroke-opacity="0.5"
-            class="dark:stroke-blue-400"></circle>
-          <!-- Stars in second galaxy -->
-          <circle
-            cx="280"
-            cy="80"
-            r="4"
-            fill="rgb(234, 179, 8)"
-            class="dark:fill-yellow-400"></circle>
-          <circle
-            cx="320"
-            cy="80"
-            r="4"
-            fill="rgb(234, 179, 8)"
-            class="dark:fill-yellow-400"></circle>
-          <circle
-            cx="300"
-            cy="120"
-            r="4"
-            fill="rgb(234, 179, 8)"
-            class="dark:fill-yellow-400"></circle>
-        </svg>
-      </div>
-
+      <!-- Futuristic Feature Panels -->
       <div
-        class="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12 text-base md:text-lg text-slate-600 dark:text-slate-400 mt-8"
+        class="w-full max-w-6xl mx-auto my-12 grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8"
       >
-        <div class="flex items-center gap-3">
+        <!-- Panel 1: Projects are represented as Galaxy -->
+        <div class="relative p-6 flex flex-col items-center justify-center">
           <div
-            class="p-3 rounded-lg backdrop-blur-md bg-blue-500/20 dark:bg-blue-400/20 border border-blue-200/40 dark:border-blue-700/40"
+            class="h-48 w-full rounded-lg relative flex items-center justify-center"
+          >
+            <ProjectGalaxy
+              client:only="react"
+              x={20}
+              y={0}
+              projectName={mockGalaxy.name}
+              projectId={mockGalaxy._id}
+              galaxyData={mockGalaxy}
+              tags={mockGalaxy.tags}
+              leaderboardPosition={1}
+              className="rounded-lg ml-14 mt-14"
+            />
+          </div>
+          <h3
+            class="text-lg font-bold text-slate-800 dark:text-slate-200 flex items-center justify-center gap-2 mt-4"
           >
             <svg
-              class="w-8 h-8 text-blue-500 dark:text-blue-400"
+              class="w-6 h-6 text-blue-500 dark:text-blue-400"
               fill="currentColor"
               viewBox="0 0 24 24"
             >
@@ -170,15 +96,42 @@ import { socialLinks } from "@/types/ara";
                 d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"
               ></path>
             </svg>
-          </div>
-          <span class="font-medium">Projects are represented as Galaxy</span>
+            Projects are represented as Galaxy
+          </h3>
         </div>
-        <div class="flex items-center gap-3">
-          <div
-            class="p-3 rounded-lg backdrop-blur-md bg-yellow-500/20 dark:bg-yellow-400/20 border border-yellow-200/40 dark:border-yellow-700/40"
+
+        <!-- Panel 2: People are represented as the Stars -->
+        <div class="relative p-6 flex flex-col items-center justify-center">
+          <div class="h-48 w-full flex items-center justify-center">
+            <UserStar
+              client:only="react"
+              x={0}
+              y={0}
+              nickname={mockUserStars[0].nickname}
+              src={`https://api.dicebear.com/9.x/avataaars/svg?seed=${mockUserStars[0].nickname}&size=256`}
+              alt={mockUserStars[0].alt}
+              stars={mockUserStars[0].stars}
+              sunshines={mockUserStars[0].sunshines}
+              role={mockUserStars[0].role}
+              funded={mockUserStars[0].funded}
+              received={mockUserStars[0].received}
+              issuesClosed={mockUserStars[0].issuesClosed}
+              issuesActive={mockUserStars[0].issuesActive}
+              tags={mockUserStars[0].tags || [
+                "Maintainer",
+                "Django",
+                "Solidity",
+                "p2p",
+              ]}
+              disableTooltip={true}
+              className="scale-120 ml-28 mt-14"
+            />
+          </div>
+          <h3
+            class="text-lg font-bold text-slate-800 dark:text-slate-200 flex items-center justify-center gap-2 mt-4"
           >
             <svg
-              class="w-8 h-8 text-yellow-500 dark:text-yellow-400"
+              class="w-6 h-6 text-yellow-500 dark:text-yellow-400"
               fill="currentColor"
               viewBox="0 0 24 24"
             >
@@ -186,15 +139,107 @@ import { socialLinks } from "@/types/ara";
                 d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
               ></path>
             </svg>
-          </div>
-          <span class="font-medium">People are represented as the Stars</span>
+            People are represented as the Stars
+          </h3>
         </div>
-        <div class="flex items-center gap-3">
-          <div
-            class="p-3 rounded-lg backdrop-blur-md bg-purple-500/20 dark:bg-purple-400/20 border border-purple-200/40 dark:border-purple-700/40"
+
+        <!-- Panel 3: Graphs for the relationships -->
+        <div class="relative p-6 flex flex-col items-center justify-center">
+          <div class="h-48 w-full flex items-center justify-center">
+            <svg
+              viewBox="0 0 400 400"
+              class="w-full h-full"
+              aria-label="Relationship graph showing star connected to galaxy"
+            >
+              <!-- Top-left star -->
+              <g>
+                <!-- Star shape (5-pointed) -->
+                <path
+                  d="M 50 30 L 52 40 L 62 40 L 54 46 L 56 56 L 50 50 L 44 56 L 46 46 L 38 40 L 48 40 Z"
+                  fill="rgb(234, 179, 8)"
+                  class="dark:fill-yellow-400"
+                  opacity="0.9"></path>
+                <circle
+                  cx="50"
+                  cy="40"
+                  r="3"
+                  fill="rgb(234, 179, 8)"
+                  class="dark:fill-yellow-400"></circle>
+              </g>
+
+              <!-- Bottom-right galaxy -->
+              <g>
+                <!-- Outer circle -->
+                <circle
+                  cx="350"
+                  cy="350"
+                  r="40"
+                  fill="none"
+                  stroke="rgb(59, 130, 246)"
+                  stroke-width="2"
+                  stroke-opacity="0.6"
+                  class="dark:stroke-blue-400"></circle>
+                <!-- Inner circle -->
+                <circle
+                  cx="350"
+                  cy="350"
+                  r="28"
+                  fill="none"
+                  stroke="rgb(59, 130, 246)"
+                  stroke-width="2"
+                  stroke-opacity="0.8"
+                  class="dark:stroke-blue-400"></circle>
+                <!-- Stars around galaxy -->
+                <circle
+                  cx="350"
+                  cy="310"
+                  r="3"
+                  fill="rgb(234, 179, 8)"
+                  class="dark:fill-yellow-400"></circle>
+                <circle
+                  cx="390"
+                  cy="350"
+                  r="3"
+                  fill="rgb(234, 179, 8)"
+                  class="dark:fill-yellow-400"></circle>
+                <circle
+                  cx="350"
+                  cy="390"
+                  r="3"
+                  fill="rgb(234, 179, 8)"
+                  class="dark:fill-yellow-400"></circle>
+                <circle
+                  cx="310"
+                  cy="350"
+                  r="3"
+                  fill="rgb(234, 179, 8)"
+                  class="dark:fill-yellow-400"></circle>
+                <circle
+                  cx="370"
+                  cy="330"
+                  r="2.5"
+                  fill="rgb(234, 179, 8)"
+                  class="dark:fill-yellow-400"></circle>
+              </g>
+
+              <!-- Diagonal connecting line with increasing dash size -->
+              <line
+                x1="50"
+                y1="50"
+                x2="350"
+                y2="350"
+                stroke="rgb(168, 85, 247)"
+                stroke-width="2.5"
+                stroke-opacity="0.6"
+                stroke-dasharray="4,3 6,3 8,4 10,4 12,5 14,5 16,6 18,6"
+                class="dark:stroke-purple-400"></line>
+            </svg>
+          </div>
+          <h3
+            class="text-lg font-bold text-slate-800 dark:text-slate-200 flex items-center justify-center gap-2 mt-4"
           >
             <svg
-              class="w-8 h-8 text-purple-500 dark:text-purple-400"
+              class="w-6 h-6 text-purple-500 dark:text-purple-400"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -205,17 +250,17 @@ import { socialLinks } from "@/types/ara";
                 stroke-width="2"
                 d="M13 10V3L4 14h7v7l9-11h-7z"></path>
             </svg>
-          </div>
-          <span class="font-medium">Graphs for the relationships</span>
+            Graphs for the relationships
+          </h3>
         </div>
       </div>
-
-      <p
-        class="text-xl md:text-2xl font-bold text-blue-600 dark:text-blue-400 mt-8"
-      >
-        for open source users, maintainers, and contributors
-      </p>
     </div>
+
+    <p
+      class="text-xl md:text-2xl font-bold text-blue-600 dark:text-blue-400 mt-8"
+    >
+      for open source users, maintainers, and contributors
+    </p>
   </section>
 
   <!-- Main Content -->
@@ -2142,12 +2187,6 @@ import { socialLinks } from "@/types/ara";
         >
           <a
             href="/all-stars"
-            class="px-6 py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition-colors"
-          >
-            Explore Projects
-          </a>
-          <a
-            href="/all-stars"
             class="px-6 py-3 bg-slate-500 text-slate-100 font-semibold rounded-lg hover:bg-slate-600 transition-colors"
           >
             Try Demo
@@ -2200,37 +2239,80 @@ import { socialLinks } from "@/types/ara";
     </section>
   </div>
 
-  <style is:global>
-    @keyframes scan {
-      0% {
-        transform: translateY(-100%);
-      }
-      100% {
-        transform: translateY(100%);
-      }
-    }
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      overflow-x: hidden;
-      overflow-y: auto;
-    }
-
-    #galaxy-space {
-      overflow-y: auto;
-    }
-
-    /* Ensure galaxy background doesn't move - disable all transforms */
-    [data-galaxy-backgrounds] {
-      transform: none !important;
-      will-change: auto !important;
-    }
-
-    /* Disable zoom transforms */
-    #galaxy-space {
-      transform: none !important;
-    }
-  </style>
+  <LandingVideoPanel
+    slot="right"
+    client:only="react"
+    youtubeUrl="https://youtu.be/suOaUQmMSGo?si=cbKjF74oBUmCbKQF"
+  />
 </GalaxyLayout>
+
+<style is:global>
+  @keyframes scan {
+    0% {
+      transform: translateY(-100%);
+    }
+    100% {
+      transform: translateY(100%);
+    }
+  }
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+  @keyframes pulse {
+    0%,
+    100% {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  @keyframes pulse-subtle {
+    0%,
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.95;
+      transform: scale(1.01);
+    }
+  }
+  .animate-pulse-subtle {
+    animation: pulse-subtle 3s ease-in-out infinite;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  #galaxy-space {
+    overflow-y: auto;
+  }
+
+  /* Ensure galaxy background doesn't move - disable all transforms */
+  [data-galaxy-backgrounds] {
+    transform: none !important;
+    will-change: auto !important;
+  }
+
+  /* Disable zoom transforms */
+  #galaxy-space {
+    transform: none !important;
+  }
+
+  .event-notification {
+    animation: pulse 2s ease-in-out infinite;
+  }
+</style>

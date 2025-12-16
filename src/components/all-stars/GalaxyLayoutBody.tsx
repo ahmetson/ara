@@ -3,6 +3,9 @@ import GalacticMeasurements from './GalacticMeasurements';
 import GalaxyZoomControls from './GalaxyZoomControls';
 import GalaxyNavigationDialog from './GalaxyNavigationDialog';
 import AllStarsLink from './AllStarsLink';
+import GalaxyLayoutSettingsButton from './GalaxyLayoutSettingsButton';
+import GalaxyLayoutTestModePopover from './GalaxyLayoutTestModePopover';
+import { getPersonalizations, savePersonalization } from '@/client-side/personalization';
 import { GALAXY_ZOOM_EVENTS } from '@/types/galaxy';
 
 interface GalaxyZoomWrapperProps {
@@ -32,6 +35,16 @@ const GalaxyZoomWrapper: React.FC<GalaxyZoomWrapperProps> = ({
   const previousZoomRef = useRef(initialZoom);
   const scrollPositionRef = useRef({ x: 0, y: 0 });
   const isZoomingRef = useRef(false);
+
+  // Test mode state for personalizations
+  const [testModeCode, setTestModeCode] = useState<string | null>(null);
+  const [testModePrompt, setTestModePrompt] = useState<string | null>(null);
+  const [testModeUris, setTestModeUris] = useState<string[]>([]);
+  const [testModePersonalizationId, setTestModePersonalizationId] = useState<string | null>(null);
+  const [previousState, setPreviousState] = useState<any>(null);
+  const [isTestMode, setIsTestMode] = useState(false);
+  const [showTestModePopover, setShowTestModePopover] = useState(false);
+  const settingsButtonRef = useRef<HTMLButtonElement | null>(null);
 
   // Check if we're on the all-stars page
   useEffect(() => {
@@ -282,6 +295,250 @@ const GalaxyZoomWrapper: React.FC<GalaxyZoomWrapperProps> = ({
     };
   }, [zoom]);
 
+  // State snapshot functions for rollback
+  const createStateSnapshot = () => {
+    return {
+      zoom,
+      showDialog,
+      virtualScreenSize,
+      isAllStarsPage,
+    };
+  };
+
+  const rollbackToSnapshot = (snapshot: any) => {
+    setZoom(snapshot.zoom);
+    setShowDialog(snapshot.showDialog);
+    setVirtualScreenSize(snapshot.virtualScreenSize);
+    setIsAllStarsPage(snapshot.isAllStarsPage);
+  };
+
+  // Code execution function
+  const executePersonalization = (code: string, isTestModeExecution: boolean = false) => {
+    try {
+      console.log('Executing personalization code:', {
+        code: code.substring(0, 200) + '...',
+        isTestMode: isTestModeExecution,
+        currentZoom: zoom,
+        currentUri: window.location.pathname + window.location.search
+      });
+
+      // Create execution context with all component state/props
+      const context = {
+        // State
+        zoom, setZoom,
+        showDialog, setShowDialog,
+        virtualScreenSize, setVirtualScreenSize,
+        isAllStarsPage, setIsAllStarsPage,
+        // Props
+        projectId, projectName, initialZoom, minZoom, maxZoom, maxGalaxyContent,
+        // Refs (read-only access)
+        hasShownDialogRef, previousZoomRef, scrollPositionRef, isZoomingRef,
+        // Utilities
+        window: window,
+        location: window.location,
+      };
+
+      // Execute code with context using Function constructor
+      const func = new Function(...Object.keys(context), code);
+      func(...Object.values(context));
+
+      console.log('Personalization code executed successfully. New zoom:', zoom);
+
+      // If in test mode, track the applied code
+      if (isTestModeExecution) {
+        setTestModeCode(code);
+        setIsTestMode(true);
+        setShowTestModePopover(true);
+        console.log('Test mode activated, popover should show');
+      }
+    } catch (error) {
+      console.error('Error executing personalization code:', error);
+      // Show error to user
+    }
+  };
+
+  // Test mode functions
+  const applyTestCode = (code: string, prompt: string, uris?: string[], personalizationId?: string) => {
+    console.log('applyTestCode called with:', { code, prompt, uris, personalizationId });
+    // Save current state snapshot
+    const snapshot = createStateSnapshot();
+    setPreviousState(snapshot);
+    setTestModePrompt(prompt);
+    setTestModeCode(code);
+    setTestModeUris(uris || []);
+    setTestModePersonalizationId(personalizationId || null);
+
+    // Apply code in test mode
+    executePersonalization(code, true);
+  };
+
+  // Load existing personalization into test mode
+  const loadPersonalizationIntoTestMode = (personalization: any) => {
+    console.log('Loading personalization into test mode:', personalization);
+    applyTestCode(
+      personalization.code,
+      personalization.prompt,
+      personalization.uris,
+      personalization._id
+    );
+  };
+
+  // Handle code changes from editable code block
+  const handleCodeChange = (newCode: string) => {
+    setTestModeCode(newCode);
+    // Re-apply the code with new changes
+    executePersonalization(newCode, true);
+  };
+
+  // Handle URI changes
+  const handleUrisChange = (newUris: string[]) => {
+    console.log('URIs changed in test mode:', newUris);
+    setTestModeUris(newUris);
+  };
+
+  // Handle regenerate - update code and URIs
+  const handleRegenerate = (newCode: string, newUris: string[]) => {
+    setTestModeCode(newCode);
+    setTestModeUris(newUris);
+    // Re-apply the regenerated code
+    executePersonalization(newCode, true);
+  };
+
+  const rollbackTestCode = () => {
+    if (previousState) {
+      rollbackToSnapshot(previousState);
+    }
+    setTestModeCode(null);
+    setTestModePrompt(null);
+    setTestModeUris([]);
+    setTestModePersonalizationId(null);
+    setPreviousState(null);
+    setIsTestMode(false);
+    setShowTestModePopover(false);
+  };
+
+  const saveTestCode = async () => {
+    if (!testModeCode || !testModePrompt) {
+      console.error('Cannot save: missing code or prompt', { testModeCode: !!testModeCode, testModePrompt: !!testModePrompt });
+      return;
+    }
+
+    // Use test mode URIs if available, otherwise use current URI
+    const urisToSave = testModeUris.length > 0
+      ? testModeUris
+      : [window.location.pathname + window.location.search];
+
+    console.log('Saving personalization:', {
+      codeLength: testModeCode.length,
+      codePreview: testModeCode.substring(0, 100),
+      prompt: testModePrompt,
+      uris: urisToSave,
+      urisCount: urisToSave.length,
+      personalizationId: testModePersonalizationId,
+      isUpdate: !!testModePersonalizationId
+    });
+
+    // Save or update in database (if personalizationId exists, it's an update)
+    const result = await savePersonalization(
+      'GalaxyLayoutBody',
+      testModeCode,
+      testModePrompt,
+      urisToSave,
+      testModePersonalizationId || undefined
+    );
+
+    console.log('Save result:', result);
+
+    if (result.success) {
+      console.log('Personalization saved successfully');
+      // Exit test mode but keep code applied (it's now saved)
+      setIsTestMode(false);
+      setShowTestModePopover(false);
+      setTestModeCode(null);
+      setTestModePrompt(null);
+      setTestModeUris([]);
+      setTestModePersonalizationId(null);
+      setPreviousState(null);
+    } else {
+      console.error('Failed to save personalization:', result.error);
+      alert(`Failed to save personalization: ${result.error || 'Unknown error'}`);
+    }
+  };
+
+
+  // Show test mode popover when test mode is activated
+  useEffect(() => {
+    if (isTestMode && testModeCode && !showTestModePopover) {
+      console.log('Test mode activated, showing popover');
+      setShowTestModePopover(true);
+    }
+  }, [isTestMode, testModeCode, showTestModePopover]);
+
+  // Load and apply saved personalizations (only when not in test mode)
+  useEffect(() => {
+    if (isTestMode) return; // Don't load saved personalizations in test mode
+
+    const loadAndApplyPersonalizations = async () => {
+      try {
+        const personalizations = await getPersonalizations('GalaxyLayoutBody');
+        const currentUri = window.location.pathname + window.location.search;
+
+        console.log('Loading personalizations:', {
+          currentUri,
+          personalizationsCount: personalizations.length,
+          personalizations: personalizations.map(p => ({ uris: p.uris, prompt: p.prompt }))
+        });
+
+        // Find matching personalization - check if current URI matches any saved URI
+        const matching = personalizations.find((p) =>
+          p.uris.some((uri) => {
+            // Check if current URI includes the saved URI, or if they're exactly equal
+            // Also check if saved URI is a substring of current URI (for query params)
+            const matches = currentUri === uri ||
+              currentUri.includes(uri) ||
+              uri.includes(currentUri) ||
+              (uri.includes('?') && currentUri.startsWith(uri.split('?')[0]));
+            if (matches) {
+              console.log('Found matching personalization:', {
+                savedUri: uri,
+                currentUri,
+                prompt: p.prompt,
+                code: p.code.substring(0, 100) + '...'
+              });
+            }
+            return matches;
+          })
+        );
+
+        if (matching) {
+          console.log('Applying personalization:', {
+            prompt: matching.prompt,
+            code: matching.code,
+            uris: matching.uris
+          });
+          executePersonalization(matching.code, false);
+        } else {
+          console.log('No matching personalization found for URI:', currentUri);
+        }
+      } catch (error) {
+        console.error('Error loading personalizations:', error);
+      }
+    };
+
+    // Run on mount and when test mode changes
+    loadAndApplyPersonalizations();
+
+    // Also listen for navigation changes
+    const handlePopState = () => {
+      if (!isTestMode) {
+        loadAndApplyPersonalizations();
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [isTestMode]); // Run when test mode changes or component mounts
+
   return (
     <>
       {/* Galaxy Measurements - Not scaled, always at 100% */}
@@ -305,6 +562,31 @@ const GalaxyZoomWrapper: React.FC<GalaxyZoomWrapperProps> = ({
         onConfirm={handleConfirm}
         onCancel={handleCancel}
       />
+
+      {/* Settings Button */}
+      <GalaxyLayoutSettingsButton
+        onTestModeChange={setIsTestMode}
+        onCodeGenerated={applyTestCode}
+        onLoadPersonalization={loadPersonalizationIntoTestMode}
+        buttonRef={settingsButtonRef}
+        isTestMode={isTestMode}
+      />
+
+      {/* Test Mode Popover */}
+      {testModeCode && testModePrompt && (
+        <GalaxyLayoutTestModePopover
+          isOpen={showTestModePopover}
+          code={testModeCode}
+          prompt={testModePrompt}
+          uris={testModeUris}
+          onCodeChange={handleCodeChange}
+          onUrisChange={handleUrisChange}
+          onRegenerate={handleRegenerate}
+          onSave={saveTestCode}
+          onCancel={rollbackTestCode}
+          anchorElement={settingsButtonRef.current}
+        />
+      )}
     </>
   );
 };

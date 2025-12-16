@@ -1,5 +1,6 @@
 import { Renderer, Program, Mesh, Color, Triangle } from 'ogl';
 import { useEffect, useRef } from 'react';
+import { GALAXY_ZOOM_EVENTS } from '@/types/galaxy';
 
 const vertexShader = `
 attribute vec2 uv;
@@ -251,7 +252,7 @@ export default function Galaxy({
     }
 
     window.addEventListener('resize', resize, false);
-    window.addEventListener('galaxy-zoom-change', resize);
+    window.addEventListener(GALAXY_ZOOM_EVENTS.ZOOM_CHANGE, resize);
     resize();
 
     const geometry = new Triangle(gl);
@@ -329,7 +330,7 @@ export default function Galaxy({
     return () => {
       cancelAnimationFrame(animateId);
       window.removeEventListener('resize', resize);
-      window.removeEventListener('galaxy-zoom-change', handleZoomChange);
+      window.removeEventListener(GALAXY_ZOOM_EVENTS.ZOOM_CHANGE, handleZoomChange);
       if (mouseInteraction) {
         ctn.removeEventListener('mousemove', handleMouseMove);
         ctn.removeEventListener('mouseleave', handleMouseLeave);

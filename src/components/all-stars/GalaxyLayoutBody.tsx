@@ -3,6 +3,7 @@ import GalacticMeasurements from './GalacticMeasurements';
 import GalaxyZoomControls from './GalaxyZoomControls';
 import GalaxyNavigationDialog from './GalaxyNavigationDialog';
 import AllStarsLink from './AllStarsLink';
+import { GALAXY_ZOOM_EVENTS } from '@/types/galaxy';
 
 interface GalaxyZoomWrapperProps {
   projectName?: string;
@@ -122,7 +123,7 @@ const GalaxyZoomWrapper: React.FC<GalaxyZoomWrapperProps> = ({
 
   const handleZoomChange = (zoom: number, virtualSize: { width: number; height: number }) => {
     // Dispatch custom event for GalaxyWrapper to listen
-    const event = new CustomEvent('galaxy-zoom-change', {
+    const event = new CustomEvent(GALAXY_ZOOM_EVENTS.ZOOM_CHANGE, {
       detail: {
         zoom,
         virtualScreenSize: virtualSize,
@@ -178,9 +179,9 @@ const GalaxyZoomWrapper: React.FC<GalaxyZoomWrapperProps> = ({
       }
     };
 
-    window.addEventListener('galaxy-zoom-to', handleZoomTo as EventListener);
+    window.addEventListener(GALAXY_ZOOM_EVENTS.ZOOM_TO, handleZoomTo as EventListener);
     return () => {
-      window.removeEventListener('galaxy-zoom-to', handleZoomTo as EventListener);
+      window.removeEventListener(GALAXY_ZOOM_EVENTS.ZOOM_TO, handleZoomTo as EventListener);
     };
   }, [zoom]);
 

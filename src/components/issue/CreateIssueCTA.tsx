@@ -3,6 +3,7 @@ import Button from '@/components/custom-ui/Button';
 import CreateIssueForm from './CreateIssueForm';
 import DemoAuthPanel from '@/components/demo/DemoAuthPanel';
 import { cn } from '@/lib/utils';
+import { ISSUE_EVENT_TYPES } from '@/types/issue';
 
 interface CreateIssueCTAProps {
     galaxyId: string;
@@ -18,7 +19,7 @@ const CreateIssueCTA: React.FC<CreateIssueCTAProps> = ({ galaxyId, onIssueCreate
         setTimeout(() => {
             onIssueCreated?.();
             // Also trigger a custom event for issue list refresh
-            window.dispatchEvent(new CustomEvent('issue-created'));
+            window.dispatchEvent(new CustomEvent(ISSUE_EVENT_TYPES.ISSUE_CREATED));
         }, 500);
     };
 

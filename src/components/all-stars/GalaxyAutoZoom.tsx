@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { GALAXY_ZOOM_EVENTS } from '@/types/galaxy';
 
 interface GalaxyAutoZoomProps {
   galaxyX?: number;
@@ -38,7 +39,7 @@ const GalaxyAutoZoom: React.FC<GalaxyAutoZoomProps> = ({ galaxyX, galaxyY }) => 
 
       // Dispatch zoom event after a short delay to ensure the page is ready
       setTimeout(() => {
-        const event = new CustomEvent('galaxy-zoom-to', {
+        const event = new CustomEvent(GALAXY_ZOOM_EVENTS.ZOOM_TO, {
           detail: { targetZoom },
         });
         window.dispatchEvent(event);

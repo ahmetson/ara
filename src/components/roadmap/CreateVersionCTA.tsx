@@ -3,6 +3,7 @@ import Button from '@/components/custom-ui/Button';
 import CreateVersionForm from './CreateVersionForm';
 import DemoAuthPanel from '@/components/demo/DemoAuthPanel';
 import { cn } from '@/lib/utils';
+import { ROADMAP_EVENT_TYPES } from '@/types/roadmap';
 
 interface CreateVersionCTAProps {
     galaxyId: string;
@@ -18,7 +19,7 @@ const CreateVersionCTA: React.FC<CreateVersionCTAProps> = ({ galaxyId, onVersion
         setTimeout(() => {
             onVersionCreated?.();
             // Also trigger a custom event for version list refresh
-            window.dispatchEvent(new CustomEvent('version-created'));
+            window.dispatchEvent(new CustomEvent(ROADMAP_EVENT_TYPES.VERSION_CREATED));
         }, 500);
     };
 

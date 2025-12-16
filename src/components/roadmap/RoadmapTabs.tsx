@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react'
 import Tabs, { TabProps } from '../Tabs'
 import Badge from '../badge/Badge'
 import type { Version } from '@/types/roadmap'
+import { ROADMAP_EVENT_TYPES } from '@/types/roadmap'
 import RoadmapPanel from './RoadmapPanel'
 import { getVersions } from '@/client-side/roadmap'
 
@@ -37,9 +38,9 @@ const RoadmapTabs: React.FC<RoadmapTabsProps> = ({ galaxyId }) => {
       fetchVersions()
     }
 
-    window.addEventListener('version-created', handleVersionCreated)
+    window.addEventListener(ROADMAP_EVENT_TYPES.VERSION_CREATED, handleVersionCreated)
     return () => {
-      window.removeEventListener('version-created', handleVersionCreated)
+      window.removeEventListener(ROADMAP_EVENT_TYPES.VERSION_CREATED, handleVersionCreated)
     }
   }, [fetchVersions])
 

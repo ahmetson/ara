@@ -17,6 +17,7 @@ export interface Version {
 }
 
 export const ROADMAP_EVENT_TYPES = {
+  VERSION_CREATED: 'version-created',
   VERSION_RELEASED: 'version-released',
 } as const
 

@@ -1,4 +1,5 @@
 ---
+import { CAPTCHA_EVENT_TYPES } from '@/types/captcha';
 const recaptchaKey = import.meta.env.PUBLIC_TURNSTYLE_KEY;
 ---
 
@@ -9,7 +10,7 @@ const recaptchaKey = import.meta.env.PUBLIC_TURNSTYLE_KEY;
 
 <script is:inline define:vars={{ recaptchaKey }}>
     // Listen for request-captcha event to trigger reCAPTCHA execution
-    document.addEventListener("request-captcha", async function (e) {
+    document.addEventListener(CAPTCHA_EVENT_TYPES.REQUEST, async function (e) {
         console.log(
             "request-captcha event received, ready to execute reCAPTCHA? for ",
             e.detail.action,
@@ -24,7 +25,7 @@ const recaptchaKey = import.meta.env.PUBLIC_TURNSTYLE_KEY;
                     "...",
                 );
                 // Dispatch custom event with the captcha token
-                const event = new CustomEvent("captcha-response", {
+                const event = new CustomEvent(CAPTCHA_EVENT_TYPES.RESPONSE, {
                     detail: { token: token },
                 });
                 console.log("captcha-response event dispatched", event);

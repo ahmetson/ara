@@ -1,3 +1,5 @@
+import { CAPTCHA_EVENT_TYPES } from '@/types/captcha';
+
 export const recaptchaHandleJoinWishlist = async (
     action: 'hero' | 'join-us',
     id: string, // Element ID wher we show the captcha (turnstile-container)
@@ -23,7 +25,7 @@ export const recaptchaHandleJoinWishlist = async (
         const recaptchaToken = customEvent.detail.token
 
         // Remove the event listener
-        document.removeEventListener('captcha-response', handleCaptchaResponse)
+        document.removeEventListener(CAPTCHA_EVENT_TYPES.RESPONSE, handleCaptchaResponse)
 
         try {
             const response = await fetch('/api-json', {
@@ -66,12 +68,12 @@ export const recaptchaHandleJoinWishlist = async (
     }
 
     // Add event listener for captcha-response
-    document.addEventListener('captcha-response', handleCaptchaResponse)
+    document.addEventListener(CAPTCHA_EVENT_TYPES.RESPONSE, handleCaptchaResponse)
 
 
     console.log('request-captcha event dispatched')
     // Dispatch request-captcha event to trigger reCAPTCHA execution
-    const requestEvent = new CustomEvent('request-captcha', { detail: { action, id } })
+    const requestEvent = new CustomEvent(CAPTCHA_EVENT_TYPES.REQUEST, { detail: { action, id } })
     document.dispatchEvent(requestEvent)
 }
 

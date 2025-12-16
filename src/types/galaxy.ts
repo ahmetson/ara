@@ -15,3 +15,8 @@ export interface Galaxy {
     blockchainTx?: string;
 }
 
+export const GALAXY_ZOOM_EVENTS = {
+    ZOOM_TO: 'galaxy-zoom-to',
+    ZOOM_CHANGE: 'galaxy-zoom-change',
+} as const
+

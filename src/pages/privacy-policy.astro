@@ -1,0 +1,1108 @@
+---
+export const prerender = true;
+import GalaxyLayout from "@/layouts/GalaxyLayout.astro";
+import { MenuName } from "@/components/navbar/WorkNavbar.astro";
+import AraGradientText from "@/components/AraGradientText";
+---
+
+<GalaxyLayout
+  active={MenuName.ProjectList}
+  hideLinks={Object.keys(MenuName)}
+  projectName="Ara"
+  initialZoom={100}
+  minZoom={25}
+  maxZoom={150}
+  isStatic={true}
+>
+  <!-- Hero Section -->
+  <section
+    slot="hero"
+    class="relative flex flex-col items-center justify-center min-h-[40vh] text-center px-4 py-16"
+  >
+    <div class="w-full max-w-4xl mx-auto space-y-6">
+      <div class="flex items-center justify-center gap-4 mb-6">
+        <img
+          src="/ara_logo.png"
+          alt="Ara Logo"
+          class="w-16 h-16 md:w-20 md:h-20"
+        />
+        <div class="text-4xl md:text-5xl lg:text-6xl font-bold">
+          <AraGradientText client:only="react" className="font-bold" />
+        </div>
+      </div>
+
+      <h1
+        class="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-800 dark:text-slate-200"
+      >
+        Privacy Policy
+      </h1>
+      <p
+        class="text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto"
+      >
+        (fun-storylike-edition)
+      </p>
+      <p class="text-base opacity-80 max-w-2xl mx-auto leading-relaxed">
+        We believe privacy should be simple and transparent. So here's the deal,
+        no fine print, no trickery.
+      </p>
+      <p class="text-sm opacity-70 mt-4 text-right max-w-2xl mx-auto">
+        Written by Medet Ahmetson.
+      </p>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <div slot="center" class="w-full max-w-5xl mx-auto space-y-16 py-12 px-4">
+    <!-- Section 1: What is Ara -->
+    <section class="space-y-8">
+      <div class="text-center mb-8">
+        <div class="flex items-center justify-center gap-3 mb-4">
+          <svg
+            class="w-8 h-8 text-blue-500 dark:text-blue-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+            ></path>
+          </svg>
+          <h2
+            class="text-3xl md:text-4xl font-bold text-slate-800 dark:text-slate-200"
+          >
+            What is Ara?
+          </h2>
+        </div>
+        <p
+          class="text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto"
+        >
+          Ara is a visual social media platform for open source projects that
+          tracks project ownership, collaboration, and funds on blockchain.
+        </p>
+      </div>
+
+      <!-- Galaxy/Stars/Sunshines Diagram -->
+      <div
+        class="backdrop-blur-md bg-white/30 dark:bg-slate-900/30 border border-slate-200/40 dark:border-slate-700/40 rounded-xl p-6 md:p-8"
+      >
+        <h3
+          class="text-2xl font-bold text-slate-800 dark:text-slate-200 mb-6 flex items-center gap-3"
+        >
+          <svg
+            class="w-6 h-6 text-purple-500 dark:text-purple-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+            ></path>
+          </svg>
+          Projects are Galaxies, People are Stars
+        </h3>
+        <div class="mb-6">
+          <svg
+            viewBox="0 0 600 300"
+            class="w-full h-auto"
+            aria-label="Galaxy and Stars relationship diagram"
+          >
+            <!-- Galaxy (Project) -->
+            <g>
+              <circle
+                cx="150"
+                cy="150"
+                r="60"
+                fill="none"
+                stroke="rgb(59, 130, 246)"
+                stroke-width="3"
+                stroke-opacity="0.6"
+                class="dark:stroke-blue-400"></circle>
+              <circle
+                cx="150"
+                cy="150"
+                r="40"
+                fill="none"
+                stroke="rgb(59, 130, 246)"
+                stroke-width="2"
+                stroke-opacity="0.8"
+                class="dark:stroke-blue-400"></circle>
+              <text
+                x="150"
+                y="155"
+                text-anchor="middle"
+                class="text-sm fill-slate-700 dark:fill-slate-300"
+                font-size="14"
+                font-weight="bold"
+              >
+                Galaxy
+              </text>
+              <text
+                x="150"
+                y="175"
+                text-anchor="middle"
+                class="text-xs fill-slate-600 dark:fill-slate-400"
+                font-size="11"
+              >
+                (Project)
+              </text>
+            </g>
+
+            <!-- Stars around Galaxy -->
+            <g>
+              <circle
+                cx="80"
+                cy="100"
+                r="4"
+                fill="rgb(234, 179, 8)"
+                class="dark:fill-yellow-400"></circle>
+              <path
+                d="M80 92 L81 98 L87 98 L82 103 L84 110 L80 105 L76 110 L78 103 L73 98 L79 98 Z"
+                fill="rgb(234, 179, 8)"
+                class="dark:fill-yellow-400"></path>
+              <text
+                x="80"
+                y="120"
+                text-anchor="middle"
+                class="text-xs fill-slate-600 dark:fill-slate-400"
+                font-size="10"
+              >
+                Star
+              </text>
+            </g>
+
+            <g>
+              <circle
+                cx="220"
+                cy="80"
+                r="4"
+                fill="rgb(234, 179, 8)"
+                class="dark:fill-yellow-400"></circle>
+              <path
+                d="M220 72 L221 78 L227 78 L222 83 L224 90 L220 85 L216 90 L218 83 L213 78 L219 78 Z"
+                fill="rgb(234, 179, 8)"
+                class="dark:fill-yellow-400"></path>
+            </g>
+
+            <g>
+              <circle
+                cx="250"
+                cy="180"
+                r="4"
+                fill="rgb(234, 179, 8)"
+                class="dark:fill-yellow-400"></circle>
+              <path
+                d="M250 172 L251 178 L257 178 L252 183 L254 190 L250 185 L246 190 L248 183 L243 178 L249 178 Z"
+                fill="rgb(234, 179, 8)"
+                class="dark:fill-yellow-400"></path>
+            </g>
+
+            <!-- Sunshines -->
+            <g>
+              <circle
+                cx="400"
+                cy="150"
+                r="35"
+                fill="rgb(255, 193, 7)"
+                fill-opacity="0.3"
+                stroke="rgb(255, 193, 7)"
+                stroke-width="2"
+                class="dark:fill-yellow-400/30 dark:stroke-yellow-400"></circle>
+              <circle
+                cx="400"
+                cy="150"
+                r="25"
+                fill="rgb(255, 193, 7)"
+                fill-opacity="0.5"
+                class="dark:fill-yellow-400/50"></circle>
+              <text
+                x="400"
+                y="155"
+                text-anchor="middle"
+                class="text-sm fill-slate-700 dark:fill-slate-300"
+                font-size="13"
+                font-weight="bold"
+              >
+                ☀️
+              </text>
+              <text
+                x="400"
+                y="200"
+                text-anchor="middle"
+                class="text-xs fill-slate-600 dark:fill-slate-400"
+                font-size="11"
+              >
+                Sunshines
+              </text>
+              <text
+                x="400"
+                y="215"
+                text-anchor="middle"
+                class="text-xs fill-slate-600 dark:fill-slate-400"
+                font-size="10"
+              >
+                (Funding)
+              </text>
+            </g>
+
+            <!-- Connection lines -->
+            <line
+              x1="150"
+              y1="150"
+              x2="400"
+              y2="150"
+              stroke="rgb(168, 85, 247)"
+              stroke-width="2"
+              stroke-opacity="0.4"
+              stroke-dasharray="5,5"
+              class="dark:stroke-purple-400"></line>
+          </svg>
+        </div>
+        <p class="text-lg text-slate-700 dark:text-slate-300">
+          In Ara, open source projects are represented as <strong
+            >Galaxies</strong
+          >, and the people who contribute to them are <strong>Stars</strong>.
+          When you fund a project, you earn <strong>Sunshines</strong> that represent
+          your contribution and stake in the project's success.
+        </p>
+      </div>
+    </section>
+
+    <!-- Decorative separator -->
+    <div class="flex items-center justify-center gap-2 my-12 opacity-50">
+      <div class="w-1 h-1 rounded-full bg-slate-400 dark:bg-slate-500"></div>
+      <div class="w-2 h-2 rounded-full bg-slate-400 dark:bg-slate-500"></div>
+      <div class="w-1 h-1 rounded-full bg-slate-400 dark:bg-slate-500"></div>
+    </div>
+
+    <!-- Section 2: Email Tracking (Demo) -->
+    <section class="space-y-8">
+      <div
+        class="backdrop-blur-md bg-white/30 dark:bg-slate-900/30 border border-purple-200/40 dark:border-purple-700/40 rounded-xl p-6 md:p-8"
+      >
+        <h3
+          class="text-2xl font-bold text-slate-800 dark:text-slate-200 mb-6 flex items-center gap-3"
+        >
+          <svg
+            class="w-6 h-6 text-purple-500 dark:text-purple-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+            ></path>
+          </svg>
+          1. Email Tracking (Demo Phase)
+        </h3>
+
+        <!-- Email Tracking Flow Diagram -->
+        <div class="mb-6">
+          <svg
+            viewBox="0 0 500 200"
+            class="w-full h-auto"
+            aria-label="Email tracking flow diagram"
+          >
+            <!-- User -->
+            <g>
+              <circle
+                cx="80"
+                cy="100"
+                r="30"
+                fill="rgb(59, 130, 246)"
+                fill-opacity="0.2"
+                stroke="rgb(59, 130, 246)"
+                stroke-width="2"
+                class="dark:fill-blue-400/20 dark:stroke-blue-400"></circle>
+              <text
+                x="80"
+                y="108"
+                text-anchor="middle"
+                class="text-sm fill-slate-700 dark:fill-slate-300"
+                font-size="14"
+                font-weight="bold"
+              >
+                👤
+              </text>
+              <text
+                x="80"
+                y="145"
+                text-anchor="middle"
+                class="text-xs fill-slate-600 dark:fill-slate-400"
+                font-size="11"
+              >
+                You
+              </text>
+            </g>
+
+            <!-- Arrow -->
+            <path
+              d="M 110 100 L 170 100"
+              stroke="rgb(168, 85, 247)"
+              stroke-width="2.5"
+              fill="none"
+              marker-end="url(#arrow-purple-email)"
+              class="dark:stroke-purple-400"></path>
+
+            <!-- Email -->
+            <g>
+              <rect
+                x="200"
+                y="60"
+                width="100"
+                height="80"
+                rx="4"
+                fill="rgb(168, 85, 247)"
+                fill-opacity="0.2"
+                stroke="rgb(168, 85, 247)"
+                stroke-width="2"
+                class="dark:fill-purple-400/20 dark:stroke-purple-400"></rect>
+              <text
+                x="250"
+                y="110"
+                text-anchor="middle"
+                class="text-lg fill-slate-700 dark:fill-slate-300"
+                font-size="16"
+              >
+                📧
+              </text>
+              <text
+                x="250"
+                y="160"
+                text-anchor="middle"
+                class="text-xs fill-slate-600 dark:fill-slate-400"
+                font-size="11"
+              >
+                Email
+              </text>
+            </g>
+
+            <!-- Arrow -->
+            <path
+              d="M 300 100 L 360 100"
+              stroke="rgb(168, 85, 247)"
+              stroke-width="2.5"
+              fill="none"
+              marker-end="url(#arrow-purple-email)"
+              class="dark:stroke-purple-400"></path>
+
+            <!-- Demo Tracking -->
+            <g>
+              <rect
+                x="380"
+                y="60"
+                width="100"
+                height="80"
+                rx="4"
+                fill="rgb(34, 197, 94)"
+                fill-opacity="0.2"
+                stroke="rgb(34, 197, 94)"
+                stroke-width="2"
+                stroke-dasharray="4,4"
+                class="dark:fill-green-400/20 dark:stroke-green-400"></rect>
+              <text
+                x="430"
+                y="105"
+                text-anchor="middle"
+                class="text-sm fill-slate-700 dark:fill-slate-300"
+                font-size="12"
+                font-weight="bold"
+              >
+                Demo
+              </text>
+              <text
+                x="430"
+                y="120"
+                text-anchor="middle"
+                class="text-sm fill-slate-700 dark:fill-slate-300"
+                font-size="12"
+                font-weight="bold"
+              >
+                Tracking
+              </text>
+              <text
+                x="430"
+                y="160"
+                text-anchor="middle"
+                class="text-xs fill-slate-600 dark:fill-slate-400"
+                font-size="10"
+              >
+                (Temporary)
+              </text>
+            </g>
+
+            <defs>
+              <marker
+                id="arrow-purple-email"
+                markerWidth="8"
+                markerHeight="8"
+                refX="7"
+                refY="3"
+                orient="auto"
+              >
+                <polygon
+                  points="0 0, 8 3, 0 6"
+                  fill="rgb(168, 85, 247)"
+                  class="dark:fill-purple-400"></polygon>
+              </marker>
+            </defs>
+          </svg>
+        </div>
+
+        <div class="space-y-4">
+          <p class="text-lg text-slate-700 dark:text-slate-300">
+            <strong>For the demo version:</strong> We collect your email address when
+            you sign up or use Ara. This is temporary and only used to create your
+            demo account and track your session.
+          </p>
+          <p class="text-lg text-slate-700 dark:text-slate-300">
+            We'll only use it to:
+          </p>
+          <ul
+            class="list-disc list-inside space-y-2 text-slate-700 dark:text-slate-300 ml-4"
+          >
+            <li>Create and manage your demo account</li>
+            <li>Track your activity during the demo session</li>
+            <li>Send you important updates about Ara (if you opt in)</li>
+          </ul>
+          <p class="text-lg text-slate-700 dark:text-slate-300 mt-4">
+            <strong>No spam, no selling your email, no creepy stuff.</strong>
+            Once we move to full blockchain tracking, email usage will be minimized
+            or eliminated.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Decorative separator -->
+    <div class="flex items-center justify-center gap-2 my-12 opacity-50">
+      <div class="w-1 h-1 rounded-full bg-slate-400 dark:bg-slate-500"></div>
+      <div class="w-2 h-2 rounded-full bg-slate-400 dark:bg-slate-500"></div>
+      <div class="w-1 h-1 rounded-full bg-slate-400 dark:bg-slate-500"></div>
+    </div>
+
+    <!-- Section 3: Blockchain Tracking -->
+    <section class="space-y-8">
+      <div
+        class="backdrop-blur-md bg-white/30 dark:bg-slate-900/30 border border-cyan-200/40 dark:border-cyan-700/40 rounded-xl p-6 md:p-8"
+      >
+        <h3
+          class="text-2xl font-bold text-slate-800 dark:text-slate-200 mb-6 flex items-center gap-3"
+        >
+          <svg
+            class="w-6 h-6 text-cyan-500 dark:text-cyan-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+          </svg>
+          2. Blockchain Tracking (Coming Soon)
+        </h3>
+
+        <!-- Blockchain Architecture Diagram -->
+        <div class="mb-6">
+          <svg
+            viewBox="0 0 600 350"
+            class="w-full h-auto"
+            aria-label="Blockchain architecture options diagram"
+          >
+            <!-- Top: Ara Interface -->
+            <g>
+              <rect
+                x="200"
+                y="20"
+                width="200"
+                height="80"
+                rx="8"
+                fill="rgb(59, 130, 246)"
+                fill-opacity="0.2"
+                stroke="rgb(59, 130, 246)"
+                stroke-width="2"
+                stroke-dasharray="4,4"
+                class="dark:fill-blue-400/20 dark:stroke-blue-400"></rect>
+              <text
+                x="300"
+                y="50"
+                text-anchor="middle"
+                class="text-sm fill-slate-700 dark:fill-slate-300"
+                font-size="14"
+                font-weight="bold"
+              >
+                Ara Visual Interface
+              </text>
+              <text
+                x="300"
+                y="70"
+                text-anchor="middle"
+                class="text-xs fill-slate-600 dark:fill-slate-400"
+                font-size="11"
+              >
+                (Frontend)
+              </text>
+              <text
+                x="300"
+                y="85"
+                text-anchor="middle"
+                class="text-xs fill-slate-600 dark:fill-slate-400"
+                font-size="11"
+              >
+                Galaxy, Stars, Sunshines
+              </text>
+            </g>
+
+            <!-- Arrow down -->
+            <path
+              d="M 300 100 L 300 140"
+              stroke="rgb(59, 130, 246)"
+              stroke-width="2"
+              fill="none"
+              marker-end="url(#arrow-blue)"
+              class="dark:stroke-blue-400"></path>
+
+            <!-- Middle: Blockchain Layer -->
+            <g>
+              <rect
+                x="150"
+                y="160"
+                width="300"
+                height="60"
+                rx="8"
+                fill="rgb(34, 211, 238)"
+                fill-opacity="0.2"
+                stroke="rgb(34, 211, 238)"
+                stroke-width="2"
+                class="dark:fill-cyan-400/20 dark:stroke-cyan-400"></rect>
+              <text
+                x="300"
+                y="185"
+                text-anchor="middle"
+                class="text-sm fill-slate-700 dark:fill-slate-300"
+                font-size="13"
+                font-weight="bold"
+              >
+                Blockchain Layer
+              </text>
+              <text
+                x="300"
+                y="205"
+                text-anchor="middle"
+                class="text-xs fill-slate-600 dark:fill-slate-400"
+                font-size="11"
+              >
+                (Implementation TBD)
+              </text>
+            </g>
+
+            <!-- Arrow down -->
+            <path
+              d="M 300 220 L 300 240"
+              stroke="rgb(34, 211, 238)"
+              stroke-width="2"
+              fill="none"
+              marker-end="url(#arrow-cyan)"
+              class="dark:stroke-cyan-400"></path>
+
+            <!-- Bottom: Two Options -->
+            <!-- Option 1: MPC -->
+            <g>
+              <rect
+                x="50"
+                y="260"
+                width="200"
+                height="70"
+                rx="8"
+                fill="rgb(168, 85, 247)"
+                fill-opacity="0.15"
+                stroke="rgb(168, 85, 247)"
+                stroke-width="2"
+                stroke-dasharray="3,3"
+                class="dark:fill-purple-400/15 dark:stroke-purple-400"></rect>
+              <text
+                x="150"
+                y="285"
+                text-anchor="middle"
+                class="text-sm fill-slate-700 dark:fill-slate-300"
+                font-size="13"
+                font-weight="bold"
+              >
+                Option 1: MPC
+              </text>
+              <text
+                x="150"
+                y="305"
+                text-anchor="middle"
+                class="text-xs fill-slate-600 dark:fill-slate-400"
+                font-size="10"
+              >
+                Multi-Party
+              </text>
+              <text
+                x="150"
+                y="318"
+                text-anchor="middle"
+                class="text-xs fill-slate-600 dark:fill-slate-400"
+                font-size="10"
+              >
+                Computation
+              </text>
+            </g>
+
+            <!-- Option 2: User-Owned -->
+            <g>
+              <rect
+                x="350"
+                y="260"
+                width="200"
+                height="70"
+                rx="8"
+                fill="rgb(34, 197, 94)"
+                fill-opacity="0.15"
+                stroke="rgb(34, 197, 94)"
+                stroke-width="2"
+                stroke-dasharray="3,3"
+                class="dark:fill-green-400/15 dark:stroke-green-400"></rect>
+              <text
+                x="450"
+                y="285"
+                text-anchor="middle"
+                class="text-sm fill-slate-700 dark:fill-slate-300"
+                font-size="13"
+                font-weight="bold"
+              >
+                Option 2: User-Owned
+              </text>
+              <text
+                x="450"
+                y="305"
+                text-anchor="middle"
+                class="text-xs fill-slate-600 dark:fill-slate-400"
+                font-size="10"
+              >
+                User Controls
+              </text>
+              <text
+                x="450"
+                y="318"
+                text-anchor="middle"
+                class="text-xs fill-slate-600 dark:fill-slate-400"
+                font-size="10"
+              >
+                Their Keys
+              </text>
+            </g>
+
+            <!-- Connection lines from blockchain to options -->
+            <path
+              d="M 200 190 L 150 260"
+              stroke="rgb(168, 85, 247)"
+              stroke-width="1.5"
+              stroke-opacity="0.5"
+              fill="none"
+              class="dark:stroke-purple-400"></path>
+            <path
+              d="M 400 190 L 450 260"
+              stroke="rgb(34, 197, 94)"
+              stroke-width="1.5"
+              stroke-opacity="0.5"
+              fill="none"
+              class="dark:stroke-green-400"></path>
+
+            <defs>
+              <marker
+                id="arrow-blue"
+                markerWidth="8"
+                markerHeight="8"
+                refX="7"
+                refY="3"
+                orient="auto"
+              >
+                <polygon
+                  points="0 0, 8 3, 0 6"
+                  fill="rgb(59, 130, 246)"
+                  class="dark:fill-blue-400"></polygon>
+              </marker>
+              <marker
+                id="arrow-cyan"
+                markerWidth="8"
+                markerHeight="8"
+                refX="7"
+                refY="3"
+                orient="auto"
+              >
+                <polygon
+                  points="0 0, 8 3, 0 6"
+                  fill="rgb(34, 211, 238)"
+                  class="dark:fill-cyan-400"></polygon>
+              </marker>
+            </defs>
+          </svg>
+        </div>
+
+        <div class="space-y-4">
+          <p class="text-lg text-slate-700 dark:text-slate-300">
+            <strong>The future:</strong> Ara will track all collaboration, ownership,
+            and funding on a blockchain. This makes everything verifiable, transparent,
+            and permanent.
+          </p>
+          <p class="text-lg text-slate-700 dark:text-slate-300">
+            We're still deciding on the exact implementation:
+          </p>
+          <ul
+            class="list-disc list-inside space-y-2 text-slate-700 dark:text-slate-300 ml-4"
+          >
+            <li>
+              <strong>MPC (Multi-Party Computation):</strong> A shared blockchain
+              where multiple parties work together to maintain the network securely.
+            </li>
+            <li>
+              <strong>User-Owned:</strong> Each user controls their own keys and blockchain
+              interactions, giving you full control over your data.
+            </li>
+          </ul>
+          <p class="text-lg text-slate-700 dark:text-slate-300 mt-4">
+            Once we decide and implement, all tracking will move to the
+            blockchain, and email usage will be minimized or eliminated. Ara
+            itself is just the visual interface—the real magic happens on-chain.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Decorative separator -->
+    <div class="flex items-center justify-center gap-2 my-12 opacity-50">
+      <div class="w-1 h-1 rounded-full bg-slate-400 dark:bg-slate-500"></div>
+      <div class="w-2 h-2 rounded-full bg-slate-400 dark:bg-slate-500"></div>
+      <div class="w-1 h-1 rounded-full bg-slate-400 dark:bg-slate-500"></div>
+    </div>
+
+    <!-- Section 4: Analytics -->
+    <section class="space-y-8">
+      <div
+        class="backdrop-blur-md bg-white/30 dark:bg-slate-900/30 border border-orange-200/40 dark:border-orange-700/40 rounded-xl p-6 md:p-8"
+      >
+        <h3
+          class="text-2xl font-bold text-slate-800 dark:text-slate-200 mb-6 flex items-center gap-3"
+        >
+          <svg
+            class="w-6 h-6 text-orange-500 dark:text-orange-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+            ></path>
+          </svg>
+          3. Analytics
+        </h3>
+        <p class="text-lg text-slate-700 dark:text-slate-300 mb-4">
+          <strong>a.k.a. "how we make Ara less clunky"</strong>
+        </p>
+        <div class="space-y-4">
+          <p class="text-lg text-slate-700 dark:text-slate-300">
+            We use analytics to see what pages people visit, how long they stay,
+            and where they click. This helps us improve the design and user
+            experience.
+          </p>
+          <p class="text-lg text-slate-700 dark:text-slate-300">
+            We don't use it to stalk you, sell you stuff, or anything creepy.
+            Promise. It's just to make Ara better for everyone.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Decorative separator -->
+    <div class="flex items-center justify-center gap-2 my-12 opacity-50">
+      <div class="w-1 h-1 rounded-full bg-slate-400 dark:bg-slate-500"></div>
+      <div class="w-2 h-2 rounded-full bg-slate-400 dark:bg-slate-500"></div>
+      <div class="w-1 h-1 rounded-full bg-slate-400 dark:bg-slate-500"></div>
+    </div>
+
+    <!-- Section 5: Stars and Sunshines -->
+    <section class="space-y-8">
+      <div
+        class="backdrop-blur-md bg-white/30 dark:bg-slate-900/30 border border-yellow-200/40 dark:border-yellow-700/40 rounded-xl p-6 md:p-8"
+      >
+        <h3
+          class="text-2xl font-bold text-slate-800 dark:text-slate-200 mb-6 flex items-center gap-3"
+        >
+          <svg
+            class="w-6 h-6 text-yellow-500 dark:text-yellow-400"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+            ></path>
+          </svg>
+          4. Stars and Sunshines
+        </h3>
+
+        <!-- Stars and Sunshines Flow Diagram -->
+        <div class="mb-6">
+          <svg
+            viewBox="0 0 600 250"
+            class="w-full h-auto"
+            aria-label="Stars and Sunshines flow diagram"
+          >
+            <!-- Funding -->
+            <g>
+              <circle
+                cx="100"
+                cy="125"
+                r="35"
+                fill="rgb(59, 130, 246)"
+                fill-opacity="0.3"
+                stroke="rgb(59, 130, 246)"
+                stroke-width="2"
+                class="dark:fill-blue-400/30 dark:stroke-blue-400"></circle>
+              <text
+                x="100"
+                y="135"
+                text-anchor="middle"
+                class="text-lg fill-slate-800 dark:fill-slate-200"
+                font-size="16"
+              >
+                💰
+              </text>
+              <text
+                x="100"
+                y="175"
+                text-anchor="middle"
+                class="text-xs fill-slate-600 dark:fill-slate-400"
+                font-size="11"
+              >
+                Funding
+              </text>
+            </g>
+
+            <!-- Arrow -->
+            <path
+              d="M 135 125 L 200 125"
+              stroke="rgb(168, 85, 247)"
+              stroke-width="2.5"
+              fill="none"
+              marker-end="url(#arrow-purple-stars)"
+              class="dark:stroke-purple-400"></path>
+
+            <!-- Sunshines -->
+            <g>
+              <circle
+                cx="250"
+                cy="125"
+                r="40"
+                fill="rgb(255, 193, 7)"
+                fill-opacity="0.4"
+                stroke="rgb(255, 193, 7)"
+                stroke-width="2"
+                class="dark:fill-yellow-400/40 dark:stroke-yellow-400"></circle>
+              <text
+                x="250"
+                y="135"
+                text-anchor="middle"
+                class="text-xl fill-slate-800 dark:fill-slate-200"
+                font-size="20"
+              >
+                ☀️
+              </text>
+              <text
+                x="250"
+                y="180"
+                text-anchor="middle"
+                class="text-xs fill-slate-600 dark:fill-slate-400"
+                font-size="11"
+                font-weight="bold"
+              >
+                Sunshines
+              </text>
+            </g>
+
+            <!-- Arrow -->
+            <path
+              d="M 290 125 L 360 125"
+              stroke="rgb(168, 85, 247)"
+              stroke-width="2.5"
+              fill="none"
+              marker-end="url(#arrow-purple-stars)"
+              class="dark:stroke-purple-400"></path>
+
+            <!-- Stars -->
+            <g>
+              <circle
+                cx="450"
+                cy="125"
+                r="35"
+                fill="rgb(234, 179, 8)"
+                fill-opacity="0.3"
+                stroke="rgb(234, 179, 8)"
+                stroke-width="2"
+                class="dark:fill-yellow-400/30 dark:stroke-yellow-400"></circle>
+              <path
+                d="M450 95 L452 110 L467 110 L455 120 L458 135 L450 125 L442 135 L445 120 L433 110 L448 110 Z"
+                fill="rgb(234, 179, 8)"
+                class="dark:fill-yellow-400"></path>
+              <text
+                x="450"
+                y="175"
+                text-anchor="middle"
+                class="text-xs fill-slate-600 dark:fill-slate-400"
+                font-size="11"
+                font-weight="bold"
+              >
+                Stars
+              </text>
+              <text
+                x="450"
+                y="190"
+                text-anchor="middle"
+                class="text-xs fill-slate-600 dark:fill-slate-400"
+                font-size="10"
+              >
+                (Contributions)
+              </text>
+            </g>
+
+            <!-- Blockchain connection -->
+            <g>
+              <rect
+                x="200"
+                y="200"
+                width="200"
+                height="40"
+                rx="4"
+                fill="rgb(34, 211, 238)"
+                fill-opacity="0.2"
+                stroke="rgb(34, 211, 238)"
+                stroke-width="1.5"
+                stroke-dasharray="3,3"
+                class="dark:fill-cyan-400/20 dark:stroke-cyan-400"></rect>
+              <text
+                x="300"
+                y="225"
+                text-anchor="middle"
+                class="text-xs fill-slate-600 dark:fill-slate-400"
+                font-size="10"
+              >
+                Tracked on Blockchain
+              </text>
+            </g>
+
+            <!-- Connection lines -->
+            <line
+              x1="250"
+              y1="165"
+              x2="300"
+              y2="200"
+              stroke="rgb(34, 211, 238)"
+              stroke-width="1.5"
+              stroke-opacity="0.5"
+              class="dark:stroke-cyan-400"></line>
+            <line
+              x1="450"
+              y1="160"
+              x2="400"
+              y2="200"
+              stroke="rgb(34, 211, 238)"
+              stroke-width="1.5"
+              stroke-opacity="0.5"
+              class="dark:stroke-cyan-400"></line>
+
+            <defs>
+              <marker
+                id="arrow-purple-stars"
+                markerWidth="8"
+                markerHeight="8"
+                refX="7"
+                refY="3"
+                orient="auto"
+              >
+                <polygon
+                  points="0 0, 8 3, 0 6"
+                  fill="rgb(168, 85, 247)"
+                  class="dark:fill-purple-400"></polygon>
+              </marker>
+            </defs>
+          </svg>
+        </div>
+
+        <div class="space-y-4">
+          <p class="text-lg text-slate-700 dark:text-slate-300">
+            When you fund a project in Ara, you get <strong>Sunshines</strong>
+            that represent your contribution. As you collaborate and contribute to
+            projects, you earn <strong>Stars</strong> that show your participation
+            and stake in the community.
+          </p>
+          <p class="text-lg text-slate-700 dark:text-slate-300">
+            All of this—your Stars, Sunshines, and contributions—will be tracked
+            on the blockchain. This makes your contributions permanent,
+            verifiable, and part of the project's history forever.
+          </p>
+          <p class="text-lg text-slate-700 dark:text-slate-300">
+            Stars are tied to real Git issues and commits, so everything is
+            transparent and connected to actual work.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Decorative separator -->
+    <div class="flex items-center justify-center gap-2 my-12 opacity-50">
+      <div class="w-1 h-1 rounded-full bg-slate-400 dark:bg-slate-500"></div>
+      <div class="w-2 h-2 rounded-full bg-slate-400 dark:bg-slate-500"></div>
+      <div class="w-1 h-1 rounded-full bg-slate-400 dark:bg-slate-500"></div>
+    </div>
+
+    <!-- Final Note -->
+    <section class="space-y-8">
+      <div
+        class="backdrop-blur-md bg-white/30 dark:bg-slate-900/30 border border-slate-200/40 dark:border-slate-700/40 rounded-xl p-6 md:p-8 text-center"
+      >
+        <div class="flex items-center justify-center gap-2 mb-4">
+          <svg
+            class="w-6 h-6 text-red-500 dark:text-red-400"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+            ></path>
+          </svg>
+          <h3 class="text-2xl font-bold text-slate-800 dark:text-slate-200">
+            That's it.
+          </h3>
+        </div>
+        <p class="text-lg text-slate-700 dark:text-slate-300">
+          We're building Ara to be transparent, fair, and sustainable. Your
+          privacy matters, and we're committed to keeping things simple and
+          honest.
+        </p>
+        <p class="text-base text-slate-600 dark:text-slate-400 mt-4">
+          Questions? Concerns? Reach out to us. We're here to help.
+        </p>
+      </div>
+    </section>
+  </div>
+</GalaxyLayout>
+
+<style is:global>
+  html {
+    scroll-behavior: smooth;
+  }
+</style>

@@ -103,6 +103,8 @@ When generating code, you have access to the following in the execution context:
    - Should NOT include function wrapper or return statements
    - Should directly manipulate state using setters
    - Can use conditionals, loops, and all JavaScript features
+   - **CRITICAL: DO NOT declare variables with names that already exist in the context** (e.g., do NOT use \`const initialZoom = ...\` because \`initialZoom\` is already available as a prop)
+   - If you need a new variable, use a different name (e.g., \`const calculatedZoom = ...\` instead of \`const initialZoom = ...\`)
 
 3. **URI Extraction**:
    - Extract URIs from the user's prompt
@@ -114,79 +116,35 @@ When generating code, you have access to the following in the execution context:
    - To set zoom: \`setZoom(50);\`
    - To check project: \`if (projectId === 'some-id') { setZoom(10); }\`
    - To check URI: \`if (location.pathname.includes('/all-stars')) { setZoom(75); }\`
+   - To calculate a value: \`const calculatedValue = someCalculation(); setZoom(calculatedValue);\` (use unique variable names)
+   - **WRONG**: \`const initialZoom = 50; setZoom(initialZoom);\` (conflicts with existing prop)
+   - **CORRECT**: \`const zoomValue = 50; setZoom(zoomValue);\` (uses unique name)
 `;
 }
 
 /**
- * Build the complete context string
+ * Build the complete context string (brief version)
  */
 function buildContext(): string {
-  const projectRoot = getProjectRoot();
+  // Build brief context document without full component code
+  const context = `# GalaxyLayoutBody Component - Brief Context
 
-  // Read all relevant files
-  const galaxyLayoutBody = readProjectFile('src/components/all-stars/GalaxyLayoutBody.tsx');
-  const galaxyZoomControls = readProjectFile('src/components/all-stars/GalaxyZoomControls.tsx');
-  const galacticMeasurements = readProjectFile('src/components/all-stars/GalacticMeasurements.tsx');
-  const galaxyNavigationDialog = readProjectFile('src/components/all-stars/GalaxyNavigationDialog.tsx');
-  const allStarsLink = readProjectFile('src/components/all-stars/AllStarsLink.tsx');
-  const galaxyTypes = readProjectFile('src/types/galaxy.ts');
+This document provides essential information for generating personalization code for the GalaxyLayoutBody React component.
 
-  // Build the context document
-  const context = `# GalaxyLayoutBody Component Context
+## Component Overview
 
-This document provides the complete context for generating personalization code for the GalaxyLayoutBody React component.
+**GalaxyLayoutBody** is a React component that:
+- Manages zoom level (25-100 range)
+- Controls virtual screen size (width/height)
+- Shows/hides navigation dialog
+- Executes user-generated personalization code
+- Supports test mode for previewing changes
 
-## Main Component
-
-### GalaxyLayoutBody.tsx
-\`\`\`typescript
-${galaxyLayoutBody}
-\`\`\`
-
-**Description**: This is the main component that manages zoom, virtual screen size, and personalization execution. It contains:
-- State management for zoom, dialog, virtual screen size
-- Code execution function (\`executePersonalization\`) that runs generated code with component context
-- Test mode functionality for previewing personalizations
-- Integration with personalization storage
-
-## Related Components
-
-### GalaxyZoomControls.tsx
-\`\`\`typescript
-${galaxyZoomControls}
-\`\`\`
-
-**Description**: Component that provides zoom controls (zoom in, zoom out, slider). It accepts \`initialZoom\`, \`minZoom\`, \`maxZoom\`, and \`onZoomChange\` callback.
-
-### GalacticMeasurements.tsx
-\`\`\`typescript
-${galacticMeasurements}
-\`\`\`
-
-**Description**: Component that displays measurements and grid marks based on \`virtualScreenSize\`. Shows width/height measurements and percentage marks.
-
-### GalaxyNavigationDialog.tsx
-\`\`\`typescript
-${galaxyNavigationDialog}
-\`\`\`
-
-**Description**: Dialog component that appears when user zooms out too far. Provides option to navigate to all-stars page.
-
-### AllStarsLink.tsx
-\`\`\`typescript
-${allStarsLink}
-\`\`\`
-
-**Description**: Link component that navigates to the all-stars page. Hidden when already on all-stars page.
-
-## Type Definitions
-
-### galaxy.ts
-\`\`\`typescript
-${galaxyTypes}
-\`\`\`
-
-**Description**: Type definitions for galaxy-related data structures and events.
+**Related Components** (for reference only):
+- **GalaxyZoomControls**: Zoom in/out buttons and slider
+- **GalacticMeasurements**: Displays width/height measurements
+- **GalaxyNavigationDialog**: Dialog shown when zooming out too far
+- **AllStarsLink**: Navigation link to all-stars page
 
 ${buildExecutionContextDocs()}
 `;
@@ -199,9 +157,9 @@ ${buildExecutionContextDocs()}
  */
 export function getCachedContext(): string {
   if (!cachedContext) {
-    console.log('Building context for Claude API (this happens once per server restart)');
+    console.log('Building brief context for LLM API (this happens once per server restart)');
     cachedContext = buildContext();
-    console.log(`Context built successfully (${cachedContext.length} characters)`);
+    console.log(`Brief context built successfully (${cachedContext.length} characters, ~${Math.ceil(cachedContext.length / 4)} tokens)`);
   }
   return cachedContext;
 }

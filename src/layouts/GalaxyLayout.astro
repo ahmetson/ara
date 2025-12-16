@@ -38,6 +38,7 @@ interface Props {
     tags?: string[];
     leaderboardPosition?: number;
   }>;
+  isStatic?: boolean;
 }
 const {
   hideLinks,
@@ -51,6 +52,7 @@ const {
   stars,
   projectId,
   projectGalaxies,
+  isStatic = false,
 } = Astro.props;
 ---
 
@@ -72,15 +74,30 @@ const {
       data-galaxy-backgrounds
       style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; transform-origin: center center; pointer-events: auto; z-index: 0; overflow: hidden;"
     >
-      <GradientBackground
-        className="fixed h-screen w-screen z-0 pointer-events-none"
-      />
+      {
+        isStatic ? (
+          <GradientBackground className="fixed h-screen w-screen z-0 pointer-events-none" />
+        ) : (
+          <GradientBackground
+            client:only="react"
+            className="fixed h-screen w-screen z-0 pointer-events-none"
+          />
+        )
+      }
       <GridBackgrounded />
-      <GravityStarsBackground
-        className="fixed h-screen w-screen z-1 pointer-events-none"
-      />
+      {
+        isStatic ? (
+          <GravityStarsBackground className="fixed h-screen w-screen z-1 pointer-events-none" />
+        ) : (
+          <GravityStarsBackground
+            client:only="react"
+            className="fixed h-screen w-screen z-1 pointer-events-none"
+          />
+        )
+      }
       <div class="fixed h-screen w-screen z-2">
         <Galaxy
+          client:only="react"
           mouseInteraction={false}
           speed={0.25}
           rotationSpeed={0.015}

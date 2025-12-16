@@ -1,9 +1,9 @@
-import '../../packages/blockchain-gateway/client-side/client';
-import { imitate50Deposit } from "../../packages/blockchain-gateway/client-side/initiate-deposit";
-import { hyperpay } from "../../packages/blockchain-gateway/client-side/hyperpay";
+import '../../packages/crypto-sockets/client-side/client';
+import { imitate50Deposit } from "../../packages/crypto-sockets/client-side/initiate-deposit";
+import { hyperpay } from "../../packages/crypto-sockets/client-side/hyperpay";
 import { ObjectId } from 'mongodb';
 import { getCollection, create } from './db';
-import type { Donation } from '@/types/blockchain-gateway';
+import type { Donation } from '@/types/crypto-sockets';
 
 /**
  * Payment gateway simulation

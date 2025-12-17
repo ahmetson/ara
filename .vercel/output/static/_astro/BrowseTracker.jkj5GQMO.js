@@ -1,1 +1,0 @@
-import{r as o}from"./index.DxhH1ShK.js";import{p as t}from"./browse-tracker.1pHqLWse.js";const n=()=>(o.useEffect(()=>{const r=window.location.pathname+window.location.search;t(r)},[]),null);export{n as default};

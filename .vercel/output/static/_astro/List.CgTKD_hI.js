@@ -1,1 +1,0 @@
-import{j as a}from"./jsx-runtime.D_zvdyIk.js";import{c as e}from"./utils.BnlJtBIq.js";const x=({className:s,children:o,contentHeight:t})=>{const r=t?`${t} overflow-y-auto`:"";return a.jsx("div",{className:e("font-noto-sans text-sm text-gray-600 dark:text-gray-500 space-y-3",r,s),children:o})};export{x as L};

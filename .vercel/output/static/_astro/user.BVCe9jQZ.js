@@ -1,1 +1,0 @@
-import{a}from"./virtual.VUcB3V37.js";async function s(t){try{const r=await a.getUserById({userId:t});return r.data?.success&&r.data.data?r.data.data:null}catch(r){return console.error("Error getting user by id:",r),null}}export{s as g};

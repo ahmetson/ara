@@ -13,6 +13,7 @@ node_modules/
 # environment variables
 .env
 .env.production
+.env.dev
 
 # macOS-specific files
 .DS_Store

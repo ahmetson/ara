@@ -20,7 +20,7 @@
     "db:sync": "tsx scripts/sync-db.ts"
   },
   "dependencies": {
-    "@ara-web/crypto-sockets": "1.0.3",
+    "@ara-web/crypto-sockets": "1.0.5",
     "@astrojs/react": "^4.4.1",
     "@astrojs/vercel": "^8.2.11",
     "@base-ui-components/react": "1.0.0-beta.4",

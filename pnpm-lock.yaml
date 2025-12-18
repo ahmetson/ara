@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@ara-web/crypto-sockets':
-        specifier: 1.0.3
-        version: 1.0.3(@types/react@19.2.2)(react@19.2.0)(typescript@5.8.3)(use-sync-external-store@1.6.0(react@19.2.0))(viem@2.43.1(typescript@5.8.3)(zod@3.25.76))
+        specifier: 1.0.5
+        version: 1.0.5(@types/react@19.2.2)(react@19.2.0)(typescript@5.8.3)(use-sync-external-store@1.6.0(react@19.2.0))(viem@2.43.1(typescript@5.8.3)(zod@3.25.76))
       '@astrojs/react':
         specifier: ^4.4.1
         version: 4.4.1(@types/node@24.10.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(jiti@2.6.1)(lightningcss@1.30.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(sass-embedded@1.93.3)(sass@1.93.3)(tsx@4.21.0)
@@ -241,8 +241,8 @@ packages:
   '@ara-web/cascadefund-smartcontracts@0.0.1':
     resolution: {integrity: sha512-3/WX+n08ER8TQnp1bzxcyXcngpEWC1axJrOvn/yAUJFVCQ14tmOmVYzh+g3RRHzCDOjYIykgUa4be+S01HaWxQ==}
 
-  '@ara-web/crypto-sockets@1.0.3':
-    resolution: {integrity: sha512-v9ac5ljgMz0Hr91YMQokSP0pgJ2+HBQTVY6/R16JPhmpojONOPEhBcfApidJQH+cuV+xINvhP71+wkoyq9qUfw==}
+  '@ara-web/crypto-sockets@1.0.5':
+    resolution: {integrity: sha512-s2iw5LEVHN4tnlTyiEa1NlnLRAbNQNW8nMYDt00DgwgfYafWfjYnyouKI8iJXk7ZEvA+HvWwcc7Z/tkyFuGcjQ==}
 
   '@ara-web/smartcontracts@1.0.1':
     resolution: {integrity: sha512-OBEYLOvlvOgLgu8J4UEuvXvklomwp86ePKVnsX6AqYU+TPaIyBLgHLGRZc9qxKl3nAzFZaRBQl/H5Vh2rBEgzA==}
@@ -5390,7 +5390,7 @@ snapshots:
     dependencies:
       '@openzeppelin/contracts': 5.4.0
 
-  '@ara-web/crypto-sockets@1.0.3(@types/react@19.2.2)(react@19.2.0)(typescript@5.8.3)(use-sync-external-store@1.6.0(react@19.2.0))(viem@2.43.1(typescript@5.8.3)(zod@3.25.76))':
+  '@ara-web/crypto-sockets@1.0.5(@types/react@19.2.2)(react@19.2.0)(typescript@5.8.3)(use-sync-external-store@1.6.0(react@19.2.0))(viem@2.43.1(typescript@5.8.3)(zod@3.25.76))':
     dependencies:
       '@ara-web/cascadefund-smartcontracts': 0.0.1
       '@ara-web/smartcontracts': 1.0.1(@types/react@19.2.2)(react@19.2.0)(typescript@5.8.3)(use-sync-external-store@1.6.0(react@19.2.0))(viem@2.43.1(typescript@5.8.3)(zod@3.25.76))

@@ -12,10 +12,6 @@ import NewGalaxyButton from "@/components/all-stars/NewGalaxyButton";
 import DemoCtaPanel from "@/components/project/DemoCtaPanel";
 import { mockContestData } from "@/types/mock-data";
 import { getAllGalaxies, getGalaxyById } from "@/server-side/galaxy";
-import { setup } from "@/setup/demo";
-
-// Setup demo galaxies (creates first 5 if they don't exist)
-await setup();
 
 // Read galaxy query parameter
 const galaxyId = Astro.url.searchParams.get("galaxy");

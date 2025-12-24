@@ -17,12 +17,14 @@
     "db:up": "./scripts/check-docker.sh && docker compose up -d",
     "db:down": "./scripts/check-docker.sh && docker compose down",
     "db:stats": "./scripts/check-docker.sh && docker compose ps",
-    "db:sync": "tsx scripts/sync-db.ts"
+    "db:sync": "tsx scripts/sync-db.ts",
+    "db:setup-auth": "tsx scripts/better-auth-setup.ts"
   },
   "dependencies": {
     "@ara-web/crypto-sockets": "1.0.5",
     "@astrojs/react": "^4.4.1",
     "@astrojs/vercel": "^8.2.11",
+    "@auth/core": "^0.37.4",
     "@base-ui-components/react": "1.0.0-beta.4",
     "@chatscope/chat-ui-kit-react": "^2.1.1",
     "@chatscope/chat-ui-kit-styles": "^1.4.0",
@@ -50,6 +52,7 @@
     "@types/react": "^19.2.2",
     "astro": "^5.15.3",
     "autoprefixer": "^10.4.21",
+    "better-auth": "^1.4.9",
     "canvas-confetti": "^1.9.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

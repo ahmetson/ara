@@ -6,7 +6,7 @@ import NumberFlow from '@number-flow/react'
 import TimeAgo from 'timeago-react'
 import Link from '@/components/custom-ui/Link'
 import Tooltip from '@/components/custom-ui/Tooltip'
-import MenuAvatar from '@/components/MenuAvatar'
+import AuthStar from '@/components/auth/AuthStar'
 import { getIcon } from '@/components/icon'
 import { Popover } from '@base-ui-components/react/popover'
 import Button from '@/components/custom-ui/Button'
@@ -223,7 +223,7 @@ const TransactionsHistoryPanel: React.FC<TransactionsHistoryPanelProps> = ({
                           <div className="text-sm">
                             Who donated
                             <div className="mt-2">
-                              <MenuAvatar
+                              <AuthStar
                                 src={transaction.user.icon}
                                 nickname={transaction.user.nickname}
                                 sunshines={transaction.user.sunshines}
@@ -234,7 +234,7 @@ const TransactionsHistoryPanel: React.FC<TransactionsHistoryPanelProps> = ({
                           </div>
                         }
                       >
-                        <MenuAvatar
+                        <AuthStar
                           src={transaction.user.icon}
                           nickname={transaction.user.nickname}
                           sunshines={transaction.user.sunshines}

@@ -140,6 +140,18 @@ function authVerificationToAuthVerificationModel(verification: AuthVerification)
     }
 }
 
+/**
+ * Get accounts by user ID
+ */
+export async function getAccountsByUserId(userId: string): Promise<AuthAccount[]> {
+    const { getDb } = await import('@/server-side/db')
+    const db = await getDb()
+    const collection = db.collection<AuthAccountModel>('account')
+
+    const accounts = await collection.find({ userId }).toArray()
+    return accounts.map(account => authAccountModelToAuthAccount(account)!).filter(Boolean)
+}
+
 export {
     authUserModelToAuthUser,
     authUserToAuthUserModel,

@@ -1,5 +1,5 @@
 import React from 'react'
-import MenuAvatar from '@/components/MenuAvatar'
+import AuthStar from '@/components/auth/AuthStar'
 import Badge from '@/components/badge/Badge'
 import NumberFlow from '@number-flow/react'
 import { getIcon } from '@/components/icon'
@@ -28,7 +28,7 @@ const ReceiverInfo: React.FC<ReceiverInfoProps> = ({
     <div>
       <div className="flex items-center justify-between gap-2 py-2">
         <div className="flex items-center gap-2 flex-1 min-w-0">
-          <MenuAvatar
+          <AuthStar
             src={icon}
             nickname={nickname}
             sunshines={sunshines}

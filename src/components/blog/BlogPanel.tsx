@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { BasePanel } from '@/components/panel'
 import Badge from '@/components/badge/Badge'
 import Link from '@/components/custom-ui/Link'
-import MenuAvatar from '@/components/MenuAvatar'
+import AuthStar from '@/components/auth/AuthStar'
 import TimeAgo from 'timeago-react'
 import type { Blog } from '@/types/blog'
 import type { Star } from '@/types/star'
@@ -132,7 +132,7 @@ const BlogPanel: React.FC<BlogPanelProps> = (blog) => {
                             ) : (
                                 <>
                                     <span className="text-sm">By</span>
-                                    <MenuAvatar
+                                    <AuthStar
                                         src={authorUser?.src}
                                         className="w-8 h-8"
                                     />

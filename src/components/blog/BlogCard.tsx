@@ -5,7 +5,7 @@ import { getIcon } from '../icon'
 import type { Blog } from '@/types/blog'
 import Badge from '../badge/Badge'
 import PanelFooter from '../panel/PanelFooter'
-import MenuAvatar from '../MenuAvatar'
+import AuthStar from '../auth/AuthStar'
 import TimeAgo from 'timeago-react'
 import type { Star } from '@/types/star'
 import { getStarById } from '@/client-side/star'
@@ -122,7 +122,7 @@ const BlogCard: React.FC<BlogCardProps> = (blog) => {
                             ) : (
                                 <>
                                     <span>By</span>
-                                    <MenuAvatar
+                                    <AuthStar
                                         src={authorUser?.src}
                                         className="w-6 h-6"
                                     />

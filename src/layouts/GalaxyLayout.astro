@@ -124,12 +124,13 @@ if (Astro.locals.session) {
       />
     </div>
 
-    <!-- Content Container - Will be transformed by GalaxyZoomWrapper -->
+    <!-- Content Container Header -->
     <div data-galaxy-fixed>
       <Header hideLinks={hideLinks} hideAuth={hideAuth} additional={additional}>
         <slot name="header-navbar" />
       </Header>
     </div>
+    <!-- Content Container Body - Will be transformed by GalaxyZoomWrapper -->
     <div
       id="galaxy-space"
       class="z-2 relative border border-red-500/20"
@@ -154,11 +155,13 @@ if (Astro.locals.session) {
         <slot name="right" class="ml-4" slot="right" />
       </ThreeColumnGrid>
     </div>
+    <!-- Content Container Footer -->
     <div data-galaxy-fixed id="galaxy-footer">
       <slot name="footer" />
       <Footer />
     </div>
 
+    <!-- Meta UI -->
     <GalaxyLayoutBody
       client:only="react"
       projectName={projectName}

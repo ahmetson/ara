@@ -1,30 +1,65 @@
 'use client'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Link from '@/components/custom-ui/Link'
 import { FaGithub, FaLinkedin, FaTelegram } from 'react-icons/fa'
 import { getIcon } from '@/components/icon'
 import { BasePanel } from '@/components/panel'
 import type { Star } from '@/types/star'
 import type { Galaxy } from '@/types/galaxy'
+import type { AuthUser } from '@/types/auth'
 import NumberFlow from '@number-flow/react'
 import { cn } from '@/lib/utils'
-
-
+import { getAccountsByUserId } from '@/client-side/auth-accounts'
+import { useIsCurrentUser } from '@/hooks/useIsCurrentUser'
+import Input from '@/components/Input'
+import Label from '@/components/custom-ui/Label'
 
 interface ProfilePanelProps {
     user: Star
     galaxies: Galaxy[]
+    authUser?: AuthUser | null
 }
 
 // 5-pointed star clip-path polygon
 const starClipPath = 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)'
 
-const ProfilePanel: React.FC<ProfilePanelProps> = ({ user, galaxies }) => {
+const ProfilePanel: React.FC<ProfilePanelProps> = ({ user, galaxies, authUser }) => {
     const defaultSrc = 'https://api.backdropbuild.com/storage/v1/object/public/avatars/9nFM8HasgS.jpeg'
     const defaultAlt = 'Avatar'
+    const { isCurrentUser } = useIsCurrentUser(user.email)
+    const [accounts, setAccounts] = useState<Array<{ providerId: string; providerAccountId: string }>>([])
+    const [isLoadingAccounts, setIsLoadingAccounts] = useState(false)
 
-    // Social links removed - no longer stored in Star model
+    // Fetch accounts if viewing own profile
+    useEffect(() => {
+        const fetchAccounts = async () => {
+            if (isCurrentUser && authUser?.id) {
+                setIsLoadingAccounts(true)
+                try {
+                    const fetchedAccounts = await getAccountsByUserId(authUser.id)
+                    setAccounts(fetchedAccounts.map(acc => ({
+                        providerId: acc.providerId,
+                        providerAccountId: acc.providerAccountId,
+                    })))
+                } catch (error) {
+                    console.error('Error fetching accounts:', error)
+                } finally {
+                    setIsLoadingAccounts(false)
+                }
+            }
+        }
+        fetchAccounts()
+    }, [isCurrentUser, authUser?.id])
+
+    // Build social links from accounts
     const socialLinks: Array<{ type: 'github' | 'linkedin' | 'telegram'; url: string }> = []
+    const githubAccount = accounts.find(acc => acc.providerId === 'github')
+    if (githubAccount) {
+        socialLinks.push({
+            type: 'github',
+            url: `https://github.com/${githubAccount.providerAccountId}`,
+        })
+    }
 
     const getSocialIcon = (type: 'github' | 'linkedin' | 'telegram') => {
         switch (type) {
@@ -157,12 +192,80 @@ const ProfilePanel: React.FC<ProfilePanelProps> = ({ user, galaxies }) => {
                         </div>
                     </div>
 
-                    {/* User Email */}
-                    {user.email && (
-                        <div className="text-center text-sm text-slate-500 dark:text-slate-400 pt-2">
-                            {user.email}
-                        </div>
-                    )}
+                    {/* Professional Information Section */}
+                    <div className="space-y-4 pt-4 border-t border-slate-200 dark:border-slate-700/50">
+                        <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">Profile Information</h2>
+
+                        {/* Connected Social Links */}
+                        {socialLinks.length > 0 && (
+                            <div className="space-y-2">
+                                <Label>Connected Social Links</Label>
+                                <div className="flex items-center gap-4">
+                                    {socialLinks.map((social) => (
+                                        <Link
+                                            key={social.type}
+                                            uri={social.url}
+                                            asNewTab={true}
+                                            className="flex items-center gap-2 p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800/50 transition-colors"
+                                        >
+                                            {getSocialIcon(social.type)}
+                                            <span className="text-sm text-slate-700 dark:text-slate-300">
+                                                {social.type === 'github' && githubAccount && (
+                                                    <>GitHub ({githubAccount.providerAccountId})</>
+                                                )}
+                                            </span>
+                                        </Link>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Email */}
+                        {user.email && (
+                            <div className="space-y-2">
+                                <Label>Email</Label>
+                                <div className="text-sm font-medium text-slate-900 dark:text-slate-100 px-3 py-2 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+                                    {user.email}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Display Name (from auth user) */}
+                        {isCurrentUser && authUser?.name && (
+                            <div className="space-y-2">
+                                <Label>Display Name</Label>
+                                <div className="text-sm font-medium text-slate-900 dark:text-slate-100 px-3 py-2 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+                                    {authUser.name}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Nickname (from star) */}
+                        {user.nickname && (
+                            <div className="space-y-2">
+                                <Label>Nickname</Label>
+                                <div className="text-sm font-medium text-slate-900 dark:text-slate-100 px-3 py-2 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+                                    {user.nickname}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Password Field (only for current user) */}
+                        {isCurrentUser && (
+                            <div className="space-y-2">
+                                <Label>Password</Label>
+                                <Input
+                                    type="password"
+                                    value="••••••••"
+                                    disabled={true}
+                                    className="w-full"
+                                />
+                                <p className="text-xs text-slate-500 dark:text-slate-400 italic">
+                                    Password change is not available yet.
+                                </p>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </BasePanel>
         </div>

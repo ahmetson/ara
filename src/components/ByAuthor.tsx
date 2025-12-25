@@ -1,5 +1,5 @@
 import React from 'react'
-import MenuAvatar from './MenuAvatar'
+import AuthStar from './auth/AuthStar'
 import AvatarList from './AvatarList'
 import ProfileRating from './rating/ProfileRating'
 import TimeAgo from 'timeago-react'
@@ -35,7 +35,7 @@ const ByAuthor: React.FC<ByAuthorProps> = ({
             <AvatarList contributors={author} showLastRating={true} />
           ) : (
             <>
-              <MenuAvatar src={author?.icon} uri={author?.uri} className='w-7! h-7!' />
+              <AuthStar src={author?.icon} uri={author?.uri} className='w-7! h-7!' />
               {author.rating && <ProfileRating {...author.rating} />}
             </>
           )}

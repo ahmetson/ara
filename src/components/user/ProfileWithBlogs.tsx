@@ -5,14 +5,16 @@ import BlogListPanel from '../blog/BlogListPanel'
 import type { Star } from '@/types/star'
 import type { Galaxy } from '@/types/galaxy'
 import type { Blog } from '@/types/blog'
+import type { AuthUser } from '@/types/auth'
 
 interface ProfileWithBlogsProps {
     user: Star
     galaxies: Galaxy[]
     blogs: Blog[]
+    authUser?: AuthUser | null
 }
 
-const ProfileWithBlogs: React.FC<ProfileWithBlogsProps> = ({ user, galaxies, blogs }) => {
+const ProfileWithBlogs: React.FC<ProfileWithBlogsProps> = ({ user, galaxies, blogs, authUser }) => {
     const [isMerged, setIsMerged] = useState(false)
     const profileRef = useRef<HTMLDivElement>(null)
 
@@ -55,6 +57,7 @@ const ProfileWithBlogs: React.FC<ProfileWithBlogsProps> = ({ user, galaxies, blo
                     <ProfilePanel
                         user={user}
                         galaxies={galaxies}
+                        authUser={authUser}
                     />
                 </div>
                 <div className={cn(

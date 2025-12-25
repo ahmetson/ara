@@ -4,7 +4,7 @@ import type { PanelEvents } from '@/types/eventTypes'
 import ProfileRatingPanel from '../rating/ProfileRatingPanel'
 import Followings from '../social-network/Followings'
 import VotingPower from '../social-network/VotingPower'
-import MenuAvatar from '../MenuAvatar'
+import AuthStar from '../auth/AuthStar'
 import Link from '../custom-ui/Link'
 import { FaGithub, FaLinkedin, FaTelegram } from 'react-icons/fa'; // Import the LinkedIn icon from Font Awesome
 import { getIcon } from '../icon'
@@ -127,7 +127,7 @@ const ProfilePanel: React.FC<ProfileProps & PanelEvents> = ({ onActionClick, ...
         />}
       <div className="flex items-start space-x-4">
         <div className="w-16 overflow-hidden flex flex-col space-y-2 items-center">
-          <MenuAvatar className='w-16 h-16' imgClassName='w-full h-full' alt={`Profile avatar of ${value['name']}`} />
+          <AuthStar className='w-16 h-16' imgClassName='w-full h-full' alt={`Profile avatar of ${value['name']}`} />
           <Followings selfProfile={props.selfProfile} following={props.following} followers={props.followers} onActionClick={() => { }} />
         </div>
 

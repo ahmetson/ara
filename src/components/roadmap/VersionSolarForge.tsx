@@ -9,7 +9,7 @@ import { solarForgeByVersion } from '@/client-side/all-stars'
 import type { SolarForgeByVersionResult, SolarUser } from '@/types/all-stars'
 import { getStarById } from '@/client-side/star'
 import type { User } from '@/types/star'
-import MenuAvatar from '@/components/MenuAvatar'
+import AuthStar from '@/components/auth/AuthStar'
 import { cn } from '@/lib/utils'
 import confetti from 'canvas-confetti'
 
@@ -237,7 +237,7 @@ const VersionSolarForge: React.FC = () => {
                                             )}
                                         >
                                             <div className="flex items-center gap-3">
-                                                <MenuAvatar user={user} />
+                                                <AuthStar star={user} />
                                                 <div>
                                                     <div className="font-medium text-slate-800 dark:text-slate-200">
                                                         {user.nickname || user.email?.split('@')[0] || 'Unknown'}
@@ -285,7 +285,7 @@ const VersionSolarForge: React.FC = () => {
                                     Top Receiver
                                 </div>
                                 <div className="flex flex-col items-center p-6 rounded-lg border-2 border-yellow-400 dark:border-yellow-500 bg-yellow-50/50 dark:bg-yellow-900/20">
-                                    <MenuAvatar user={topUser} />
+                                    <AuthStar star={topUser} />
                                     <div className="mt-4 font-bold text-xl text-slate-800 dark:text-slate-200">
                                         {topUser.nickname || topUser.email?.split('@')[0] || 'Unknown'}
                                     </div>

@@ -6,7 +6,7 @@ import { getIssueStatIcon } from './utils'
 import Badge from '../badge/Badge'
 import PanelFooter from '../panel/PanelFooter'
 import PanelStat from '../panel/PanelStat'
-import MenuAvatar from '../MenuAvatar'
+import AuthStar from '../auth/AuthStar'
 import TimeAgo from 'timeago-react';
 import { ActionProps } from '@/types/eventTypes'
 import PanelAction from '../panel/PanelAction'
@@ -254,7 +254,7 @@ const IssueLinkPanel4: React.FC<IssueLinkProps> = (issue) => {
                     <Spinner className='w-7 h-7' variant='ellipsis' />
                   </div>
                 ) : authorUser ? (
-                  <MenuAvatar user={authorUser} className='w-7! h-7!' />
+                  <AuthStar star={authorUser} className='w-7! h-7!' />
                 ) : null}
               </>
             )}

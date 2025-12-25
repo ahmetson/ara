@@ -6,10 +6,12 @@ import BackButton from "@/components/custom-ui/BackButton";
 import GalaxyAutoZoom from "@/components/all-stars/GalaxyAutoZoom";
 import ProfileWithBlogs from "@/components/user/ProfileWithBlogs";
 import CreateBlogCTA from "@/components/blog/CreateBlogCTA";
+import ConditionalSignOutButton from "@/components/auth/ConditionalSignOutButton";
 import { getStarById, getStarByEmail } from "@/server-side/star";
 import { getGalaxiesByMaintainer } from "@/server-side/galaxy";
 import { getBlogsByAuthor } from "@/server-side/blog";
 import { mockUserStars } from "@/types/mock-data";
+import type { AuthUser } from "@/types/auth";
 
 // Get user identifier from query params
 const userIdParam = Astro.url.searchParams.get("id");
@@ -67,6 +69,26 @@ const userY =
     userGalaxies.length > 0
         ? userGalaxies.reduce((sum, g) => sum + g.y, 0) / userGalaxies.length
         : 0;
+
+// Get auth user from locals (set by middleware)
+const betterAuthUser = Astro.locals.user;
+const authUser: AuthUser | null = betterAuthUser
+    ? {
+          id: betterAuthUser.id,
+          email: betterAuthUser.email,
+          emailVerified: betterAuthUser.emailVerified || false,
+          username: (betterAuthUser as any).username as string | undefined,
+          displayUsername: (betterAuthUser as any).displayUsername as
+              | string
+              | undefined,
+          name: betterAuthUser.name,
+          image: betterAuthUser.image
+              ? (betterAuthUser.image as string)
+              : undefined,
+          createdAt: betterAuthUser.createdAt,
+          updatedAt: betterAuthUser.updatedAt,
+      }
+    : null;
 ---
 
 <GalaxyLayout
@@ -81,11 +103,14 @@ const userY =
 >
     <BackButton slot="left" client:load />
 
+    <ConditionalSignOutButton slot="right" starEmail={user.email} client:load />
+
     <ProfileWithBlogs
         slot="center"
         user={user}
         galaxies={userGalaxies}
         blogs={userBlogs}
+        authUser={authUser}
         client:only="react"
     />
 

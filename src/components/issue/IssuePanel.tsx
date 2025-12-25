@@ -15,7 +15,7 @@ import { ActionProps } from '@/types/eventTypes'
 import PanelFooter from '@/components/panel/PanelFooter'
 import PanelStat from '@/components/panel/PanelStat'
 import PanelAction from '@/components/panel/PanelAction'
-import MenuAvatar from '@/components/MenuAvatar'
+import AuthStar from '@/components/auth/AuthStar'
 import TimeAgo from 'timeago-react'
 import YourBadge from '../badge/YourBadge'
 import EditableBadge from '../badge/EditableBadge'
@@ -412,7 +412,7 @@ const IssueContentPanel: React.FC<IssueContentPanelProps> = ({
                     {isLoadingContributor ? (
                       <span className="text-xs text-gray-400">Loading...</span>
                     ) : (
-                      <MenuAvatar
+                      <AuthStar
                         src={contributorUser.src}
                         className='w-7! h-7!'
                       />
@@ -423,7 +423,7 @@ const IssueContentPanel: React.FC<IssueContentPanelProps> = ({
                     {isLoadingMaintainer ? (
                       <span className="text-xs text-gray-400">Loading...</span>
                     ) : (
-                      <MenuAvatar
+                      <AuthStar
                         src={maintainerUser.src}
                         uri={maintainerUser.uri}
                         className='w-7! h-7!'
@@ -439,7 +439,7 @@ const IssueContentPanel: React.FC<IssueContentPanelProps> = ({
                     {isLoadingAuthor ? (
                       <span className="text-xs text-gray-400">Loading...</span>
                     ) : (
-                      <MenuAvatar
+                      <AuthStar
                         src={authorUser.src}
                         className='w-7! h-7!'
                       />

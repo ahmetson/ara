@@ -14,7 +14,7 @@ import DropTarget from '../DropTarget'
 import type { Version, Patch } from '@/types/roadmap'
 import type { Star } from '@/types/star'
 import type { Issue } from '@/types/issue'
-import MenuAvatar from '../MenuAvatar'
+import AuthStar from '../auth/AuthStar'
 import { DndProvider, useDrag } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { getDemo, incrementDemoStep } from '@/client-side/demo'
@@ -257,7 +257,7 @@ const ProjectVersionPanel: React.FC<Version> = ({
   const maintainerTooltip = maintainerUser ? (
     <div className="text-sm flex items-center gap-2">
       <span>Maintainer</span>
-      <MenuAvatar user={maintainerUser} />
+      <AuthStar star={maintainerUser} />
       <span>is reviewing the patches.</span>
     </div>
   ) : 'Maintainer controls this action.'
@@ -606,7 +606,7 @@ const ProjectVersionPanel: React.FC<Version> = ({
         return (
           <div className="text-sm flex items-center gap-2">
             <span>contributor</span>
-            {contributorUser && <MenuAvatar user={contributorUser} />}
+            {contributorUser && <AuthStar star={contributorUser} />}
             <span>is working on this issue :)</span>
           </div>
         )
@@ -620,10 +620,10 @@ const ProjectVersionPanel: React.FC<Version> = ({
         return (
           <div className="text-sm flex items-center gap-2">
             <span>contributor</span>
-            {contributorUser && <MenuAvatar user={contributorUser} />}
+            {contributorUser && <AuthStar star={contributorUser} />}
             <span>worked.</span>
             <span>maintainer</span>
-            {maintainerUser && <MenuAvatar user={maintainerUser} />}
+            {maintainerUser && <AuthStar star={maintainerUser} />}
             <span>reviewed.</span>
           </div>
         )
@@ -734,7 +734,7 @@ const ProjectVersionPanel: React.FC<Version> = ({
         return (
           <div className="text-sm flex items-center gap-2">
             <span>Only author</span>
-            {authorUser && <MenuAvatar user={authorUser} />}
+            {authorUser && <AuthStar star={authorUser} />}
             <span>can mark tested</span>
           </div>
         )

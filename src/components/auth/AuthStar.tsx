@@ -1,13 +1,14 @@
 import React from 'react'
 import Link from '@/components/custom-ui/Link'
-import Tooltip from './custom-ui/Tooltip'
+import Tooltip from '../custom-ui/Tooltip'
 import NumberFlow from '@number-flow/react'
-import { getIcon } from './icon'
+import { getIcon } from '../icon'
 import { Roles, type Star } from '@/types/star'
 import { cn } from '@/lib/utils'
 
-interface MenuAvatarProps {
+interface AuthStarProps {
   src?: string
+  email?: string
   alt?: string
   className?: string
   imgClassName?: string
@@ -16,11 +17,12 @@ interface MenuAvatarProps {
   sunshines?: number
   stars?: number
   role?: Roles
-  user?: Star // Accept Star object as alternative to individual props
+  star?: Star // Accept Star object as alternative to individual props
 }
 
-const MenuAvatar: React.FC<MenuAvatarProps> = ({
+const AuthStar: React.FC<AuthStarProps> = ({
   src,
+  email,
   alt,
   className,
   imgClassName = '',
@@ -29,18 +31,18 @@ const MenuAvatar: React.FC<MenuAvatarProps> = ({
   sunshines,
   stars,
   role,
-  user
+  star
 }) => {
   // Use star object if provided, otherwise fall back to individual props
-  const finalSrc = user?.src || src
+  const finalSrc = star?.src || src
   const finalAlt = alt || 'Avatar'
-  const finalNickname = user?.nickname || nickname
-  const finalSunshines = user?.sunshines ?? sunshines
-  const finalStars = user?.stars ?? stars
-  const finalRole = user?.role || role
+  const finalNickname = star?.nickname || nickname
+  const finalSunshines = star?.sunshines ?? sunshines
+  const finalStars = star?.stars ?? stars
+  const finalRole = star?.role || role
   const defaultSrc = 'https://api.backdropbuild.com/storage/v1/object/public/avatars/9nFM8HasgS.jpeg'
   const defaultAlt = 'Avatar'
-  const profileUri = `${uri}?id=${user?._id || ''}`
+  const profileUri = `${uri}?id=${star?._id || ''}`
 
   const tooltipContent = (
     <div className="text-sm space-y-2">
@@ -112,4 +114,4 @@ const MenuAvatar: React.FC<MenuAvatarProps> = ({
   )
 }
 
-export default MenuAvatar
+export default AuthStar

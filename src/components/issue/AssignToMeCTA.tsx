@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Button from '@/components/custom-ui/Button';
 import Tooltip from '@/components/custom-ui/Tooltip';
-import MenuAvatar from '@/components/MenuAvatar';
+import AuthStar from '@/components/auth/AuthStar';
 import DemoAuthPanel from '@/components/demo/DemoAuthPanel';
 import { getDemo } from '@/client-side/demo';
 import { getStarById } from '@/client-side/star';
@@ -166,7 +166,7 @@ const AssignToMeCTA: React.FC<AssignToMeCTAProps> = ({ issueId }) => {
                         {isLoadingContributor ? (
                             <span className="text-xs text-gray-400">Loading...</span>
                         ) : (
-                            <MenuAvatar
+                            <AuthStar
                                 src={contributorUser.src}
                                 className='w-6! h-6!'
                             />

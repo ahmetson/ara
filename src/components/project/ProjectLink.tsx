@@ -7,7 +7,7 @@ import ProjectRating, { ProjectRatingProps } from '../rating/ProjectRating'
 import PanelFooter from '../panel/PanelFooter'
 import PanelStat from '../panel/PanelStat'
 import Link from '../custom-ui/Link'
-import { ProfileLink } from '../../types/user'
+import { Star as ProfileLink } from '../../types/star'
 import MenuAvatar from '../MenuAvatar'
 import TimeAgo from 'timeago-react'
 import { ActionProps } from '@/types/eventTypes'
@@ -130,7 +130,7 @@ const ProjectCard: React.FC<ProjectInfoProps> = ({
 
             {/* Issue author and created time */}
             <div className="flex justify-end items-center space-x-1 text-slate-600 dark:text-slate-400 gap-1 text-xs">
-              By <MenuAvatar src={author?.icon} uri={author?.uri} className='w-7! h-7!' />
+              By <MenuAvatar src={author?.src} className='w-7! h-7!' />
               {createdTime &&
                 <TimeAgo datetime={createdTime} />
               }

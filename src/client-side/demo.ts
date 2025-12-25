@@ -1,6 +1,6 @@
 import { actions } from 'astro:actions';
-import type { Roles, Star } from '../types/user'
-import { DEMO_COOKIE_NAMES, DEMO_EVENT_TYPES } from '../types/demo'
+import type { Roles, Star } from '../types/star'
+import { DEMO_COOKIE_NAMES, DEMO_EVENT_TYPES } from '@/types/demo'
 
 
 // (Client Side) Check if demo cookies exist

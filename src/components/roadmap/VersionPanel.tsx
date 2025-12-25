@@ -223,7 +223,7 @@ const ProjectVersionPanel: React.FC<Version> = ({
     if (!maintainerUser) return undefined
 
     return {
-      uri: maintainerUser.uri || `/profile/${maintainerUser._id}`,
+      uri: `/star?id=${maintainerUser._id}`,
       children: maintainerUser.nickname || maintainerUser.email?.split('@')[0] || 'Unknown',
       icon: maintainerUser.src,
     }
@@ -676,7 +676,7 @@ const ProjectVersionPanel: React.FC<Version> = ({
   const MinimalTestablePatch: React.FC<{ patch: Patch }> = memo(({ patch }) => {
     const [isTested, setIsTested] = useState<boolean>(!!patch.tested)
     const [issue, setIssue] = useState<Issue | null>(null)
-    const [authorUser, setAuthorUser] = useState<User | null>(null)
+    const [authorUser, setAuthorUser] = useState<Star | null>(null)
     const [isLoadingIssue, setIsLoadingIssue] = useState<boolean>(false)
     const [isToggling, setIsToggling] = useState<boolean>(false)
 

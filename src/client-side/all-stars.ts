@@ -1,9 +1,5 @@
 import { actions } from 'astro:actions';
-import type { AllStarStats, SolarForgeByIssueResult, SolarForgeByVersionResult, UserStar } from '@/types/all-stars';
-import { ISSUE_EVENT_TYPES } from '@/types/issue';
-import { STAR_EVENT_TYPES } from '@/types/star';
-import { getIssueById } from './issue';
-import { getStarById } from './user';
+import type { AllStarStats, SolarForgeByVersionResult, UserStar } from '@/types/all-stars';
 
 /**
  * Get all star stats (read-only, no event)

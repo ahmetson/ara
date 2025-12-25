@@ -113,7 +113,7 @@ export const server = {
             try {
                 // Get demo to find maintainer user
                 const { getDemoByEmail } = await import('@/server-side/demo');
-                const { getStarByIds } = await import('@/server-side/user');
+                const { getStarByIds } = await import('@/server-side/star');
                 const demo = await getDemoByEmail(email);
                 if (!demo || !demo.users || demo.users.length === 0) {
                     return {

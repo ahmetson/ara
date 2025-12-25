@@ -1,7 +1,7 @@
 import { Collection, ObjectId } from 'mongodb'
 import { Wallet } from 'ethers'
 import { getCollection } from '../server-side/db'
-import { getOrCreateStarByEmail, getStarByEmail } from '../server-side/user'
+import { getOrCreateStarByEmail, getStarByEmail } from '../server-side/star'
 import { createGalaxy, getAllGalaxies } from '../server-side/galaxy'
 import { getOrCreateProject, getProjectById } from '../server-side/project'
 import type { Galaxy } from '../types/galaxy'

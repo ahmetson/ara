@@ -16,8 +16,8 @@ import { getAllGalaxies, getGalaxyById } from "@/server-side/galaxy";
 const galaxyId = Astro.url.searchParams.get("galaxy");
 const selectedGalaxy = galaxyId ? await getGalaxyById(galaxyId) : null;
 
-// Get all galaxies from database
-const allGalaxiesData = await getAllGalaxies();
+// Get all galaxies from database (only those in space: x > 0 and y > 0)
+const allGalaxiesData = await getAllGalaxies(true);
 
 // Get current user's starsunshines (for demo, using 0 to show locked state)
 const currentStarsunshines = 0;
@@ -38,11 +38,11 @@ const allGalaxies = allGalaxiesData.map((galaxy, index) => ({
   active={MenuName.ProjectList}
   hideLinks={Object.keys(MenuName)}
   projectName="Ara Universe"
-  projectX={selectedGalaxy?.x}
-  projectY={selectedGalaxy?.y}
+  projectX={0}
+  projectY={0}
   projectGalaxies={allGalaxies}
 >
-  {selectedGalaxy && <BackButton slot="left" client:load />}
+  <BackButton slot="left" client:load />
 
   <UniverseHero slot="center" client:only="react" />
   <DemoCtaPanel

@@ -224,7 +224,7 @@ async function ensureGalaxiesOnBlockchain(collection: Collection<GalaxyModel>): 
     console.log('Ensuring galaxies on blockchain...')
     console.log('🔄 Ensuring galaxies on blockchain...')
     try {
-        const galaxies = await getAllGalaxies()
+        const galaxies = await getAllGalaxies() // Get all galaxies including those not in space
         const maintainerUser = await getStarByEmail('milayter@gmail.com')
 
         if (!maintainerUser || !maintainerUser._id || !maintainerUser.demoPrivateKey) {

@@ -68,11 +68,14 @@ function galaxyToGalaxyModel(galaxy: Galaxy): GalaxyModel {
 
 /**
  * Get all galaxies
+ * @param onlyInSpace - If true, returns only galaxies in space (x > 0 and y > 0). Default is false (returns all galaxies).
  */
-export async function getAllGalaxies(): Promise<Galaxy[]> {
+export async function getAllGalaxies(onlyInSpace: boolean = false): Promise<Galaxy[]> {
     try {
         const collection = await getCollection<GalaxyModel>('galaxies')
-        const galaxies = await collection.find({}).toArray()
+        // Filter at database level: only galaxies in space (x > 0 and y > 0) if onlyInSpace is true
+        const query = onlyInSpace ? { x: { $gt: 0 }, y: { $gt: 0 } } : {}
+        const galaxies = await collection.find(query).toArray()
         return galaxies.map(galaxyModelToGalaxy).filter((g): g is Galaxy => g !== null)
     } catch (error) {
         console.error('Error getting all galaxies:', error)

@@ -4,11 +4,12 @@ import Button from '@/components/custom-ui/Button';
 import Badge from '@/components/badge/Badge';
 import * as RadixSlider from '@radix-ui/react-slider';
 import { IssueTag } from '@/types/issue';
-import { getDemo } from '@/client-side/demo';
+import { authClient } from '@/client-side/auth';
 import { createIssue } from '@/client-side/issue';
-import { getStarById } from '@/client-side/star';
+import { getStarByUserId } from '@/client-side/star';
 import NumberFlow from '@number-flow/react';
 import { cn } from '@/lib/utils';
+import type { AuthUser } from '@/types/auth';
 
 interface CreateIssueFormProps {
     galaxyId: string;
@@ -29,18 +30,22 @@ const CreateIssueForm: React.FC<CreateIssueFormProps> = ({ galaxyId, onSuccess, 
     const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
     const titleInputRef = useRef<HTMLInputElement>(null);
 
+    // Get session for authentication
+    const { data: session, isPending: isSessionPending } = authClient.useSession();
+
     // Fetch user sunshines
     useEffect(() => {
         const fetchUserSunshines = async () => {
+            if (isSessionPending) {
+                return;
+            }
+
             try {
-                const demo = getDemo();
-                if (demo.email && demo.users) {
-                    const currentUser = demo.users.find(u => u.role === 'user') || demo.users[0];
-                    if (currentUser && currentUser._id) {
-                        const user = await getStarById(currentUser._id.toString());
-                        if (user) {
-                            setAvailableSunshines(user.sunshines || 0);
-                        }
+                const user = session?.user as AuthUser | undefined;
+                if (user?.id) {
+                    const star = await getStarByUserId(user.id);
+                    if (star) {
+                        setAvailableSunshines(star.sunshines || 0);
                     }
                 }
             } catch (error) {
@@ -51,7 +56,7 @@ const CreateIssueForm: React.FC<CreateIssueFormProps> = ({ galaxyId, onSuccess, 
         };
 
         fetchUserSunshines();
-    }, []);
+    }, [session, isSessionPending]);
 
     const toggleTag = (tag: IssueTag) => {
         setSelectedTags(prev =>
@@ -144,24 +149,17 @@ const CreateIssueForm: React.FC<CreateIssueFormProps> = ({ galaxyId, onSuccess, 
 
         setIsLoading(true);
         try {
-            const demo = getDemo();
-            if (!demo.email || !demo.users) {
+            const user = session?.user as AuthUser | undefined;
+            if (!user?.id || !user?.email) {
                 alert('Please log in to create an issue');
-                setIsLoading(false);
-                return;
-            }
-
-            const currentUser = demo.users.find(u => u.role === 'user') || demo.users[0];
-            if (!currentUser || !currentUser._id) {
-                alert('User not found');
                 setIsLoading(false);
                 return;
             }
 
             const createdIssue = await createIssue({
                 galaxyId,
-                userId: currentUser._id.toString(),
-                email: demo.email,
+                userId: user.id,
+                email: user.email,
                 title: title.trim(),
                 description: description.trim(),
                 tags: selectedTags,

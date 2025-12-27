@@ -41,9 +41,11 @@ const GalaxyBarMenuPopover: React.FC<GalaxyBarMenuPopoverProps> = ({
 
   const trigger = (
     <Tooltip content="More menu options">
-      <button
-        className="flex items-center justify-center w-8 h-8 rounded hover:bg-slate-100/40 dark:hover:bg-slate-800/30 transition-colors text-slate-600 dark:text-slate-400"
+      <div
+        className="flex items-center justify-center w-8 h-8 rounded hover:bg-slate-100/40 dark:hover:bg-slate-800/30 transition-colors text-slate-600 dark:text-slate-400 cursor-pointer"
         aria-label="More menu options"
+        role="button"
+        tabIndex={0}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -59,7 +61,7 @@ const GalaxyBarMenuPopover: React.FC<GalaxyBarMenuPopoverProps> = ({
             d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
           />
         </svg>
-      </button>
+      </div>
     </Tooltip>
   );
 

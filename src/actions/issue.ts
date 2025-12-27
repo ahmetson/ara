@@ -1,7 +1,7 @@
 import { defineAction } from 'astro:actions'
 import { z } from 'astro:schema'
-import { getDemoByEmail } from '@/server-side/demo'
-import { getStarById, updateStarSunshines, getStarByIds } from '@/server-side/star'
+import { auth } from '@/lib/auth'
+import { getStarById, getStarByUserId, updateStarSunshines, getStarByIds } from '@/server-side/star'
 import { getAuthUserById } from '@/server-side/auth'
 import { getGalaxyById, updateGalaxySunshines } from '@/server-side/galaxy'
 import { getIssuesByGalaxy, getShiningIssues, getPublicBacklogIssues, createIssue, updateIssueSunshines, getIssueById, setIssueContributor, unsetIssueContributor, updateIssue, patchIssue, unpatchIssue } from '@/server-side/issue'
@@ -149,14 +149,27 @@ export const server = {
             tags: z.array(z.nativeEnum(IssueTag)),
             sunshines: z.number().min(0),
         }),
-        handler: async ({ galaxyId, userId, email, title, description, tags, sunshines }): Promise<{ success: boolean; error?: string }> => {
+        handler: async ({ galaxyId, userId, email, title, description, tags, sunshines }, { request }): Promise<{ success: boolean; error?: string }> => {
             try {
-                // Get demo and validate
-                const demo = await getDemoByEmail(email);
-                if (!demo) {
+                // Check authentication
+                const session = await auth.api.getSession({
+                    headers: request.headers,
+                });
+
+                if (!session || !session.user) {
                     return {
                         success: false,
-                        error: 'Demo not found',
+                        error: 'Authentication required. Please log in to create an issue',
+                    };
+                }
+
+                const authenticatedUserId = session.user.id;
+
+                // Verify that the authenticated user's ID matches the userId parameter
+                if (authenticatedUserId !== userId) {
+                    return {
+                        success: false,
+                        error: 'You can only create issues for your own account',
                     };
                 }
 
@@ -169,12 +182,12 @@ export const server = {
                     };
                 }
 
-                // Get current user
-                const user = await getStarById(userId);
-                if (!user) {
+                // Get current user by userId (which is the auth user ID)
+                const user = await getStarByUserId(userId);
+                if (!user || !user._id) {
                     return {
                         success: false,
-                        error: 'Can not create issue, user id invalid',
+                        error: 'Can not create issue, user profile not found. Please ensure your account is set up correctly.',
                     };
                 }
 
@@ -188,8 +201,8 @@ export const server = {
                         };
                     }
 
-                    // Deduct sunshines from user
-                    const userUpdated = await updateStarSunshines(userId, -sunshines);
+                    // Deduct sunshines from user (using star _id)
+                    const userUpdated = await updateStarSunshines(user._id.toString(), -sunshines);
                     if (!userUpdated) {
                         return {
                             success: false,
@@ -201,7 +214,7 @@ export const server = {
                     const galaxyUpdated = await updateGalaxySunshines(galaxyId, sunshines);
                     if (!galaxyUpdated) {
                         // Rollback user sunshines if galaxy update fails
-                        await updateStarSunshines(userId, sunshines);
+                        await updateStarSunshines(user._id.toString(), sunshines);
                         return {
                             success: false,
                             error: 'Can not create issue, failed to update galaxy sunshines',
@@ -211,14 +224,12 @@ export const server = {
 
                 // Get auth user data for username
                 let username = 'unknown'
-                if (user.userId) {
-                    const authUser = await getAuthUserById(user.userId)
-                    if (authUser) {
-                        username = authUser.name || authUser.username || authUser.email?.split('@')[0] || 'unknown'
-                    }
+                const authUser = await getAuthUserById(userId)
+                if (authUser) {
+                    username = authUser.name || authUser.username || authUser.email?.split('@')[0] || 'unknown'
                 }
 
-                // Create issue with authorId
+                // Create issue with authorId (using star _id)
                 const issue: Issue = {
                     galaxy: galaxyId,
                     uri: `/issue`,
@@ -233,14 +244,14 @@ export const server = {
                         starshineAmount: sunshines,
                         transactionDate: Math.floor(Date.now() / 1000),
                     }],
-                    author: userId,
+                    author: user._id.toString(),
                 };
 
                 const created = await createIssue(issue);
                 if (!created) {
                     // Rollback sunshines if issue creation fails
                     if (sunshines > 0) {
-                        await updateStarSunshines(userId, sunshines);
+                        await updateStarSunshines(user._id.toString(), sunshines);
                         await updateGalaxySunshines(galaxyId, -sunshines);
                     }
                     return {

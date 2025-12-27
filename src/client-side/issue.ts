@@ -1,6 +1,6 @@
 import { ISSUE_EVENT_TYPES, Issue, IssueTabKey, IssueTag } from '@/types/issue'
 import { actions } from 'astro:actions';
-import { incrementDemoStep } from '@/client-side/demo';
+import { getStarByUserId } from '@/client-side/star';
 
 /**
  * Emit issue-update event to notify components of issue changes
@@ -80,16 +80,18 @@ export async function createIssue(params: {
         if (result.data?.success) {
             // Fetch the created issue to get its ID
             // We need to find it by querying issues
+            // First get the star by userId to find the star ID
+            const star = await getStarByUserId(params.userId);
+            const starId = star?._id?.toString();
+            
             const issues = await getIssues(params.galaxyId, params.sunshines > 0 ? IssueTabKey.SHINING : IssueTabKey.PUBLIC);
             const createdIssue = issues.find(issue =>
                 issue.title === params.title &&
-                issue.author === params.userId
+                (starId ? issue.author === starId : false)
             ) || issues[issues.length - 1]; // Fallback to last issue if not found
 
             if (createdIssue) {
                 emitIssueCreated(createdIssue);
-                // Increment demo step (step 1: Create Issue)
-                await incrementDemoStep({ email: params.email, expectedStep: 1 });
                 return createdIssue;
             }
         }

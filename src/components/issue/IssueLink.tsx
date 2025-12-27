@@ -13,9 +13,10 @@ import PanelAction from '../panel/PanelAction'
 import type { Star } from '@/types/star'
 import { Spinner } from '@/components/ui/shadcn-io/spinner'
 import SunshinesPopover from './SunshinesPopover'
-import { getDemo } from '@/client-side/demo'
+import { authClient, getAuthUserById } from '@/client-side/auth'
 import { updateIssueSunshines } from '@/client-side/issue'
-import { getStarById } from '@/client-side/star'
+import { getStarById, getStarByUserId } from '@/client-side/star'
+import type { AuthUser } from '@/types/auth'
 import Tooltip from '../custom-ui/Tooltip'
 import { TheaterIcon } from 'lucide-react'
 
@@ -30,7 +31,9 @@ interface IssueLinkProps extends Issue {
 }
 
 const IssueLinkPanel4: React.FC<IssueLinkProps> = (issue) => {
+  const { data: session, isPending } = authClient.useSession();
   const [authorUser, setAuthorUser] = useState<Star | null>(null);
+  const [authorAuthUser, setAuthorAuthUser] = useState<AuthUser | null>(null);
   const [isLoadingAuthor, setIsLoadingAuthor] = useState(false);
   const [currentUser, setCurrentUser] = useState<Star | null>(null);
   const [availableSunshines, setAvailableSunshines] = useState(0);
@@ -48,10 +51,18 @@ const IssueLinkPanel4: React.FC<IssueLinkProps> = (issue) => {
   useEffect(() => {
     if (issue.author && typeof issue.author === 'string') {
       setIsLoadingAuthor(true);
+      // Step 1: Get star by starId (issue.author)
       getStarById(issue.author)
-        .then((userData) => {
-          if (userData) {
-            setAuthorUser(userData);
+        .then(async (star) => {
+          if (star) {
+            setAuthorUser(star);
+            // Step 2: Get auth user by userId from star
+            if (star.userId) {
+              const authUser = await getAuthUserById(star.userId);
+              if (authUser) {
+                setAuthorAuthUser(authUser);
+              }
+            }
           }
         })
         .catch((error) => {
@@ -65,25 +76,25 @@ const IssueLinkPanel4: React.FC<IssueLinkProps> = (issue) => {
 
   // Fetch current user and available sunshines (for non-draggable mode)
   useEffect(() => {
-    if (!issue.draggable) {
-      const demo = getDemo();
-      if (demo.email && demo.users && demo.role) {
-        const user = demo.users.find(u => u.role === demo.role) || demo.users[0];
-        if (user && user._id) {
-          getStarById(user._id.toString())
-            .then((userData) => {
-              if (userData) {
-                setCurrentUser(userData);
-                setAvailableSunshines(userData.sunshines || 0);
-              }
-            })
-            .catch((error) => {
-              console.error('Error fetching current user:', error);
-            });
-        }
+    if (!issue.draggable && !isPending) {
+      const user = session?.user as AuthUser | undefined;
+      if (user?.id) {
+        getStarByUserId(user.id)
+          .then((userData) => {
+            if (userData) {
+              setCurrentUser(userData);
+              setAvailableSunshines(userData.sunshines || 0);
+            }
+          })
+          .catch((error) => {
+            console.error('Error fetching current user:', error);
+          });
+      } else {
+        setCurrentUser(null);
+        setAvailableSunshines(0);
       }
     }
-  }, [issue.draggable]);
+  }, [issue.draggable, session, isPending]);
 
   // Handle sunshines update
   const handleSunshinesUpdate = async (newSunshines: number) => {
@@ -94,8 +105,8 @@ const IssueLinkPanel4: React.FC<IssueLinkProps> = (issue) => {
 
     setIsUpdating(true);
     try {
-      const demo = getDemo();
-      if (!demo.email) {
+      const user = session?.user as AuthUser | undefined;
+      if (!user?.email) {
         alert('Please log in to add sunshines');
         return;
       }
@@ -103,7 +114,7 @@ const IssueLinkPanel4: React.FC<IssueLinkProps> = (issue) => {
       const success = await updateIssueSunshines({
         issueId: issue._id,
         userId: currentUser._id!.toString(),
-        email: demo.email,
+        email: user.email,
         sunshinesToAdd,
       });
 
@@ -254,7 +265,12 @@ const IssueLinkPanel4: React.FC<IssueLinkProps> = (issue) => {
                     <Spinner className='w-7 h-7' variant='ellipsis' />
                   </div>
                 ) : authorUser ? (
-                  <AuthStar star={authorUser} className='w-7! h-7!' />
+                  <AuthStar
+                    star={authorUser}
+                    src={authorAuthUser?.image}
+                    nickname={authorAuthUser?.name || authorAuthUser?.username || authorAuthUser?.email?.split('@')[0] || 'Unknown'}
+                    className='w-7! h-7!'
+                  />
                 ) : null}
               </>
             )}

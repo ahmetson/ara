@@ -5,11 +5,12 @@ import DropTarget from '../DropTarget'
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { getIcon } from '../icon';
-import { getDemo } from '@/client-side/demo'
-import { DEMO_EVENT_TYPES } from '@/types/demo'
-import { getStarById } from '@/client-side/star'
+import { authClient } from '@/client-side/auth'
+import { getStarByUserId } from '@/client-side/star'
 import { updateIssue } from '@/client-side/issue'
+import { actions } from 'astro:actions'
 import type { Star } from '@/types/star'
+import type { AuthUser } from '@/types/auth'
 import { ISSUE_EVENT_TYPES, IssueTabKey } from '@/types/issue'
 
 interface WorkPanelProps {
@@ -17,38 +18,54 @@ interface WorkPanelProps {
 }
 
 const C: React.FC<WorkPanelProps> = ({ galaxyId }) => {
+  const { data: session, isPending } = authClient.useSession();
   const [, setCurrentUser] = useState<Star | null>(null);
   const [isMaintainer, setIsMaintainer] = useState(false);
   const [activeTab, setActiveTab] = useState<IssueTabKey>(IssueTabKey.SHINING);
 
-  // Check user role and listen for changes
+  // Check user role and maintainer status
   useEffect(() => {
     const checkUserRole = async () => {
-      const demo = getDemo();
-      if (demo.email && demo.users && demo.role) {
-        const user = demo.users.find(u => u.role === demo.role) || demo.users[0];
-        if (user && user._id) {
-          const userData = await getStarById(user._id.toString());
-          if (userData) {
-            setCurrentUser(userData);
-            setIsMaintainer(userData.role === 'maintainer');
+      if (isPending) {
+        return;
+      }
+
+      const user = session?.user as AuthUser | undefined;
+      if (user?.id) {
+        const userData = await getStarByUserId(user.id);
+        if (userData && userData._id) {
+          setCurrentUser(userData);
+
+          // Check if user is maintainer by fetching issues and comparing maintainer field
+          try {
+            const result = await actions.getIssuesByGalaxy({ galaxyId });
+            if (result.data?.success && result.data.issues && result.data.issues.length > 0) {
+              // Check if user's star ID matches the maintainer field of any issue
+              const userStarId = userData._id.toString();
+              const isUserMaintainer = result.data.issues.some(issue =>
+                issue.maintainer === userStarId
+              );
+              setIsMaintainer(isUserMaintainer);
+            } else {
+              // If no issues, we can't determine maintainer status, default to false
+              setIsMaintainer(false);
+            }
+          } catch (error) {
+            console.error('Error checking maintainer status:', error);
+            setIsMaintainer(false);
           }
+        } else {
+          setCurrentUser(null);
+          setIsMaintainer(false);
         }
+      } else {
+        setCurrentUser(null);
+        setIsMaintainer(false);
       }
     };
 
     checkUserRole();
-
-    // Listen for role changes
-    const handleRoleChange = () => {
-      checkUserRole();
-    };
-
-    window.addEventListener(DEMO_EVENT_TYPES.ROLE_CHANGED, handleRoleChange);
-    return () => {
-      window.removeEventListener(DEMO_EVENT_TYPES.ROLE_CHANGED, handleRoleChange);
-    };
-  }, []);
+  }, [session, isPending, galaxyId]);
 
   useEffect(() => {
     // Use a small delay to ensure all listeners are set up before dispatching
@@ -70,16 +87,16 @@ const C: React.FC<WorkPanelProps> = ({ galaxyId }) => {
 
   const changeIssueList = async (issueId: string, listKey: IssueTabKey) => {
     try {
-      const demo = getDemo();
-      if (!demo.email) {
-        console.error('No demo email found');
+      const user = session?.user as AuthUser | undefined;
+      if (!user?.email) {
+        console.error('No authenticated user found');
         return;
       }
 
       // Update issue listHistory to only contain this list key
       const success = await updateIssue({
         issueId,
-        email: demo.email,
+        email: user.email,
         listHistory: [listKey],
       });
 

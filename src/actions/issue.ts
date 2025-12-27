@@ -531,14 +531,46 @@ export const server = {
             email: z.string().email(),
             listHistory: z.array(z.string()).optional(),
         }),
-        handler: async ({ issueId, email, listHistory }): Promise<{ success: boolean; error?: string }> => {
+        handler: async ({ issueId, email, listHistory }, { request }): Promise<{ success: boolean; error?: string }> => {
             try {
-                // Get demo and validate
-                const demo = await getDemoByEmail(email);
-                if (!demo) {
+                // Check authentication
+                const session = await auth.api.getSession({
+                    headers: request.headers,
+                });
+
+                if (!session || !session.user) {
                     return {
                         success: false,
-                        error: 'Demo not found',
+                        error: 'Authentication required. Please log in to update issue',
+                    };
+                }
+
+                const authenticatedUserId = session.user.id;
+
+                // Get authenticated user's star
+                const authenticatedStar = await getStarByUserId(authenticatedUserId);
+                if (!authenticatedStar || !authenticatedStar._id) {
+                    return {
+                        success: false,
+                        error: 'User profile not found. Please ensure your account is set up correctly.',
+                    };
+                }
+
+                // Get issue to verify maintainer
+                const issue = await getIssueById(issueId);
+                if (!issue) {
+                    return {
+                        success: false,
+                        error: 'Issue not found',
+                    };
+                }
+
+                // Verify authenticated user is the maintainer of the issue
+                const authenticatedStarId = authenticatedStar._id.toString();
+                if (issue.maintainer !== authenticatedStarId) {
+                    return {
+                        success: false,
+                        error: 'Only maintainers can update issue lists',
                     };
                 }
 
@@ -579,13 +611,28 @@ export const server = {
             issueId: z.string(),
             email: z.string().email(),
         }),
-        handler: async ({ issueId, email }): Promise<{ success: boolean; error?: string }> => {
+        handler: async ({ issueId, email }, { request }): Promise<{ success: boolean; error?: string }> => {
             try {
-                const demo = await getDemoByEmail(email);
-                if (!demo) {
+                // Check authentication
+                const session = await auth.api.getSession({
+                    headers: request.headers,
+                });
+
+                if (!session || !session.user) {
                     return {
                         success: false,
-                        error: 'Demo not found',
+                        error: 'Authentication required. Please log in to patch issue',
+                    };
+                }
+
+                const authenticatedUserId = session.user.id;
+
+                // Get authenticated user's star
+                const authenticatedStar = await getStarByUserId(authenticatedUserId);
+                if (!authenticatedStar || !authenticatedStar._id) {
+                    return {
+                        success: false,
+                        error: 'User profile not found. Please ensure your account is set up correctly.',
                     };
                 }
 
@@ -594,6 +641,14 @@ export const server = {
                     return {
                         success: false,
                         error: 'Issue not found',
+                    };
+                }
+
+                // Verify issue is patchable (has both contributor and maintainer)
+                if (!issue.contributor || !issue.maintainer) {
+                    return {
+                        success: false,
+                        error: 'Issue must have both a contributor and maintainer to be patched',
                     };
                 }
 
@@ -626,14 +681,37 @@ export const server = {
             issueId: z.string(),
             email: z.string().email(),
         }),
-        handler: async ({ issueId, email }): Promise<{ success: boolean; error?: string }> => {
+        handler: async ({ issueId, email }, { request }): Promise<{ success: boolean; error?: string }> => {
             try {
-                // Get demo and validate
-                const demo = await getDemoByEmail(email);
-                if (!demo) {
+                // Check authentication
+                const session = await auth.api.getSession({
+                    headers: request.headers,
+                });
+
+                if (!session || !session.user) {
                     return {
                         success: false,
-                        error: 'Demo not found',
+                        error: 'Authentication required. Please log in to unpatch issue',
+                    };
+                }
+
+                const authenticatedUserId = session.user.id;
+
+                // Get authenticated user's star
+                const authenticatedStar = await getStarByUserId(authenticatedUserId);
+                if (!authenticatedStar || !authenticatedStar._id) {
+                    return {
+                        success: false,
+                        error: 'User profile not found. Please ensure your account is set up correctly.',
+                    };
+                }
+
+                // Get issue to verify it exists
+                const issue = await getIssueById(issueId);
+                if (!issue) {
+                    return {
+                        success: false,
+                        error: 'Issue not found',
                     };
                 }
 

@@ -80,8 +80,21 @@ const IssueListPanel: React.FC<Props> = ({ tabType, draggable = false, filterabl
         return;
       }
 
-      // Check if the issue's listHistory no longer contains the current tabType
       const issueListHistory = updatedIssue.listHistory || [];
+      
+      // If the issue has been patched (has PATCH_KEYWORD in listHistory), remove it from all lists
+      // except SHINING and PUBLIC tabs which don't filter by PATCH_KEYWORD
+      if (issueListHistory.includes(PATCH_KEYWORD)) {
+        if (tabType === IssueTabKey.SHINING || tabType === IssueTabKey.PUBLIC) {
+          refetchIssues();
+          return;
+        }
+        // Remove patched issues from other tabs
+        setIssues(prevIssues => prevIssues.filter(issue => issue._id !== updatedIssue._id));
+        return;
+      }
+
+      // Check if the issue's listHistory no longer contains the current tabType
       const shouldBeInThisList = issueListHistory.includes(tabType);
 
       // For SHINING and PUBLIC tabs, they don't use listHistory, so we don't remove them

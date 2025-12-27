@@ -142,8 +142,6 @@ export async function patchIssue(params: {
             if (updatedIssue) {
                 emitIssueUpdate(updatedIssue);
             }
-            // Step 4: Patch Issue
-            await incrementDemoStep({ email: params.email, expectedStep: 4 });
             return true;
         }
         return false;

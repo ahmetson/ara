@@ -4,7 +4,8 @@ import React, { useState, useEffect, useLayoutEffect, useCallback, useRef } from
 import { motion } from 'motion/react';
 import { HoleBackground } from '@/components/animate-ui/components/backgrounds/hole';
 import { getIcon } from '@/components/icon';
-import { getDemo } from '@/client-side/demo';
+import { authClient } from '@/client-side/auth';
+import type { AuthUser } from '@/types/auth';
 import { ISSUE_EVENT_TYPES, ISSUE_TAB_TITLES, IssueTabKey, isPatchable } from '@/types/issue';
 import type { Issue } from '@/types/issue';
 import { PATCH_KEYWORD } from '@/types/patch';
@@ -24,6 +25,7 @@ interface PatcherContainerProps {
 }
 
 const PatcherContainer: React.FC<PatcherContainerProps> = () => {
+    const { data: session } = authClient.useSession();
     const [patchedIssues, setPatchedIssues] = useState<PatchedIssue[]>([]);
     const [isVisible, setIsVisible] = useState(false);
     const [galaxyId, setGalaxyId] = useState<string>('');
@@ -115,9 +117,9 @@ const PatcherContainer: React.FC<PatcherContainerProps> = () => {
 
     // Handle drop
     const handleDrop = useCallback(async (item: { id: string; title: string }) => {
-        const demo = getDemo();
-        if (!demo.email) {
-            console.error('No email found in demo');
+        const user = session?.user as AuthUser | undefined;
+        if (!user?.email) {
+            console.error('No authenticated user found');
             return;
         }
 
@@ -132,7 +134,7 @@ const PatcherContainer: React.FC<PatcherContainerProps> = () => {
             // Patch the issue
             const success = await patchIssue({
                 issueId: item.id,
-                email: demo.email!,
+                email: user.email,
             });
 
             if (success) {
@@ -152,20 +154,20 @@ const PatcherContainer: React.FC<PatcherContainerProps> = () => {
         } catch (error) {
             console.error('Error patching issue:', error);
         }
-    }, []);
+    }, [session]);
 
     // Handle cancel (unpatch)
     const handleCancel = useCallback(async (issue: PatchedIssue) => {
-        const demo = getDemo();
-        if (!demo.email) {
-            console.error('No email found in demo');
+        const user = session?.user as AuthUser | undefined;
+        if (!user?.email) {
+            console.error('No authenticated user found');
             return;
         }
 
         try {
             const success = await unpatchIssue({
                 issueId: issue._id!,
-                email: demo.email!,
+                email: user.email,
             });
 
             if (success) {
@@ -175,7 +177,7 @@ const PatcherContainer: React.FC<PatcherContainerProps> = () => {
         } catch (error) {
             console.error('Error unpatching issue:', error);
         }
-    }, []);
+    }, [session]);
 
     const truncateTitle = (title: string, maxLength: number = 58) => {
         if (title.length <= maxLength) return title;

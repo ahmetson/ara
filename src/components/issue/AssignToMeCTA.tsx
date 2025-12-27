@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Button from '@/components/custom-ui/Button';
 import Tooltip from '@/components/custom-ui/Tooltip';
 import AuthStar from '@/components/auth/AuthStar';
-import DemoAuthPanel from '@/components/demo/DemoAuthPanel';
+import LoginRequireForPanel from '@/components/auth/login-require-for-panel';
 import { getDemo } from '@/client-side/demo';
 import { getStarById } from '@/client-side/star';
 import { getIssueById, setContributor, unsetContributor } from '@/client-side/issue';
@@ -151,7 +151,7 @@ const AssignToMeCTA: React.FC<AssignToMeCTAProps> = ({ issueId }) => {
     }
 
     return (
-        <DemoAuthPanel>
+        <LoginRequireForPanel>
             <div className={cn(
                 "fixed bottom-4 right-1/2 translate-x-1/2 z-40",
                 "backdrop-blur-md bg-white/90 dark:bg-slate-900/90",
@@ -207,7 +207,7 @@ const AssignToMeCTA: React.FC<AssignToMeCTAProps> = ({ issueId }) => {
                     </Button>
                 )}
             </div>
-        </DemoAuthPanel>
+        </LoginRequireForPanel>
     );
 };
 

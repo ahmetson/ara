@@ -2,7 +2,7 @@
 import React, { useState } from 'react'
 import CreateBlogForm from './CreateBlogForm'
 import Button from '../custom-ui/Button'
-import DemoAuthPanel from '../demo/DemoAuthPanel'
+import LoginRequireForPanel from '../auth/login-require-for-panel'
 import { cn } from '@/lib/utils'
 
 interface CreateBlogCTAProps {
@@ -23,7 +23,7 @@ const CreateBlogCTA: React.FC<CreateBlogCTAProps> = ({ authorId, onBlogCreated }
 
     return (
         <>
-            <DemoAuthPanel>
+            <LoginRequireForPanel>
                 <div className={cn(
                     "fixed bottom-4 left-1/2 -translate-x-1/2 z-40",
                     "backdrop-blur-md bg-white/90 dark:bg-slate-900/90",
@@ -45,7 +45,7 @@ const CreateBlogCTA: React.FC<CreateBlogCTAProps> = ({ authorId, onBlogCreated }
                         <span>Add Blog Post</span>
                     </Button>
                 </div>
-            </DemoAuthPanel>
+            </LoginRequireForPanel>
 
             {showForm && (
                 <CreateBlogForm

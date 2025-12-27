@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Button from '@/components/custom-ui/Button';
 import CreateVersionForm from './CreateVersionForm';
-import DemoAuthPanel from '@/components/demo/DemoAuthPanel';
+import LoginRequireForPanel from '@/components/auth/login-require-for-panel';
 import { cn } from '@/lib/utils';
 import { ROADMAP_EVENT_TYPES } from '@/types/roadmap';
 
@@ -25,7 +25,7 @@ const CreateVersionCTA: React.FC<CreateVersionCTAProps> = ({ galaxyId, onVersion
 
     return (
         <>
-            <DemoAuthPanel>
+            <LoginRequireForPanel>
                 <div className={cn(
                     "fixed bottom-4 right-1/2 translate-x-1/2 z-40",
                     "backdrop-blur-md bg-white/90 dark:bg-slate-900/90",
@@ -47,7 +47,7 @@ const CreateVersionCTA: React.FC<CreateVersionCTAProps> = ({ galaxyId, onVersion
                         <span>Create Version</span>
                     </Button>
                 </div>
-            </DemoAuthPanel>
+            </LoginRequireForPanel>
 
             {showForm && (
                 <CreateVersionForm

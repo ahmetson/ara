@@ -5,7 +5,7 @@ import Link from '@/components/custom-ui/Link';
 import Tooltip from '@/components/custom-ui/Tooltip';
 import { getIcon } from '@/components/icon';
 import { cn } from '@/lib/utils';
-import DemoAuthPanel from '@/components/demo/DemoAuthPanel';
+import LoginRequireForPanel from '@/components/auth/login-require-for-panel';
 
 interface ProjectCTAStepPanelProps {
     title: string;
@@ -39,7 +39,7 @@ const ProjectCTAStepPanel: React.FC<ProjectCTAStepPanelProps> = ({
     const [isHovered, setIsHovered] = useState(false);
 
     return (
-        <DemoAuthPanel>
+        <LoginRequireForPanel>
             <motion.div
                 className={cn(
                     "relative w-full max-w-md mx-auto mt-1",
@@ -122,7 +122,7 @@ const ProjectCTAStepPanel: React.FC<ProjectCTAStepPanelProps> = ({
                     )}
                 </div>
             </motion.div>
-        </DemoAuthPanel>
+        </LoginRequireForPanel>
     );
 };
 

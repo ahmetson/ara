@@ -8,14 +8,12 @@ import { Spinner } from '@/components/ui/shadcn-io/spinner'
 
 interface BlogListPanelProps {
     blogs: Blog[]
-    authorId?: string
     isMerged?: boolean
     className?: string
 }
 
 const BlogListPanel: React.FC<BlogListPanelProps> = ({
     blogs: initialBlogs,
-    authorId,
     isMerged = false,
     className
 }) => {

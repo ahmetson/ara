@@ -5,9 +5,9 @@ import { MenuName } from "@/components/navbar/WorkNavbar.astro";
 import BackButton from "@/components/custom-ui/BackButton";
 import GalaxyAutoZoom from "@/components/all-stars/GalaxyAutoZoom";
 import StarProfileHero from "@/components/user/StarProfileHero";
-import CreateBlogCTA from "@/components/blog/CreateBlogCTA";
 import ConditionalSignOutButton from "@/components/auth/ConditionalSignOutButton";
 import UserAccountPanel from "@/components/user/UserAccountPanel";
+import StarBar from "@/components/user/StarBar";
 import { getStarById, getStarByUserId } from "@/server-side/star";
 import { getAuthUserById } from "@/server-side/auth";
 import { getGalaxiesByMaintainer } from "@/server-side/galaxy";
@@ -128,7 +128,7 @@ if (user?.userId) {
         client:only="react"
     />
 
-    <CreateBlogCTA slot="center" authorId={user._id!} client:only="react" />
+    <StarBar slot="footer" authorId={user._id!} client:only="react" />
 
     <GalaxyAutoZoom client:only="react" galaxyX={0} galaxyY={0} />
 </GalaxyLayout>

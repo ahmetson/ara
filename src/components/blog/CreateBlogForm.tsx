@@ -2,10 +2,11 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import ScrollStack, { ScrollStackItem } from '@/components/ScrollStack';
 import Button from '@/components/custom-ui/Button';
 import Badge from '@/components/badge/Badge';
-import { getDemo } from '@/client-side/demo';
+import { authClient } from '@/client-side/auth';
 import { createBlog } from '@/client-side/blog';
-import { getStarById } from '@/client-side/star';
+import { getStarByUserId } from '@/client-side/star';
 import { cn } from '@/lib/utils';
+import type { AuthUser } from '@/types/auth';
 
 interface CreateBlogFormProps {
     authorId: string;
@@ -44,6 +45,7 @@ const CreateBlogForm: React.FC<CreateBlogFormProps> = ({ authorId, onSuccess, on
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
     const titleInputRef = useRef<HTMLInputElement>(null);
+    const { data: session, isPending } = authClient.useSession();
 
     const addTag = () => {
         const trimmed = tagInput.trim();
@@ -126,31 +128,38 @@ const CreateBlogForm: React.FC<CreateBlogFormProps> = ({ authorId, onSuccess, on
             return;
         }
 
+        if (isPending) {
+            alert('Please wait while we verify your authentication');
+            return;
+        }
+
+        const user = session?.user as AuthUser | undefined;
+        if (!user?.id || !user?.email) {
+            alert('Please log in to create a blog post');
+            return;
+        }
+
         setIsLoading(true);
         try {
-            const demo = getDemo();
-            if (!demo.email || !demo.users) {
-                alert('Please log in to create a blog post');
+            // Get the star for the current authenticated user
+            const currentUserStar = await getStarByUserId(user.id);
+            if (!currentUserStar || !currentUserStar._id) {
+                alert('User profile not found. Please ensure your account is set up correctly.');
                 setIsLoading(false);
                 return;
             }
 
-            const currentUser = demo.users.find(u => u.role === 'user') || demo.users[0];
-            if (!currentUser || !currentUser._id) {
-                alert('User not found');
-                setIsLoading(false);
-                return;
-            }
-
-            if (currentUser._id.toString() !== authorId) {
+            // Verify that the user is creating a blog for their own account
+            const currentUserId = String(currentUserStar._id);
+            const authorIdStr = String(authorId);
+            if (currentUserId !== authorIdStr) {
                 alert('You can only create blog posts for your own account');
                 setIsLoading(false);
                 return;
             }
 
             const createdBlog = await createBlog({
-                userId: currentUser._id.toString(),
-                email: demo.email,
+                starId: currentUserId,
                 title: title.trim(),
                 content: content.trim(),
                 description: description.trim() || undefined,

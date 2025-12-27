@@ -7,6 +7,7 @@ import { server as roadmapActions } from './roadmap'
 import { server as blockchainGatewayActions } from './crypto-sockets'
 import { server as personalizationActions } from './personalization'
 import { server as blogActions } from './blog'
+import { server as authActions } from './auth'
 
 export const server = {
     ...demoActions,
@@ -18,5 +19,6 @@ export const server = {
     ...blockchainGatewayActions,
     ...personalizationActions,
     ...blogActions,
+    ...authActions,
 }
 

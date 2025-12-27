@@ -133,7 +133,7 @@ const StarProfileHero: React.FC<StarProfileHeroProps> = ({ user, galaxies, blogs
             {blogs.length === 0 ? 'No thoughts shared yet' : `${blogs.length} ${blogs.length === 1 ? 'thought' : 'thoughts'}`}
           </p>
         </div>
-        <BlogListPanel blogs={blogs} authorId={user._id} />
+        <BlogListPanel blogs={blogs} />
       </div>
     </div>
   )

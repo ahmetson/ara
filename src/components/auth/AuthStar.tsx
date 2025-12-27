@@ -18,6 +18,8 @@ interface AuthStarProps {
   stars?: number
   role?: Roles
   star?: Star // Accept Star object as alternative to individual props
+  starId?: string // Star ID for building profile URI
+  noLink?: boolean // If true, renders a div instead of Link to avoid nested links
 }
 
 const AuthStar: React.FC<AuthStarProps> = ({
@@ -31,7 +33,9 @@ const AuthStar: React.FC<AuthStarProps> = ({
   sunshines,
   stars,
   role,
-  star
+  star,
+  starId,
+  noLink = false
 }) => {
   // Use individual props (star object no longer contains src/nickname)
   const finalSrc = src
@@ -42,7 +46,7 @@ const AuthStar: React.FC<AuthStarProps> = ({
   const finalRole = star?.role || role
   const defaultSrc = 'https://api.backdropbuild.com/storage/v1/object/public/avatars/9nFM8HasgS.jpeg'
   const defaultAlt = 'Avatar'
-  const profileUri = `${uri}?id=${star?._id || ''}`
+  const profileUri = `${uri}?id=${starId || star?._id || ''}`
 
   const tooltipContent = (
     <div className="text-sm space-y-2">
@@ -97,20 +101,29 @@ const AuthStar: React.FC<AuthStarProps> = ({
     </div>
   )
 
+  const avatarContent = (
+    <img
+      src={finalSrc || defaultSrc}
+      alt={finalAlt || defaultAlt}
+      width={32}
+      height={32}
+      className={`w-full h-full rounded-full object-cover ${imgClassName}`}
+      style={{ minWidth: '28px', minHeight: '28px' }}
+    />
+  )
+
   return (
     <Tooltip content={tooltipContent}>
-      <Link uri={profileUri} className={`hover:bg-teal-300 bg-blue-200 dark:bg-blue-400 rounded-full h-8 w-8 flex items-center justify-center overflow-hidden ${className}`}>
-        <img
-          src={finalSrc || defaultSrc}
-          alt={finalAlt || defaultAlt}
-          width={32}
-          height={32}
-          className={`w-full h-full rounded-full object-cover ${imgClassName}`}
-          style={{ minWidth: '28px', minHeight: '28px' }}
-        />
-      </Link>
+      {noLink ? (
+        <div className={`bg-blue-200 dark:bg-blue-400 rounded-full h-8 w-8 flex items-center justify-center overflow-hidden ${className}`}>
+          {avatarContent}
+        </div>
+      ) : (
+        <Link uri={profileUri} className={`hover:bg-teal-300 bg-blue-200 dark:bg-blue-400 rounded-full h-8 w-8 flex items-center justify-center overflow-hidden ${className}`}>
+          {avatarContent}
+        </Link>
+      )}
     </Tooltip>
-
   )
 }
 

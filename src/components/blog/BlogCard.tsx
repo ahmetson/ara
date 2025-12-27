@@ -7,8 +7,9 @@ import Badge from '../badge/Badge'
 import PanelFooter from '../panel/PanelFooter'
 import AuthStar from '../auth/AuthStar'
 import TimeAgo from 'timeago-react'
-import type { Star } from '@/types/star'
+import type { AuthUser } from '@/types/auth'
 import { getStarById } from '@/client-side/star'
+import { getAuthUserById } from '@/client-side/auth'
 import { BasePanel } from '../panel'
 import { cn } from '@/lib/utils'
 
@@ -17,17 +18,23 @@ interface BlogCardProps extends Blog {
 }
 
 const BlogCard: React.FC<BlogCardProps> = (blog) => {
-    const [authorUser, setAuthorUser] = useState<Star | null>(null)
+    const [authorUser, setAuthorUser] = useState<AuthUser | null>(null)
     const [isLoadingAuthor, setIsLoadingAuthor] = useState(false)
 
-    // Fetch author user
+    // Fetch author user: blog.author (starId) -> star -> star.userId -> authUser
     useEffect(() => {
         if (blog.author) {
+            console.log('fetching author user for blog', blog.author)
             setIsLoadingAuthor(true)
+            // Step 1: Get star by starId (blog.author)
             getStarById(blog.author)
-                .then((userData) => {
-                    if (userData) {
-                        setAuthorUser(userData)
+                .then(async (star) => {
+                    if (star && star.userId) {
+                        // Step 2: Get auth user by userId from star
+                        const authUser = await getAuthUserById(star.userId)
+                        if (authUser) {
+                            setAuthorUser(authUser)
+                        }
                     }
                 })
                 .catch((error) => {
@@ -60,7 +67,7 @@ const BlogCard: React.FC<BlogCardProps> = (blog) => {
                 <div className="flex flex-col space-y-3 p-4">
                     {/* Title and Status Badge */}
                     <div className="flex items-center justify-between gap-2">
-                        <h2 className="text-xl font-bold text-slate-700 dark:text-slate-300 flex-1">
+                        <h2 className="text-lg font-bold text-slate-700 dark:text-slate-300 flex-1 text-left">
                             {blog.title}
                         </h2>
                         <div className="flex items-center gap-2">
@@ -76,7 +83,7 @@ const BlogCard: React.FC<BlogCardProps> = (blog) => {
 
                     {/* Description (from Project cards) */}
                     {truncatedDescription && (
-                        <p className="text-base text-slate-600 dark:text-slate-400 line-clamp-2">
+                        <p className="text-base text-slate-600 dark:text-slate-400 line-clamp-2 text-left">
                             {truncatedDescription}
                         </p>
                     )}
@@ -123,10 +130,18 @@ const BlogCard: React.FC<BlogCardProps> = (blog) => {
                                 <>
                                     <span>By</span>
                                     <AuthStar
-                                        src={authorUser?.src}
+                                        src={authorUser?.image}
                                         className="w-6 h-6"
+                                        starId={blog.author}
+                                        noLink={true}
                                     />
-                                    <span>{authorUser?.nickname || authorUser?.email?.split('@')[0] || 'Unknown'}</span>
+                                    <span>
+                                        {authorUser?.name ||
+                                            authorUser?.username ||
+                                            authorUser?.displayUsername ||
+                                            authorUser?.email?.split('@')[0] ||
+                                            'Unknown'}
+                                    </span>
                                 </>
                             )}
                         </div>

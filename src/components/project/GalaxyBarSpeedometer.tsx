@@ -26,24 +26,32 @@ const GalaxyBarSpeedometer: React.FC<GalaxyBarSpeedometerProps> = ({
     return (
         <div className={cn(
             "w-48 h-24 p-3",
-            "backdrop-blur-md bg-slate-900/40 dark:bg-slate-900/40",
-            "border border-cyan-500/30 dark:border-cyan-400/30",
+            "backdrop-blur-md bg-white/60 dark:bg-slate-900/40",
+            "border border-cyan-500/50 dark:border-cyan-400/30",
             "rounded-md",
             "relative overflow-hidden",
-            "shadow-lg shadow-cyan-500/20"
+            "shadow-lg shadow-cyan-500/30 dark:shadow-cyan-500/20"
         )}>
             {/* Neon glow effect */}
-            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/15 via-purple-500/8 to-pink-500/15 pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 via-purple-500/12 to-pink-500/20 dark:from-cyan-500/15 dark:via-purple-500/8 dark:to-pink-500/15 pointer-events-none" />
 
             {/* Title - Personal data */}
             <div className="relative z-10 mb-2">
-                <h3 className={cn(
-                    "text-xs font-mono font-bold uppercase tracking-wider",
-                    "text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400",
-                    "drop-shadow-[0_0_4px_rgba(34,211,238,0.8)]"
-                )}>
-                    Personal data
-                </h3>
+                <div
+                    className={cn(
+                        "[filter:drop-shadow(0_0_2px_rgba(6,182,212,0.8))drop-shadow(0_0_4px_rgba(147,51,234,0.6))]",
+                        "dark:[filter:drop-shadow(0_0_4px_rgba(34,211,238,0.8))]"
+                    )}
+                >
+                    <h3 className={cn(
+                        "text-xs font-mono font-bold uppercase tracking-wider",
+                        "text-transparent bg-clip-text",
+                        "bg-gradient-to-r from-cyan-800 via-purple-800 to-pink-800",
+                        "dark:from-cyan-400 dark:via-purple-400 dark:to-pink-400"
+                    )}>
+                        Personal data
+                    </h3>
+                </div>
             </div>
 
             {/* Horizontal Layout - Metrics and Status */}
@@ -55,14 +63,14 @@ const GalaxyBarSpeedometer: React.FC<GalaxyBarSpeedometerProps> = ({
                         openDelay={300}
                         tooltipClassName={cn(
                             "backdrop-blur-md",
-                            "bg-slate-900/80 dark:bg-slate-900/80",
-                            "border border-cyan-500/50 dark:border-cyan-400/50",
-                            "text-cyan-100 dark:text-cyan-100",
-                            "shadow-lg shadow-cyan-500/30",
+                            "bg-white/90 dark:bg-slate-900/80",
+                            "border border-cyan-500/60 dark:border-cyan-400/50",
+                            "text-cyan-700 dark:text-cyan-100",
+                            "shadow-lg shadow-cyan-500/40 dark:shadow-cyan-500/30",
                             "font-mono text-sm"
                         )}
                     >
-                        <span className="flex items-center gap-1.5 text-purple-400 cursor-help">
+                        <span className="flex items-center gap-1.5 text-purple-600 dark:text-purple-400 cursor-help">
                             {getIcon({ iconType: 'sunshine', className: 'w-4 h-4' })}
                             <NumberFlow
                                 value={sunshines}
@@ -76,14 +84,14 @@ const GalaxyBarSpeedometer: React.FC<GalaxyBarSpeedometerProps> = ({
                         openDelay={300}
                         tooltipClassName={cn(
                             "backdrop-blur-md",
-                            "bg-slate-900/80 dark:bg-slate-900/80",
-                            "border border-pink-500/50 dark:border-pink-400/50",
-                            "text-pink-100 dark:text-pink-100",
-                            "shadow-lg shadow-pink-500/30",
+                            "bg-white/90 dark:bg-slate-900/80",
+                            "border border-pink-500/60 dark:border-pink-400/50",
+                            "text-pink-700 dark:text-pink-100",
+                            "shadow-lg shadow-pink-500/40 dark:shadow-pink-500/30",
                             "font-mono text-sm"
                         )}
                     >
-                        <span className="flex items-center gap-1.5 text-pink-400 cursor-help">
+                        <span className="flex items-center gap-1.5 text-pink-600 dark:text-pink-400 cursor-help">
                             {getIcon({ iconType: 'star', className: 'w-4 h-4' })}
                             <NumberFlow
                                 value={stars}
@@ -95,20 +103,20 @@ const GalaxyBarSpeedometer: React.FC<GalaxyBarSpeedometerProps> = ({
                 </div>
 
                 {/* Right: Status Gauge - Star on Page Indicator */}
-                <div className="flex flex-col items-center gap-1.5 px-3 border-l border-cyan-500/20">
-                    <span className="text-[9px] text-slate-400 font-mono uppercase">Star on Page</span>
+                <div className="flex flex-col items-center gap-1.5 px-3 border-l border-cyan-500/40 dark:border-cyan-500/20">
+                    <span className="text-[9px] text-slate-600 dark:text-slate-400 font-mono uppercase">Star on Page</span>
                     {/* Status LED */}
                     <div className="flex items-center gap-1.5">
                         <div className={cn(
                             "w-4 h-4 rounded-full",
                             "transition-all duration-300",
                             hasStarOnPage
-                                ? "bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,1),0_0_16px_rgba(34,211,238,0.6),0_0_24px_rgba(34,211,238,0.3)] animate-pulse"
-                                : "bg-slate-500/50"
+                                ? "bg-cyan-500 dark:bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,1),0_0_16px_rgba(34,211,238,0.6),0_0_24px_rgba(34,211,238,0.3)] animate-pulse"
+                                : "bg-slate-400/60 dark:bg-slate-500/50"
                         )} />
                         <span className={cn(
                             "text-[10px] font-mono font-semibold uppercase",
-                            hasStarOnPage ? "text-cyan-400" : "text-slate-500"
+                            hasStarOnPage ? "text-cyan-600 dark:text-cyan-400" : "text-slate-600 dark:text-slate-500"
                         )}>
                             {hasStarOnPage ? "ON" : "OFF"}
                         </span>
@@ -117,7 +125,7 @@ const GalaxyBarSpeedometer: React.FC<GalaxyBarSpeedometerProps> = ({
             </div>
 
             {/* Subtle border glow */}
-            <div className="absolute inset-0 border border-cyan-500/20 rounded-md pointer-events-none" />
+            <div className="absolute inset-0 border border-cyan-500/30 dark:border-cyan-500/20 rounded-md pointer-events-none" />
         </div>
     );
 };

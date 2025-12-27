@@ -1,7 +1,7 @@
 import { defineAction } from 'astro:actions'
 import { z } from 'astro:schema'
-import { getAccountsByUserId } from '@/server-side/auth'
-import type { AuthAccount } from '@/types/auth'
+import { getAccountsByUserId, getAuthUserById } from '@/server-side/auth'
+import type { AuthAccount, AuthUser } from '@/types/auth'
 
 export const server = {
     getAccountsByUserId: defineAction({
@@ -20,6 +20,32 @@ export const server = {
                 return {
                     success: false,
                     error: 'An error occurred while getting accounts',
+                }
+            }
+        },
+    }),
+    getAuthUserById: defineAction({
+        input: z.object({
+            userId: z.string(),
+        }),
+        handler: async ({ userId }): Promise<{ success: boolean; data?: AuthUser; error?: string }> => {
+            try {
+                const authUser = await getAuthUserById(userId)
+                if (!authUser) {
+                    return {
+                        success: false,
+                        error: 'Auth user not found',
+                    }
+                }
+                return {
+                    success: true,
+                    data: authUser,
+                }
+            } catch (error) {
+                console.error('Error getting auth user by id:', error)
+                return {
+                    success: false,
+                    error: 'An error occurred while getting auth user',
                 }
             }
         },

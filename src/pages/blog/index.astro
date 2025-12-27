@@ -32,7 +32,7 @@ if (!blog) {
 <Layout hideLinks={Object.keys(MenuName)}>
     <BackButton slot="left" client:load />
 
-    <BlogPanel slot="center" {...blog} client:load />
+    <BlogPanel slot="center" {...blog} />
 </Layout>
 
 <style is:global>

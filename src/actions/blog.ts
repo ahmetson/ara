@@ -1,16 +1,15 @@
 import { defineAction } from 'astro:actions'
 import { z } from 'astro:schema'
 import { createBlog, getBlogById, getBlogsByAuthor, getAllBlogs } from '@/server-side/blog'
-import { getDemoByEmail } from '@/server-side/demo'
-import { getStarById } from '@/server-side/star'
+import { getStarById, getStarByUserId } from '@/server-side/star'
+import { auth } from '@/lib/auth'
 import type { Blog } from '@/types/blog'
 
 export const server = {
     createBlog: defineAction({
         accept: 'json',
         input: z.object({
-            userId: z.string(),
-            email: z.string().email(),
+            starId: z.string(),
             title: z.string().min(1),
             content: z.string().min(1),
             description: z.string().optional(),
@@ -19,19 +18,43 @@ export const server = {
             projectTypes: z.array(z.string()).optional(),
             draft: z.boolean().default(false),
         }),
-        handler: async ({ userId, email, title, content, description, tags, projects, projectTypes, draft }): Promise<{ success: boolean; error?: string; blogId?: string }> => {
+        handler: async ({ starId, title, content, description, tags, projects, projectTypes, draft }, { request }): Promise<{ success: boolean; error?: string; blogId?: string }> => {
             try {
-                // Get demo and validate
-                const demo = await getDemoByEmail(email);
-                if (!demo) {
+                // Check authentication
+                const session = await auth.api.getSession({
+                    headers: request.headers,
+                });
+
+                if (!session || !session.user) {
                     return {
                         success: false,
-                        error: 'Demo not found',
+                        error: 'Authentication required. Please log in to create a blog post',
                     };
                 }
 
-                // Get current star
-                const star = await getStarById(userId);
+                const authenticatedUserId = session.user.id;
+
+                // Get the star for the authenticated user
+                const authenticatedUserStar = await getStarByUserId(authenticatedUserId);
+                if (!authenticatedUserStar || !authenticatedUserStar._id) {
+                    return {
+                        success: false,
+                        error: 'User profile not found. Please ensure your account is set up correctly.',
+                    };
+                }
+
+                // Verify that the authenticated user's star ID matches the starId parameter
+                const authenticatedStarId = String(authenticatedUserStar._id);
+                const requestedStarId = String(starId);
+                if (authenticatedStarId !== requestedStarId) {
+                    return {
+                        success: false,
+                        error: 'You can only create blog posts for your own account',
+                    };
+                }
+
+                // Get star to verify it exists
+                const star = await getStarById(starId);
                 if (!star) {
                     return {
                         success: false,
@@ -39,17 +62,9 @@ export const server = {
                     };
                 }
 
-                // Validate that star is creating blog for themselves
-                if (star._id?.toString() !== userId) {
-                    return {
-                        success: false,
-                        error: 'You can only create blog posts for your own account',
-                    };
-                }
-
                 // Create blog
                 const blog: Blog = {
-                    author: userId,
+                    author: starId,
                     title: title.trim(),
                     content: content.trim(),
                     description: description?.trim(),
@@ -70,12 +85,12 @@ export const server = {
 
                 // Fetch the created blog to get its ID
                 // We'll need to find it by querying blogs
-                const userBlogs = await getBlogsByAuthor(userId);
-                const createdBlog = userBlogs.find(b =>
+                const starBlogs = await getBlogsByAuthor(starId);
+                const createdBlog = starBlogs.find(b =>
                     b.title === blog.title &&
-                    b.author === userId &&
+                    b.author === starId &&
                     Math.abs((b.createdTime || 0) - (blog.createdTime || 0)) < 5 // Within 5 seconds
-                ) || userBlogs[0]; // Fallback to first blog if not found
+                ) || starBlogs[0]; // Fallback to first blog if not found
 
                 return {
                     success: true,

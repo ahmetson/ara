@@ -74,8 +74,7 @@ export async function getAllBlogs(): Promise<Blog[]> {
  * Create blog and broadcast BLOG_CREATED event
  */
 export async function createBlog(params: {
-    userId: string
-    email: string
+    starId: string
     title: string
     content: string
     description?: string
@@ -96,10 +95,10 @@ export async function createBlog(params: {
                 }
             }
             // Fallback: fetch all blogs and find the most recent one
-            const blogs = await getBlogsByAuthor(params.userId)
+            const blogs = await getBlogsByAuthor(params.starId)
             const createdBlog = blogs.find(blog =>
                 blog.title === params.title &&
-                blog.author === params.userId
+                blog.author === params.starId
             ) || blogs[0] // Fallback to first blog if not found
 
             if (createdBlog) {

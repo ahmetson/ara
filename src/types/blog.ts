@@ -1,6 +1,6 @@
 export interface Blog {
     _id?: string;
-    author: string; // User ID
+    author: string; // Star ID
     title: string;
     content: string; // Markdown content
     description?: string; // Meta description

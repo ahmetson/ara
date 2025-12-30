@@ -2,71 +2,30 @@
 import GalaxyLayout from "@/layouts/GalaxyLayout.astro";
 import { MenuName } from "@/components/navbar/WorkNavbar.astro";
 import { socialLinks } from "@/types/ara";
-import ProjectGalaxy from "@/components/all-stars/ProjectGalaxy";
-import UserStar from "@/components/all-stars/UserStar";
-import { mockUserStars } from "@/types/mock-data";
-import type { Galaxy } from "@/types/galaxy";
 import AraGradientText from "@/components/AraGradientText";
-import LandingVideoPanel from "@/components/landing/LandingVideoPanel";
-import LandingVideoMiniPanel from "@/components/landing/LandingVideoMiniPanel";
-import { DashboardIcon, StarIcon } from "@/components/icon";
 import {
-  LightningIcon,
-  LeftArrowIcon,
-  RightArrowIcon,
-  FingerTouchIcon,
-  LightbulbIcon,
-  CheckmarkCircleIcon,
   CheckmarkIcon,
-  UsersIcon,
-  UsersGroupIcon,
-  WarningTriangleIcon,
-  DecliningGraph,
-  BookIcon,
-  ClockIcon,
+  SettingsIcon,
+  UserIcon,
+  GraduateHatIcon,
+  CheckmarkCircleIcon,
   LockIcon,
-  ChartIcon,
-  FundingFlowDiagram,
-  BlockchainVisualization,
-  AuthorOwnershipVisualization,
-  OwnershipTransition,
-  AraApproachFlow,
-  HyperpayDependencyTree,
+  BookIcon,
+  WarningTriangleIcon,
   TelegramIcon,
   DiscordIcon,
   GitHubIcon,
   LinkedInIcon,
   TwitterIcon,
   BlueskyIcon,
-  SettingsIcon,
-  UserIcon,
-  GraduateHatIcon,
 } from "@/svg/index";
 import DecorativeStarSeparator from "@/components/utilitified_decorations/DecorativeStarSeparator.astro";
 import DecorativeSeparator from "@/components/utilitified_decorations/DecorativeSeparator.astro";
-import DependencyFlowDiagram from "@/components/diagrams/DependencyFlowDiagram";
 import IsometricFundingFlow from "@/components/diagrams/IsometricFundingFlow";
-import OwnershipTransferDiagram from "@/components/diagrams/OwnershipTransferDiagram";
-import AraLayerStack from "@/components/diagrams/AraLayerStack";
-import TokenSupplyComparison from "@/components/diagrams/TokenSupplyComparison";
-import TokenSupplyProgress from "@/components/diagrams/TokenSupplyProgress";
 import AddProjectButton from "@/components/auth/AddProjectButton";
-
-// Create a mock Galaxy object for the hero panel
-const mockGalaxy: Galaxy = {
-  _id: "693f178fe2790a79200798b3",
-  maintainer: "hero-maintainer",
-  projectLink: "hero-project",
-  name: "Ara App",
-  description: "The frontend application for Ara platform",
-  stars: 1250,
-  sunshines: 8500,
-  users: 42,
-  donationAmount: 125000,
-  x: 0,
-  y: 0,
-  tags: ["Frontend", "React", "Astro", "Web3", "Open Source"],
-};
+import AraLayerStack from "@/components/diagrams/AraLayerStack";
+import OwnershipTransferDiagram from "@/components/diagrams/OwnershipTransferDiagram";
+import TokenSupplyProgress from "@/components/diagrams/TokenSupplyProgress";
 ---
 
 <GalaxyLayout
@@ -84,12 +43,6 @@ const mockGalaxy: Galaxy = {
     class="relative flex flex-col items-center justify-center min-h-[40vh] text-center px-4 pointer-events-auto"
     style="pointer-events: auto;"
   >
-    <!-- Video Panel - Part of Hero Section -->
-    <LandingVideoPanel
-      client:only="react"
-      youtubeUrl="https://youtu.be/IMUkljLpKIQ"
-    />
-
     <div class="w-full max-w-7xl mx-auto space-y-6">
       <div class="flex items-center justify-center gap-4 mb-6">
         <div class="text-5xl md:text-6xl lg:text-7xl font-bold">
@@ -668,12 +621,6 @@ const mockGalaxy: Galaxy = {
     </section>
   </div>
 </GalaxyLayout>
-
-<LandingVideoMiniPanel
-  slot="footer"
-  client:load
-  youtubeUrl="https://youtu.be/IMUkljLpKIQ"
-/>
 
 <style is:global>
   @keyframes scan {

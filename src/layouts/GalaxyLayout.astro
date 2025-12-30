@@ -86,6 +86,32 @@ if (Astro.locals.session) {
     <title>{"'" + projectName + "' star galaxy"}</title>
     <ClientRouter />
     <Analytics />
+    {
+      import.meta.env.DEV && (
+        <script is:inline>
+          {`
+          (function() {
+            const originalWarn = console.warn;
+            console.warn = function(...args) {
+              const message = args[0];
+              if (
+                typeof message === 'string' &&
+                message.includes('is unrecognized in this browser') &&
+                (message.includes('<line>') ||
+                 message.includes('<polygon>') ||
+                 message.includes('<marker>') ||
+                 message.includes('<defs>') ||
+                 message.includes('If you meant to render a React component'))
+              ) {
+                return;
+              }
+              originalWarn.apply(console, args);
+            };
+          })();
+        `}
+        </script>
+      )
+    }
   </head>
   <body
     class="min-h-screen bg-slate-200 dark:bg-slate-800 border-1 border-red-500/10"

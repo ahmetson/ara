@@ -1,4 +1,3 @@
-import { server as demoActions } from './demo'
 import { server as allStarsActions } from './all-stars'
 import { server as starActions } from './star'
 import { server as issueActions } from './issue'
@@ -10,7 +9,6 @@ import { server as blogActions } from './blog'
 import { server as authActions } from './auth'
 
 export const server = {
-    ...demoActions,
     ...allStarsActions,
     ...starActions,
     ...issueActions,

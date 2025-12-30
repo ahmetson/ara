@@ -83,7 +83,7 @@ export async function createIssue(params: {
             // First get the star by userId to find the star ID
             const star = await getStarByUserId(params.userId);
             const starId = star?._id?.toString();
-            
+
             const issues = await getIssues(params.galaxyId, params.sunshines > 0 ? IssueTabKey.SHINING : IssueTabKey.PUBLIC);
             const createdIssue = issues.find(issue =>
                 issue.title === params.title &&
@@ -132,7 +132,6 @@ export async function updateIssue(params: {
  */
 export async function patchIssue(params: {
     issueId: string;
-    email: string;
 }): Promise<boolean> {
     try {
         const result = await actions.patchIssue(params);
@@ -152,17 +151,15 @@ export async function patchIssue(params: {
 }
 
 /**
- * Drop issue to patcher: patch issue and increment demo step
+ * Drop issue to patcher: makes the issue patchable.
+ * @description Adds the 'patcher' keyword to the issue's listHistory[].
  */
 export async function dropIssueToPatcher(params: {
     issueId: string;
-    email: string;
 }): Promise<boolean> {
     try {
-        // Patch the issue (this will also increment demo step)
         const success = await patchIssue({
             issueId: params.issueId,
-            email: params.email,
         });
         return success;
     } catch (error) {
@@ -176,7 +173,6 @@ export async function dropIssueToPatcher(params: {
  */
 export async function unpatchIssue(params: {
     issueId: string;
-    email: string;
 }): Promise<boolean> {
     try {
         const result = await actions.unpatchIssue(params);

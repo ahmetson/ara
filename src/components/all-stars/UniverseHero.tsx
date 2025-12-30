@@ -111,14 +111,14 @@ const UniverseHero: React.FC = () => {
                             <NumberFlow
                                 value={totalStars}
                                 locales="en-US"
-                                format={{ style: 'decimal', maximumFractionDigits: 2 }}
+                                format={{ style: 'decimal', maximumFractionDigits: 4 }}
                                 className="text-lg font-semibold text-slate-800 dark:text-slate-200"
                             />
                         </div>
                     </div>
                 </Tooltip>
 
-                <Tooltip content="demo users (who created 3 demo)">
+                <Tooltip content="users uses Ara">
                     <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 dark:bg-slate-900/10 backdrop-blur-sm border border-slate-200/20 dark:border-slate-700/20 cursor-help">
                         {getIcon({ iconType: 'user', className: 'w-5 h-5 text-blue-500' })}
                         <div className="flex flex-col items-start">

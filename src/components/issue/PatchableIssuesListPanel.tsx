@@ -5,7 +5,6 @@ import { motion } from 'motion/react';
 import { HoleBackground } from '@/components/animate-ui/components/backgrounds/hole';
 import { getIcon } from '@/components/icon';
 import { authClient } from '@/client-side/auth';
-import type { AuthUser } from '@/types/auth';
 import { ISSUE_EVENT_TYPES, ISSUE_TAB_TITLES, IssueTabKey, isPatchable } from '@/types/issue';
 import type { Issue } from '@/types/issue';
 import { PATCH_KEYWORD } from '@/types/patch';
@@ -117,12 +116,6 @@ const PatcherContainer: React.FC<PatcherContainerProps> = () => {
 
     // Handle drop
     const handleDrop = useCallback(async (item: { id: string; title: string }) => {
-        const user = session?.user as AuthUser | undefined;
-        if (!user?.email) {
-            console.error('No authenticated user found');
-            return;
-        }
-
         try {
             const issue = await getIssueById(item.id);
 
@@ -134,7 +127,6 @@ const PatcherContainer: React.FC<PatcherContainerProps> = () => {
             // Patch the issue
             const success = await patchIssue({
                 issueId: item.id,
-                email: user.email,
             });
 
             if (success) {
@@ -158,16 +150,9 @@ const PatcherContainer: React.FC<PatcherContainerProps> = () => {
 
     // Handle cancel (unpatch)
     const handleCancel = useCallback(async (issue: PatchedIssue) => {
-        const user = session?.user as AuthUser | undefined;
-        if (!user?.email) {
-            console.error('No authenticated user found');
-            return;
-        }
-
         try {
             const success = await unpatchIssue({
                 issueId: issue._id!,
-                email: user.email,
             });
 
             if (success) {

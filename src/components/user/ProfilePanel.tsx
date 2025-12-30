@@ -26,7 +26,7 @@ const starClipPath = 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70
 const ProfilePanel: React.FC<ProfilePanelProps> = ({ user, galaxies, authUser }) => {
     const defaultSrc = 'https://api.backdropbuild.com/storage/v1/object/public/avatars/9nFM8HasgS.jpeg'
     const defaultAlt = 'Avatar'
-    // Get email from authUser if available, otherwise fallback (for demo/legacy)
+    // Get email from authUser if available, otherwise fallback (for legacy)
     const userEmail = authUser?.email || (user as any).email
     const { isCurrentUser } = useIsCurrentUser(userEmail)
     // Get display values from authUser

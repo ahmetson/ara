@@ -185,7 +185,6 @@ const LandingVideoMiniPanel: React.FC<LandingVideoMiniPanelProps> = ({
                                 >
                                     <div className="flex items-center gap-2 text-slate-400 dark:text-slate-500">
                                         {getIcon({ iconType: 'youtube', className: 'w-4 h-4' })}
-                                        <span className="text-xs font-mono">Demo</span>
                                     </div>
                                 </ControlPanel>
                             </ElectricBorder>
@@ -223,7 +222,7 @@ const LandingVideoMiniPanel: React.FC<LandingVideoMiniPanelProps> = ({
                             <div className="relative aspect-video w-full rounded-lg overflow-hidden bg-slate-900/50">
                                 <iframe
                                     src={embedUrl}
-                                    title="Ara Demo Video"
+                                    title="Ara Showcase"
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                     allowFullScreen
                                     className="absolute inset-0 w-full h-full"
@@ -234,7 +233,7 @@ const LandingVideoMiniPanel: React.FC<LandingVideoMiniPanelProps> = ({
                             {/* Text and CTA */}
                             <div className="space-y-3">
                                 <p className="text-xs text-slate-500 dark:text-slate-400 text-center">
-                                    Try out demo yourself
+                                    Try Ara yourself
                                 </p>
                                 <a
                                     href="/all-stars"
@@ -260,7 +259,7 @@ const LandingVideoMiniPanel: React.FC<LandingVideoMiniPanelProps> = ({
                                 >
                                     <span className="relative z-10 flex items-center gap-2">
                                         {getIcon({ iconType: 'star', className: 'w-4 h-4' })}
-                                        <span>Try Demo Now</span>
+                                        <span>Try Now</span>
                                         <span>→</span>
                                     </span>
                                 </a>

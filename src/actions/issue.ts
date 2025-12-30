@@ -1,7 +1,7 @@
 import { defineAction } from 'astro:actions'
 import { z } from 'astro:schema'
 import { auth } from '@/lib/auth'
-import { getStarById, getStarByUserId, updateStarSunshines, getStarByIds } from '@/server-side/star'
+import { getStarById, getStarByUserId, updateStarSunshines } from '@/server-side/star'
 import { getAuthUserById } from '@/server-side/auth'
 import { getGalaxyById, updateGalaxySunshines } from '@/server-side/galaxy'
 import { getIssuesByGalaxy, getShiningIssues, getPublicBacklogIssues, createIssue, updateIssueSunshines, getIssueById, setIssueContributor, unsetIssueContributor, updateIssue, patchIssue, unpatchIssue } from '@/server-side/issue'
@@ -281,14 +281,46 @@ export const server = {
             email: z.string().email(),
             sunshinesToAdd: z.number().min(0),
         }),
-        handler: async ({ issueId, userId, email, sunshinesToAdd }): Promise<{ success: boolean; error?: string }> => {
+        handler: async ({ issueId, userId, email, sunshinesToAdd }, { request }): Promise<{ success: boolean; error?: string }> => {
             try {
-                // Get demo and validate
-                const demo = await getDemoByEmail(email);
-                if (!demo) {
+                // Check authentication
+                const session = await auth.api.getSession({
+                    headers: request.headers,
+                });
+
+                if (!session || !session.user) {
                     return {
                         success: false,
-                        error: 'Demo not found',
+                        error: 'Authentication required. Please log in to update issue sunshines',
+                    };
+                }
+
+                const authenticatedUserId = session.user.id;
+                const authenticatedUserEmail = session.user.email;
+
+                // Verify that the authenticated user's email matches the provided email
+                if (authenticatedUserEmail !== email) {
+                    return {
+                        success: false,
+                        error: 'Email mismatch. You can only update sunshines for your own account',
+                    };
+                }
+
+                // Get authenticated user's star
+                const authenticatedStar = await getStarByUserId(authenticatedUserId);
+                if (!authenticatedStar || !authenticatedStar._id) {
+                    return {
+                        success: false,
+                        error: 'User profile not found. Please ensure your account is set up correctly.',
+                    };
+                }
+
+                // Verify that the userId parameter matches the authenticated user's star ID
+                const authenticatedStarId = authenticatedStar._id.toString();
+                if (userId !== authenticatedStarId) {
+                    return {
+                        success: false,
+                        error: 'User ID mismatch. You can only update sunshines for your own account',
                     };
                 }
 
@@ -603,15 +635,13 @@ export const server = {
     /**
      * Adds 'patcher' to listHistory property of the issue, marking as the patchable issue.
      * @requires issueId to identify the issue
-     * @requires email to verify the demo session
      */
     patchIssue: defineAction({
         accept: 'json',
         input: z.object({
             issueId: z.string(),
-            email: z.string().email(),
         }),
-        handler: async ({ issueId, email }, { request }): Promise<{ success: boolean; error?: string }> => {
+        handler: async ({ issueId }, { request }): Promise<{ success: boolean; error?: string }> => {
             try {
                 // Check authentication
                 const session = await auth.api.getSession({
@@ -679,9 +709,8 @@ export const server = {
         accept: 'json',
         input: z.object({
             issueId: z.string(),
-            email: z.string().email(),
         }),
-        handler: async ({ issueId, email }, { request }): Promise<{ success: boolean; error?: string }> => {
+        handler: async ({ issueId }, { request }): Promise<{ success: boolean; error?: string }> => {
             try {
                 // Check authentication
                 const session = await auth.api.getSession({

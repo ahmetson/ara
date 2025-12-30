@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Accordion as AccordionPrimitive } from 'radix-ui';
 import { motion, AnimatePresence, type HTMLMotionProps } from 'motion/react';
 
-import { useControlledState } from '@/hooks/use-controlled-state';
+import { useControlledState } from '@/hooks/useControlledState';
 import { getStrictContext } from '@/lib/get-strict-context';
 
 type AccordionContextType = {

@@ -3,13 +3,9 @@ import GalaxyLayout from "@/layouts/GalaxyLayout.astro";
 import { MenuName } from "@/components/navbar/WorkNavbar.astro";
 
 import UniverseHero from "@/components/all-stars/UniverseHero";
-import AllStarsContestPanel from "@/components/all-stars/AllStarsContestPanel";
-import AllStarsLeaderboardPanels from "@/components/all-stars/AllStarsLeaderboardPanels";
 import UniverseResearchPanel from "@/components/all-stars/UniverseResearchPanel";
 import GalaxyAutoZoom from "@/components/all-stars/GalaxyAutoZoom";
 import BackButton from "@/components/custom-ui/BackButton";
-import DemoCtaPanel from "@/components/project/DemoCtaPanel";
-import { mockContestData } from "@/types/mock-data";
 import { getAllGalaxies, getGalaxyById } from "@/server-side/galaxy";
 
 // Start timing frontmatter execution
@@ -44,7 +40,7 @@ console.log(
   `[all-stars] getAllGalaxies(true): ${(getAllGalaxiesTime - getAllGalaxiesStartTime).toFixed(2)}ms (found ${allGalaxiesData.length} galaxies)`,
 );
 
-// Get current user's starsunshines (for demo, using 0 to show locked state)
+// Get current user's starsunshines
 const currentStarsunshines = 0;
 
 // Prepare all galaxies for display in the virtual screen

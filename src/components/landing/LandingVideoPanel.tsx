@@ -99,7 +99,7 @@ const LandingVideoPanel: React.FC<LandingVideoPanelProps> = ({
                             </span>
                         </p>
                         <p className="text-xs text-slate-600 dark:text-slate-400">
-                            Watch the demo video below to see Ara in action
+                            Watch the video below to see Ara in action
                         </p>
                     </div>
 
@@ -130,7 +130,7 @@ const LandingVideoPanel: React.FC<LandingVideoPanelProps> = ({
                         <div className="relative aspect-video w-full">
                             <iframe
                                 src={embedUrl}
-                                title="Ara Demo Video"
+                                title="Ara Showcase"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                 allowFullScreen
                                 className="absolute inset-0 w-full h-full rounded-xl"
@@ -145,11 +145,10 @@ const LandingVideoPanel: React.FC<LandingVideoPanelProps> = ({
                             Ready to try it out?
                         </p>
                         <p className="text-xs text-slate-600 dark:text-slate-400">
-                            Visit the Demo Page to explore Ara yourself
+                            Visit the All Stars Page to explore Ara yourself
                         </p>
                     </div>
 
-                    {/* Visit Demo Page Button */}
                     <motion.a
                         href="/all-stars"
                         className={cn(
@@ -179,7 +178,7 @@ const LandingVideoPanel: React.FC<LandingVideoPanelProps> = ({
                             transition={{ duration: 0.5, repeat: Infinity, repeatDelay: 1 }}
                         >
                             {getIcon({ iconType: 'star', className: 'w-5 h-5' })}
-                            <span>Demo</span>
+                            <span>All Stars</span>
                             <motion.span
                                 animate={isHovered ? { x: [0, 4, 0] } : {}}
                                 transition={{ duration: 0.5, repeat: Infinity, repeatDelay: 1 }}

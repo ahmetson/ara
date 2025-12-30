@@ -161,7 +161,7 @@ const AllStarsLeaderboardPanel: React.FC<AllStarsLeaderboardPanelProps> = ({
 
                 {/* Prize Pool Section */}
                 <div className="w-full space-y-3 flex flex-col items-center px-4 py-4 rounded-lg bg-white/5 dark:bg-slate-900/5 border border-slate-200/20 dark:border-slate-700/20">
-                    <div className="text-xs text-slate-600 dark:text-slate-400 flex items-center gap-2">Prize Pool <Badge variant="info">Demo</Badge></div>
+                    <div className="text-xs text-slate-600 dark:text-slate-400 flex items-center gap-2">Prize Pool</div>
                     <div className="flex items-center gap-2">
                         {getIcon({ iconType: 'money', className: 'w-6 h-6 text-green-500 dark:text-green-500/70' })}
                         <NumberFlow

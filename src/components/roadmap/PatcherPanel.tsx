@@ -13,7 +13,7 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import NumberFlow from '@number-flow/react';
 import DropTarget from '@/components/DropTarget';
-import { getDemo } from '@/client-side/demo';
+import { authClient } from '@/client-side/auth';
 import { getIssueById, updateIssue } from '@/client-side/issue';
 import { getIssues } from '@/client-side/issue';
 import { removePatch } from '@/client-side/roadmap';
@@ -23,6 +23,7 @@ interface PatcherPanelProps {
 }
 
 const PatcherPanel: React.FC<PatcherPanelProps> = ({ galaxyId }) => {
+    const { data: session } = authClient.useSession();
     const [issues, setIssues] = useState<Issue[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -73,9 +74,9 @@ const PatcherPanel: React.FC<PatcherPanelProps> = ({ galaxyId }) => {
 
     // Handle drop of patch into patcher
     const handlePatchDrop = useCallback(async (item: { id: string; title: string; versionId: string }) => {
-        const demo = getDemo();
-        if (!demo.email) {
-            console.error('No email found in demo');
+        const userEmail = session?.user?.email;
+        if (!userEmail) {
+            console.error('No email found in session');
             return;
         }
 
@@ -98,7 +99,7 @@ const PatcherPanel: React.FC<PatcherPanelProps> = ({ galaxyId }) => {
             // Update issue
             const updateSuccess = await updateIssue({
                 issueId: item.id,
-                email: demo.email!,
+                email: userEmail,
                 listHistory: newListHistory,
             });
 
@@ -118,7 +119,7 @@ const PatcherPanel: React.FC<PatcherPanelProps> = ({ galaxyId }) => {
         } catch (error) {
             console.error('Error handling patch drop:', error);
         }
-    }, [fetchIssues]);
+    }, [fetchIssues, session]);
 
 
 

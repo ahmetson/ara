@@ -1,9 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { authClient } from '@/client-side/auth'
-import { getStarByUserId } from '@/client-side/star'
 import type { AuthUser } from '@/types/auth'
-import type { Star } from '@/types/star'
 
 /**
  * Hook to check if the current signed-in user is viewing their own profile

@@ -42,7 +42,7 @@ const AddProjectButton: React.FC<AddProjectButtonProps> = ({ className }) => {
         {isLoggedIn && (
           <CheckmarkIcon className="w-5 h-5 text-white" />
         )}
-        Add your project
+        Check your dependencies
       </button>
 
       <AuthDialog

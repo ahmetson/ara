@@ -230,7 +230,7 @@ export const CheckmarkCircleIcon: React.FC<SVGProps> = ({ className = '', ...pro
 export const CheckmarkIcon: React.FC<SVGProps> = ({ className = '', ...props }) => (
   <svg
     className={className}
-    fill="green"
+    fill="currentColor"
     viewBox="0 0 20 20"
     width="1.5em"
     height="1.5em"

@@ -1,30 +1,24 @@
+import { cn } from '@/lib/utils'
+import NumberFlow, { Format, Value } from '@number-flow/react'
 import React from 'react'
 
 interface ContentItemProps {
-  icon: string
-  text: string
+  value: Value
+  format: Format
+  description: string
+  className?: string
 }
 
-const ContentItem: React.FC<ContentItemProps> = ({ icon, text }) => {
-  const getBackgroundColor = (iconLetter: string) => {
-    const colors = {
-      'G': 'bg-gray-700',
-      'R': 'bg-red-600',
-      'E': 'bg-green-600',
-      'P': 'bg-purple-600',
-      'A': 'bg-blue-600',
-      'X': 'bg-orange-600',
-      'H': 'bg-indigo-600'
-    }
-    return colors[iconLetter as keyof typeof colors] || 'bg-gray-500'
-  }
-
+const ContentItem: React.FC<ContentItemProps> = ({ value, format, description, className }) => {
   return (
-    <div className="flex items-start space-x-4">
-      <div className={`w-8 h-8 rounded-full ${getBackgroundColor(icon)} flex items-center justify-center flex-shrink-0`}>
-        <span className="text-white text-sm font-bold">{icon}</span>
-      </div>
-      <p className="text-gray-700 leading-relaxed flex-1">{text}</p>
+    <div className={cn("flex flex-col space-x-4 items-center justify-center", className)}>
+      <NumberFlow
+        value={value}
+        locales="en-US"
+        format={format}
+        className="font-bold text-2xl md:text-4xl text-sky-600 dark:text-sky-400"
+      />
+      <p className="text-gray-500 dark:text-gray-500 leading-relaxed flex-1">{description}</p>
     </div>
   )
 }

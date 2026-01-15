@@ -1,0 +1,704 @@
+---
+import GalaxyLayout from "@/layouts/GalaxyLayout.astro";
+import { MenuName } from "@/components/navbar/WorkNavbar.astro";
+import { socialLinks } from "@/types/ara";
+import AraGradientText from "@/components/AraGradientText";
+import {
+  CheckmarkIcon,
+  SettingsIcon,
+  UserIcon,
+  GraduateHatIcon,
+  CheckmarkCircleIcon,
+  LockIcon,
+  BookIcon,
+  WarningTriangleIcon,
+  TelegramIcon,
+  DiscordIcon,
+  GitHubIcon,
+  LinkedInIcon,
+  TwitterIcon,
+  BlueskyIcon,
+} from "@/svg/index";
+import DecorativeStarSeparator from "@/components/utilitified_decorations/DecorativeStarSeparator.astro";
+import DecorativeSeparator from "@/components/utilitified_decorations/DecorativeSeparator.astro";
+import IsometricFundingFlow from "@/components/diagrams/IsometricFundingFlow";
+import AddProjectButton from "@/components/auth/AddProjectButton";
+import AraLayerStack from "@/components/diagrams/AraLayerStack";
+import OwnershipTransferDiagram from "@/components/diagrams/OwnershipTransferDiagram";
+import TokenSupplyProgress from "@/components/diagrams/TokenSupplyProgress";
+---
+
+<GalaxyLayout
+  active={MenuName.ProjectList}
+  hideLinks={Object.keys(MenuName)}
+  projectName="Ara"
+  initialZoom={100}
+  minZoom={25}
+  maxZoom={150}
+  isStatic={true}
+>
+  <!-- Hero Section -->
+  <section
+    slot="hero"
+    class="relative flex flex-col items-center justify-center min-h-[40vh] text-center px-4 pointer-events-auto"
+    style="pointer-events: auto;"
+  >
+    <div class="w-full max-w-7xl mx-auto space-y-6">
+      <div class="flex items-center justify-center gap-4 mb-6">
+        <div class="text-5xl md:text-6xl lg:text-7xl font-bold">
+          <AraGradientText client:only="react" className="font-bold" />
+        </div>
+      </div>
+
+      <p
+        class="text-xl md:text-2xl font-bold text-slate-600 dark:text-slate-400 space-y-4"
+      >
+        Maintainer-centric funding & coordination layer
+      </p>
+
+      <p
+        class="text-xl md:text-2xl text-slate-600 dark:text-slate-400 space-y-4"
+      >
+        for open source users, project owners, and people who learn programming.
+      </p>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <div slot="center" class="w-full max-w-6xl mx-auto px-4">
+    <DecorativeStarSeparator />
+
+    <!-- Header Section with Integrated Benefits -->
+    <section id="header-section" class="text-center space-y-12">
+      <!-- Benefits Cards -->
+      <div class="mt-12">
+        <div class="grid md:grid-cols-3 gap-8 md:gap-10">
+          <div
+            class="backdrop-blur-md bg-white/30 dark:bg-slate-900/30 border border-slate-300/40 dark:border-slate-700/40 rounded-xl p-8 md:p-10 text-left"
+          >
+            <div class="flex items-center gap-3 mb-4">
+              <div class="p-2 rounded-lg bg-blue-500/20 dark:bg-blue-400/20">
+                <SettingsIcon class="text-blue-500 dark:text-blue-400" />
+              </div>
+              <h4 class="text-xl font-bold text-slate-800 dark:text-slate-200">
+                For maintainers
+              </h4>
+            </div>
+            <p
+              class="text-lg font-semibold text-slate-800 dark:text-slate-200 mb-4"
+            >
+              Get funded while maintaining full control
+            </p>
+            <ul class="space-y-3">
+              <li
+                class="flex items-start gap-2 text-slate-700 dark:text-slate-300"
+              >
+                <CheckmarkIcon
+                  class="text-green-500 dark:text-green-400 mt-0.5 flex-shrink-0"
+                />
+                <span>Funding to sustain your work</span>
+              </li>
+              <li
+                class="flex items-start gap-2 text-slate-700 dark:text-slate-300"
+              >
+                <CheckmarkIcon
+                  class="text-green-500 dark:text-green-400 mt-0.5 flex-shrink-0"
+                />
+                <span>Build reputation & visibility</span>
+              </li>
+              <li
+                class="flex items-start gap-2 text-slate-700 dark:text-slate-300"
+              >
+                <CheckmarkIcon
+                  class="text-green-500 dark:text-green-400 mt-0.5 flex-shrink-0"
+                />
+                <span>Grow your contributor team</span>
+              </li>
+            </ul>
+          </div>
+
+          <div
+            class="backdrop-blur-md bg-white/30 dark:bg-slate-900/30 border border-slate-200/40 dark:border-slate-700/40 rounded-xl p-8 md:p-10 text-left"
+          >
+            <div class="flex items-center gap-3 mb-4">
+              <div
+                class="p-2 rounded-lg bg-purple-500/20 dark:bg-purple-400/20"
+              >
+                <UserIcon class="text-purple-500 dark:text-purple-400" />
+              </div>
+              <h4 class="text-xl font-bold text-slate-800 dark:text-slate-200">
+                For users
+              </h4>
+            </div>
+            <p
+              class="text-lg font-semibold text-slate-800 dark:text-slate-200 mb-4"
+            >
+              Support projects you depend on
+            </p>
+            <ul class="space-y-3">
+              <li
+                class="flex items-start gap-2 text-slate-700 dark:text-slate-300"
+              >
+                <CheckmarkIcon
+                  class="text-green-500 dark:text-green-400 mt-0.5 flex-shrink-0"
+                />
+                <span>Connect with project creators</span>
+              </li>
+              <li
+                class="flex items-start gap-2 text-slate-700 dark:text-slate-300"
+              >
+                <CheckmarkIcon
+                  class="text-green-500 dark:text-green-400 mt-0.5 flex-shrink-0"
+                />
+                <span>Track project direction & decisions</span>
+              </li>
+              <li
+                class="flex items-start gap-2 text-slate-700 dark:text-slate-300"
+              >
+                <CheckmarkIcon
+                  class="text-green-500 dark:text-green-400 mt-0.5 flex-shrink-0"
+                />
+                <span>Protect critical features & APIs</span>
+              </li>
+            </ul>
+          </div>
+
+          <div
+            class="backdrop-blur-md bg-white/30 dark:bg-slate-900/30 border border-slate-200/40 dark:border-slate-700/40 rounded-xl p-8 md:p-10 text-left"
+          >
+            <div class="flex items-center gap-3 mb-4">
+              <div class="p-2 rounded-lg bg-green-500/20 dark:bg-green-400/20">
+                <GraduateHatIcon class="text-green-500 dark:text-green-400" />
+              </div>
+              <h4 class="text-xl font-bold text-slate-800 dark:text-slate-200">
+                For learners
+              </h4>
+            </div>
+            <p
+              class="text-lg font-semibold text-slate-800 dark:text-slate-200 mb-4"
+            >
+              Learn by contributing to real projects
+            </p>
+            <ul class="space-y-3">
+              <li
+                class="flex items-start gap-2 text-slate-700 dark:text-slate-300"
+              >
+                <CheckmarkIcon
+                  class="text-green-500 dark:text-green-400 mt-0.5 flex-shrink-0"
+                />
+                <span>Real-world project experience</span>
+              </li>
+              <li
+                class="flex items-start gap-2 text-slate-700 dark:text-slate-300"
+              >
+                <CheckmarkIcon
+                  class="text-green-500 dark:text-green-400 mt-0.5 flex-shrink-0"
+                />
+                <span>Learn production-grade practices</span>
+              </li>
+              <li
+                class="flex items-start gap-2 text-slate-700 dark:text-slate-300"
+              >
+                <CheckmarkIcon
+                  class="text-green-500 dark:text-green-400 mt-0.5 flex-shrink-0"
+                />
+                <span>Earn funding & build credibility</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- What's Ara Section -->
+    <section id="ara-layer-section" class="space-y-8 mt-8">
+      <!-- Decorative separator -->
+      <DecorativeSeparator />
+      <h3
+        class="text-3xl md:text-4xl font-bold text-slate-800 dark:text-slate-200 text-center mb-8"
+      >
+        What's Ara
+      </h3>
+
+      <div class="flex flex-col md:flex-row gap-8 items-start">
+        <!-- Diagram on the left -->
+        <div class="flex-1 md:flex-none md:w-1/2">
+          <AraLayerStack client:load className="w-full" />
+        </div>
+
+        <!-- Explanation on the right -->
+        <div class="flex-1 space-y-6">
+          <p class="text-lg md:text-xl text-slate-700 dark:text-slate-300">
+            Ara adds funded issues, roadmap/version management, and transparent
+            record.
+          </p>
+
+          <ul class="space-y-4 text-slate-700 dark:text-slate-300">
+            <li class="flex items-start gap-3">
+              <CheckmarkIcon
+                class="text-green-500 dark:text-green-400 mt-0.5 flex-shrink-0"
+              />
+              <span>
+                Your code stays where it is. GitHub (or GitLab) for code.
+                Nothing in your workflow is replaced.
+              </span>
+            </li>
+            <li class="flex items-start gap-3">
+              <CheckmarkIcon
+                class="text-green-500 dark:text-green-400 mt-0.5 flex-shrink-0"
+              />
+              <span>Your license the same.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <CheckmarkIcon
+                class="text-green-500 dark:text-green-400 mt-0.5 flex-shrink-0"
+              />
+              <span>Ara works only on top of existing repository.</span>
+            </li>
+          </ul>
+
+          <p
+            class="text-lg md:text-xl text-slate-700 dark:text-slate-300 font-semibold"
+          >
+            And, adds two rules, applied inside Ara.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Decorative separator -->
+
+    <!-- Two Rules Section -->
+    <section id="two-rules-section" class="space-y-12 my-16">
+      <DecorativeStarSeparator />
+      <h3
+        class="text-3xl md:text-4xl font-bold text-slate-800 dark:text-slate-200 text-center mb-8"
+      >
+        TWO RULES (INSIDE ARA ONLY)
+      </h3>
+
+      <!-- Rule 1: Funding follows dependencies -->
+      <div class="space-y-6">
+        <h4
+          class="text-2xl md:text-3xl font-bold text-slate-800 dark:text-slate-200 text-center"
+        >
+          Rule 1. Funding follows dependencies
+        </h4>
+
+        <div
+          class="backdrop-blur-md bg-white/30 dark:bg-slate-900/30 border border-slate-300/40 dark:border-slate-700/40 rounded-xl p-6 md:p-8 relative"
+          style="min-height: 600px;"
+        >
+          <!-- Full size diagram -->
+          <div
+            class="absolute inset-0 w-full h-full rounded-xl overflow-hidden"
+          >
+            <IsometricFundingFlow
+              client:only="react"
+              className="w-full h-full"
+            />
+          </div>
+
+          <!-- Split overlay descriptions positioned around the flow -->
+          <div class="relative z-10 pointer-events-none">
+            <!-- Main description - top center -->
+            <div
+              class="absolute top-4 left-1/2 transform -translate-x-1/2 p-4 max-w-[300px]"
+            >
+              <div
+                class="backdrop-blur-lg bg-white/90 dark:bg-slate-900/90 border border-slate-300/50 dark:border-slate-700/50 rounded-lg p-4 shadow-xl pointer-events-auto"
+              >
+                <p
+                  class="text-base md:text-lg text-slate-700 dark:text-slate-300 leading-relaxed text-center"
+                >
+                  When a project on Ara receives funding, a portion of that
+                  funding automatically flows to the projects it depends on.
+                </p>
+              </div>
+            </div>
+
+            <!-- Benefits list - top right area -->
+            <div class="absolute top-4 right-4 p-4 max-w-xs">
+              <div
+                class="backdrop-blur-lg bg-white/90 dark:bg-slate-900/90 border border-slate-300/50 dark:border-slate-700/50 rounded-lg p-4 shadow-xl pointer-events-auto"
+              >
+                <p
+                  class="text-base md:text-lg font-semibold text-slate-800 dark:text-slate-200 mb-2"
+                >
+                  What this means for you:
+                </p>
+                <ul
+                  class="space-y-2 text-sm md:text-base text-slate-700 dark:text-slate-300"
+                >
+                  <li class="flex items-start gap-2">
+                    <span class="text-blue-500 dark:text-blue-400 mt-1">•</span>
+                    <span>
+                      If other projects build on your code and get funded, you
+                      get funded too
+                    </span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <span class="text-blue-500 dark:text-blue-400 mt-1">•</span>
+                    <span>
+                      Popularity becomes a source of sustainability, not burnout
+                    </span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Hyperpayment note - bottom left area -->
+            <div class="absolute top-90 left-4 p-4 max-w-xs">
+              <div
+                class="backdrop-blur-lg bg-white/90 dark:bg-slate-900/90 border border-slate-300/50 dark:border-slate-700/50 rounded-lg p-4 shadow-xl pointer-events-auto"
+              >
+                <div
+                  class="space-y-2 text-sm md:text-base text-slate-700 dark:text-slate-300"
+                >
+                  <p>
+                    This rule applies only inside Ara and called <strong
+                      >Hyperpayment</strong
+                    >.
+                  </p>
+                  <p>
+                    Outside Ara, your project works exactly as it does today.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Decorative separator -->
+
+      <!-- Rule 2: Progressive ownership transfer -->
+      <div class="space-y-6">
+        <DecorativeSeparator />
+        <h4
+          class="text-2xl md:text-3xl font-bold text-slate-800 dark:text-slate-200 text-center"
+        >
+          Rule 2. Progressive ownership transfer
+        </h4>
+
+        <div
+          class="backdrop-blur-md bg-white/30 dark:bg-slate-900/30 border border-slate-300/40 dark:border-slate-700/40 rounded-xl p-6 md:p-8"
+        >
+          <div class="flex flex-col md:flex-row gap-8 items-start">
+            <!-- Explanation on the left -->
+            <div class="flex-1 space-y-4">
+              <p
+                class="text-lg md:text-xl text-slate-700 dark:text-slate-300 leading-relaxed"
+              >
+                Projects on Ara agree that ownership move from maintainer to
+                community over time.
+              </p>
+              <ul
+                class="space-y-3 text-lg md:text-xl text-slate-700 dark:text-slate-300"
+              >
+                <li class="flex items-start gap-2">
+                  <span class="text-blue-500 dark:text-blue-400 mt-1">•</span>
+                  <span>
+                    Ownership is tracked with blockchain tokens (separate for
+                    each project).
+                  </span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-blue-500 dark:text-blue-400 mt-1">•</span>
+                  <span>Maintainer sets the token supply.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-blue-500 dark:text-blue-400 mt-1">•</span>
+                  <span
+                    >Tokens are minted only for funded, maintainer's accepted
+                    work.</span
+                  >
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-blue-500 dark:text-blue-400 mt-1">•</span>
+                  <span>
+                    Ownership changes only when 100% of tokens are minted.
+                  </span>
+                </li>
+              </ul>
+              <p
+                class="text-lg md:text-xl text-slate-700 dark:text-slate-300 leading-relaxed"
+              >
+                Projects shouldn't depend on a single person forever, but
+                ownership should change only after real work, real funding, and
+                real trust.
+              </p>
+              <p
+                class="text-lg md:text-xl text-slate-700 dark:text-slate-300 leading-relaxed"
+              >
+                Ara makes ownership transition earned, slow, and maintainer-led.
+              </p>
+            </div>
+
+            <!-- Diagram on the right -->
+            <div class="flex-1">
+              <OwnershipTransferDiagram client:load className="w-full" />
+            </div>
+          </div>
+
+          <!-- Token Supply Progress Section -->
+          <div
+            class="mt-8 pt-8 border-t border-slate-300/40 dark:border-slate-700/40"
+          >
+            <TokenSupplyProgress client:load className="w-full" />
+          </div>
+
+          <!-- Maintainer Safety Cards inside Rule 2 -->
+          <div
+            class="mt-8 pt-8 border-t border-slate-300/40 dark:border-slate-700/40"
+          >
+            <h5
+              class="text-xl md:text-2xl font-bold text-slate-800 dark:text-slate-200 text-center mb-8"
+            >
+              MAINTAINER SAFETY
+            </h5>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div
+                class="backdrop-blur-md bg-white/30 dark:bg-slate-900/30 border border-slate-300/40 dark:border-slate-700/40 rounded-xl p-6 flex flex-col items-center justify-center min-h-[160px] transition-all hover:shadow-lg hover:scale-[1.02]"
+              >
+                <div class="mb-5 flex items-center justify-center">
+                  <LockIcon
+                    class="w-10 h-10 text-blue-500 dark:text-blue-400"
+                  />
+                </div>
+                <h4
+                  class="text-base md:text-lg font-semibold text-slate-800 dark:text-slate-200 text-center leading-tight"
+                >
+                  Control by default
+                </h4>
+              </div>
+
+              <div
+                class="backdrop-blur-md bg-white/30 dark:bg-slate-900/30 border border-slate-300/40 dark:border-slate-700/40 rounded-xl p-6 flex flex-col items-center justify-center min-h-[160px] transition-all hover:shadow-lg hover:scale-[1.02]"
+              >
+                <div class="mb-5 flex items-center justify-center">
+                  <CheckmarkCircleIcon
+                    class="w-10 h-10 text-green-500 dark:text-green-400"
+                  />
+                </div>
+                <h4
+                  class="text-base md:text-lg font-semibold text-slate-800 dark:text-slate-200 text-center leading-tight"
+                >
+                  Only accepted work creates tokens
+                </h4>
+              </div>
+
+              <div
+                class="backdrop-blur-md bg-white/30 dark:bg-slate-900/30 border border-slate-300/40 dark:border-slate-700/40 rounded-xl p-6 flex flex-col items-center justify-center min-h-[160px] transition-all hover:shadow-lg hover:scale-[1.02]"
+              >
+                <div class="mb-5 flex items-center justify-center">
+                  <WarningTriangleIcon
+                    class="w-10 h-10 text-yellow-500 dark:text-yellow-400"
+                  />
+                </div>
+                <h4
+                  class="text-base md:text-lg font-semibold text-slate-800 dark:text-slate-200 text-center leading-tight"
+                >
+                  No early governance
+                </h4>
+              </div>
+
+              <div
+                class="backdrop-blur-md bg-white/30 dark:bg-slate-900/30 border border-slate-300/40 dark:border-slate-700/40 rounded-xl p-6 flex flex-col items-center justify-center min-h-[160px] transition-all hover:shadow-lg hover:scale-[1.02]"
+              >
+                <div class="mb-5 flex items-center justify-center">
+                  <BookIcon
+                    class="w-10 h-10 text-purple-500 dark:text-purple-400"
+                  />
+                </div>
+                <h4
+                  class="text-base md:text-lg font-semibold text-slate-800 dark:text-slate-200 text-center leading-tight"
+                >
+                  Repo & license untouched
+                </h4>
+              </div>
+
+              <div
+                class="backdrop-blur-md bg-white/30 dark:bg-slate-900/30 border border-slate-300/40 dark:border-slate-700/40 rounded-xl p-6 flex flex-col items-center justify-center min-h-[160px] transition-all hover:shadow-lg hover:scale-[1.02] md:col-span-2 lg:col-span-1"
+              >
+                <div class="mb-5 flex items-center justify-center">
+                  <svg
+                    class="w-10 h-10 text-red-500 dark:text-red-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M6 18L18 6M6 6l12 12"></path>
+                  </svg>
+                </div>
+                <h4
+                  class="text-base md:text-lg font-semibold text-slate-800 dark:text-slate-200 text-center leading-tight"
+                >
+                  Leave anytime
+                </h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Decorative separator -->
+    <DecorativeSeparator />
+
+    <!-- Footer CTA Section -->
+    <section id="footer-cta-section" class="text-center space-y-6">
+      <p class="text-lg md:text-xl text-slate-600 dark:text-slate-400">
+        For maintainers • users • people learning programming
+      </p>
+      <h2
+        class="text-3xl md:text-4xl font-bold text-slate-800 dark:text-slate-200"
+      >
+        Grow projects without losing control
+      </h2>
+      <div class="flex justify-center">
+        <AddProjectButton client:only="react" />
+      </div>
+    </section>
+
+    <!-- Social Links -->
+    <section class="text-center space-y-4">
+      <p class="text-lg text-slate-600 dark:text-slate-400 mt-2">
+        Also, let's stay connected!
+      </p>
+      <div class="flex items-center justify-center gap-6 flex-wrap">
+        {
+          Object.values(socialLinks).map((link) => (
+            <a
+              href={link.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="p-3 rounded-lg backdrop-blur-md bg-white/30 dark:bg-slate-900/30 border border-slate-200/40 dark:border-slate-700/40 hover:bg-white/40 dark:hover:bg-slate-900/40 transition-all"
+              aria-label={link.label}
+            >
+              {link.type === "telegram" ? (
+                <TelegramIcon class="text-[#0088cc]" />
+              ) : link.type === "discord" ? (
+                <DiscordIcon class="text-[#5865F2]" />
+              ) : link.type === "github" ? (
+                <GitHubIcon class="text-slate-800 dark:text-slate-200" />
+              ) : link.type === "linkedin" ? (
+                <LinkedInIcon class="text-[#0077B5]" />
+              ) : link.type === "twitter" ? (
+                <TwitterIcon class="text-blue-500" />
+              ) : link.type === "bluesky" ? (
+                <BlueskyIcon class="text-[#00A3FF]" />
+              ) : null}
+            </a>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- Notice Section -->
+    <section class="text-center space-y-4 mt-8">
+      <div
+        class="backdrop-blur-md bg-white/30 dark:bg-slate-900/30 border border-slate-300/40 dark:border-slate-700/40 rounded-xl p-6 max-w-2xl mx-auto"
+      >
+        <p class="text-base md:text-lg text-slate-700 dark:text-slate-300">
+          Ara is currently a solo-dev work. Try out the Testnet version. Become
+          one of early pioneers with me. More about me is on{" "}
+          <a
+            href="/people"
+            class="text-blue-600 dark:text-blue-400 hover:underline font-semibold"
+          >
+            /people
+          </a>
+          .
+        </p>
+      </div>
+    </section>
+  </div>
+</GalaxyLayout>
+
+<style is:global>
+  @keyframes scan {
+    0% {
+      transform: translateY(-100%);
+    }
+    100% {
+      transform: translateY(100%);
+    }
+  }
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+  @keyframes pulse {
+    0%,
+    100% {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  @keyframes pulse-subtle {
+    0%,
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.95;
+      transform: scale(1.01);
+    }
+  }
+  .animate-pulse-subtle {
+    animation: pulse-subtle 3s ease-in-out infinite;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  /* Ensure galaxy background doesn't move - disable all transforms */
+  [data-galaxy-backgrounds] {
+    transform: none !important;
+    will-change: auto !important;
+  }
+
+  .event-notification {
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  /* Hide scrollbar for horizontal scroll */
+  .scrollbar-hide {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
+
+  /* Ensure video panel and hero section are clickable */
+  [data-landing-video-panel] {
+    pointer-events: auto !important;
+  }
+
+  section[slot="hero"] {
+    pointer-events: auto !important;
+  }
+</style>

@@ -31,7 +31,7 @@ export default function AraGradientText({ className = '' }: { className?: string
 
   return (
     <GradientText colors={colors} animationSpeed={8} className={className}>
-      Open source, built to grow and last.
+      Sustainable open-source<br /> driven by community
     </GradientText>
   );
 }

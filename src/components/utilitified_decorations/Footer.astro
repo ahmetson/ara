@@ -1,6 +1,9 @@
 ---
 import Link from "@/components/custom-ui/Link";
 import { companyInfo } from "@/types/ara";
+import { motion } from "framer-motion";
+import { socialLinks } from "@/types/ara";
+import SocialLink from "./SocialLink";
 ---
 
 <footer
@@ -22,6 +25,16 @@ import { companyInfo } from "@/types/ara";
       className=" text-slate-600 dark:text-slate-400 transition-colors"
       >Privacy Policy (fun-storylike-edition)</Link
     >
+  </div>
+
+  <div>
+    <motion.div className="flex flex-row items-center space-x-2 ml-4 w-full">
+      {
+        Object.values(socialLinks).map((link) => (
+          <SocialLink className="flex rounded-sm w-8 h-8 mt-3" link={link} />
+        ))
+      }
+    </motion.div>
   </div>
 
   <div class="text-sm">

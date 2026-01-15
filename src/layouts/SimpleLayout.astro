@@ -1,0 +1,169 @@
+---
+import { ClientRouter } from "astro:transitions";
+import "@/styles/global.css";
+import "@/styles/motion.css";
+import Header from "@/components/utilitified_decorations/HeaderCosmic.astro";
+import Footer from "@/components/utilitified_decorations/Footer.astro";
+import ThreeColumnGrid from "@/components/grid/ThreeColumnGrid.astro";
+import GridBackgrounded from "./GridBackgrounded";
+import { MenuItemProps } from "@/components/menu/MenuItem";
+import { GradientBackground } from "@/components/animate-ui/components/backgrounds/gradient";
+import { UserStar as UserStarData } from "@/types/all-stars";
+import BrowseTracker from "@/components/navigation/BrowseTracker";
+import PageTransitionProvider from "@/components/navigation/PageTransitionProvider";
+import Analytics from "./Analytics.astro";
+import RandomSlotDistributor from "@/components/layout/RandomSlotDistributor";
+import type { Galaxy as GalaxyType } from "@/types/galaxy";
+
+interface Props {
+  active?: string;
+  hideLinks?: string[];
+  hideAuth?: boolean;
+  additional?: MenuItemProps[];
+  projectName?: string;
+  initialZoom?: number;
+  minZoom?: number;
+  maxZoom?: number;
+  maxGalaxyContent?: number;
+  stars?: UserStarData[];
+  projectGoal?: number;
+  projectId?: string;
+  projectX?: number;
+  projectY?: number;
+  projectGalaxies?: Array<{
+    x: number;
+    y: number;
+    projectName: string;
+    projectId?: string;
+    galaxyData?: any;
+    tags?: string[];
+    leaderboardPosition?: number;
+  }>;
+  isStatic?: boolean;
+  disableGalaxyBackground?: boolean;
+  random?: boolean;
+  randomSlot?: string[];
+  randomItems?: GalaxyType[];
+}
+const {
+  hideLinks,
+  hideAuth,
+  additional,
+  projectName,
+  isStatic = false,
+  random = false,
+  randomSlot = ["left", "center", "right"],
+  randomItems = [],
+} = Astro.props;
+
+if (Astro.locals.session) {
+  console.log("User is authenticated");
+} else {
+  // Redirect to login page if the user is not authenticated
+  console.log("User is not authenticated");
+}
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/ara_logo.png" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{"'" + projectName + "' star galaxy"}</title>
+    <ClientRouter />
+    <Analytics />
+  </head>
+  <body
+    class="min-h-screen bg-slate-200 dark:bg-slate-800 border-1 border-red-500/10"
+  >
+    <BrowseTracker client:load />
+    <!-- Background Container - Will be transformed by GalaxyZoomWrapper -->
+    <div
+      data-galaxy-backgrounds
+      style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; transform-origin: center center; pointer-events: auto; z-index: 0; overflow: hidden;"
+    >
+      {
+        isStatic ? (
+          <GradientBackground className="fixed h-screen w-screen z-0 pointer-events-none" />
+        ) : (
+          <GradientBackground
+            client:only="react"
+            className="fixed h-screen w-screen z-0 pointer-events-none"
+          />
+        )
+      }
+      <GridBackgrounded />
+      <slot
+        name="background"
+        class="fixed h-screen w-screen z-3 pointer-events-none"
+      />
+    </div>
+
+    <!-- Content Container Header -->
+    <div data-galaxy-fixed>
+      <Header hideLinks={hideLinks} hideAuth={hideAuth} additional={additional}>
+        <slot name="header-navbar" />
+      </Header>
+    </div>
+    <!-- Content Container Body - Will be transformed by GalaxyZoomWrapper -->
+    <div
+      id="galaxy-space"
+      class="z-2 relative border border-red-500/20 pointer-events-none"
+      style="transform-origin: center center;"
+    >
+      <section class="mt-6">
+        <slot name="hero" class="pointer-events-auto" />
+      </section>
+      <ThreeColumnGrid
+        centerPercents="3/5"
+        className="mx-auto py-16 space-x-8 px-8 min-h-[calc(100vh-4rem)] pointer-events-auto"
+      >
+        <slot name="left" class="mr-4" slot="left">
+          {
+            random && randomItems.length > 0 && (
+              <RandomSlotDistributor
+                client:only="react"
+                items={randomItems}
+                slots={randomSlot}
+                slotName="left"
+              />
+            )
+          }
+        </slot>
+        <slot name="center" class="mx-4" slot="center">
+          {
+            random && randomItems.length > 0 && (
+              <RandomSlotDistributor
+                client:only="react"
+                items={randomItems}
+                slots={randomSlot}
+                slotName="center"
+              />
+            )
+          }
+        </slot>
+        <slot name="right" class="ml-4" slot="right">
+          {
+            random && randomItems.length > 0 && (
+              <RandomSlotDistributor
+                client:only="react"
+                items={randomItems}
+                slots={randomSlot}
+                slotName="right"
+              />
+            )
+          }
+        </slot>
+      </ThreeColumnGrid>
+    </div>
+    <!-- Content Container Footer -->
+    <div data-galaxy-fixed id="galaxy-footer">
+      <slot name="footer" />
+      <Footer />
+    </div>
+
+    <PageTransitionProvider client:load />
+  </body>
+</html>

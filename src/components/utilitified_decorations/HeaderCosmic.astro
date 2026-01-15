@@ -3,9 +3,6 @@ import Logo from "./Logo.astro";
 import AuthHeader from "@/components/auth/AuthHeader";
 import WorkNavbar, { type MenuName } from "../navbar/WorkNavbar.astro";
 import { MenuItemProps } from "../menu/MenuItem";
-import { motion } from "framer-motion";
-import { socialLinks } from "@/types/ara";
-import SocialLink from "./SocialLink";
 import Badge from "../badge/Badge";
 
 interface Props {
@@ -57,13 +54,6 @@ const { active, hideLinks, hideAuth, additional } = Astro.props;
         variant="blue"
         className="text-slate-500 dark:text-slate-400 text-sm">testnet</Badge
       >
-      <motion.div className="flex flex-row items-center space-x-2 ml-4 w-full">
-        {
-          Object.values(socialLinks).map((link) => (
-            <SocialLink className="flex rounded-sm w-8 h-8 mt-3" link={link} />
-          ))
-        }
-      </motion.div>
     </div>
     <div class="navbar-center h-6 hidden lg:flex lg:min-w-[50vw]">
       <WorkNavbar

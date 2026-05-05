@@ -1,0 +1,769 @@
+---
+import MinimalDarkLayout from "@/layouts/MinimalDarkLayout.astro";
+
+const experiments = [
+  {
+    title: "Experiment 2",
+    href: "https://github.com/ara-foundation/forum",
+    subtitle: "Minimal community-first forum, no blockchain.",
+  },
+  {
+    title: "Experiment 3",
+    href: "https://github.com/ara-foundation/app-v1",
+  },
+  {
+    title: "Experiment 4",
+    href: "https://github.com/ara-foundation/ara-v1",
+  },
+  {
+    title: "Experiment 5",
+    href: "https://github.com/ara-foundation/ara-v2",
+  },
+  {
+    title: "Experiment 6",
+    href: "https://github.com/ara-foundation/ara-v3",
+  },
+  {
+    title: "Experiment 7",
+    href: "https://github.com/ara-foundation/app/tree/pre-blockchain",
+    subtitle:
+      "Social media for sustainable open source projects with semantic payment distribution.",
+  },
+] as const;
+---
+
+<MinimalDarkLayout title="Ara Roadmap">
+  <div class="roadmap-main">
+    <div class="roadmap-shell">
+      <aside class="roadmap-nav-wrap">
+        <nav class="roadmap-nav" aria-label="Roadmap section navigation">
+          <p class="roadmap-nav-label">Roadmap</p>
+          <a href="#pre-2024-2026" class="nav-link nav-link-pre"
+            >Pre with date (2024-2026)</a
+          >
+          <a href="#now" class="nav-link nav-link-now">Now</a>
+          <a href="#from-2026" class="nav-link nav-link-next">2026-onward</a>
+          <a href="#join-us" class="nav-link nav-link-join">Join us</a>
+        </nav>
+      </aside>
+
+      <div class="roadmap-content">
+        <section id="pre-2024-2026" class="roadmap-section section-pre">
+          <p class="s-label">Pre with date (2024-2026)</p>
+          <h1 class="section-title">What Has Been Done</h1>
+
+          <div class="timeline">
+            <article class="timeline-item">
+              <p>
+                First it was a 3D software environment with AI assistant. The
+                idea was right but asbtract. 3D space was a desktop app. It
+                didn't work out because the UI metaphor was not properly built,
+                and the blockchain side was not ready.
+              </p>
+              <div class="shot-grid three">
+                <figure class="screenshot-photo">
+                  <img
+                    src="/roadmap/roadmap-3d-1.png"
+                    alt="3D environment screenshot showing AI assistant and command panel."
+                    loading="lazy"
+                  />
+                  <figcaption>screenshot 1 - 3D environment</figcaption>
+                </figure>
+                <figure class="screenshot-photo">
+                  <img
+                    src="/roadmap/roadmap-3d-2.png"
+                    alt="3D environment screenshot showing UI panel and browser action."
+                    loading="lazy"
+                  />
+                  <figcaption>screenshot 2 - 3D environment</figcaption>
+                </figure>
+                <figure class="screenshot-photo">
+                  <img
+                    src="/roadmap/roadmap-3d-3.png"
+                    alt="3D environment screenshot showing multiple users and Ara transfers."
+                    loading="lazy"
+                  />
+                  <figcaption>screenshot 3 - 3D environment</figcaption>
+                </figure>
+              </div>
+              <p>
+                Demo showcase available on
+                <a
+                  href="https://www.youtube.com/watch?v=suOaUQmMSGo&t=41s"
+                  target="_blank"
+                  rel="noopener">YouTube</a
+                >.
+              </p>
+            </article>
+
+            <article class="timeline-item">
+              <p>
+                Then it moved to the web to ship faster. It experiment with 2D
+                new metaphor for malleable interface: instead typography based
+                component, its like a universe with galaxies (projects) and
+                stars (users).
+              </p>
+              <figure class="screenshot-photo">
+                <img
+                  src="/roadmap/roadmap-galaxy-interface.png"
+                  alt="Galaxy interface screenshot from Ara web version."
+                  loading="lazy"
+                />
+                <figcaption>screenshot - galaxy interface</figcaption>
+              </figure>
+              <p>
+                The site itself came with meta tools that let you step outside
+                the page.
+              </p>
+              <figure class="screenshot-photo">
+                <img
+                  src="/roadmap/roadmap-meta-tools-scrolled.png"
+                  alt="Scrolled Ara page showing meta tools and galaxy background."
+                  loading="lazy"
+                />
+                <figcaption>
+                  screenshot - scrolled version with meta tools visible
+                </figcaption>
+              </figure>
+              <p>
+                UI is malleable with AI: in screenshot below you can see how to
+                customize zoom controller with AI.
+              </p>
+              <figure class="screenshot-photo">
+                <img
+                  src="/roadmap/roadmap-zoom-controller.png"
+                  alt="Ara interface screenshot with zoom controller customization panel."
+                  loading="lazy"
+                />
+                <figcaption>screenshot - zoom controller</figcaption>
+              </figure>
+            </article>
+
+            <article class="timeline-item">
+              <p>
+                It didn't work out because I was trying to push it as a social
+                network. Then I tried to work on each of the Ara component and
+                as only focus on malleable interface was misdirecting
+                trajectory.
+              </p>
+            </article>
+
+            <article class="timeline-item">
+              <p>
+                After countless feedbacks I finally get the proper idea and
+                structure and here we are.
+              </p>
+            </article>
+          </div>
+
+          <div class="completion-block">
+            <h2 class="sub-title">Completed</h2>
+            <ul class="done-list">
+              <li>
+                <a href="/ara.pdf" target="_blank" rel="noopener"
+                  ><strong>Whitepaper</strong></a
+                >
+                - the full framework, published April 2026.
+              </li>
+              <li>
+                <a href="https://hyperpayment.org" target="_blank" rel="noopener"
+                  ><strong>Hyperpayment protocol</strong></a
+                >
+                - pays money according to semantics, not manual invoicing or
+                fixed subscriptions.
+              </li>
+              <li>
+                <strong>Malleable interface that people need</strong> (draft).
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <section id="now" class="roadmap-section section-now">
+          <p class="s-label">Now</p>
+          <h2 class="section-title">What Is Now</h2>
+          <article class="phase-card">
+            <div class="phase-head">
+              <h3 class="phase-title">Phase I - Cascade Fund</h3>
+              <span class="phase-state state-active">Active</span>
+            </div>
+            <p>
+              The first version brings together two communities: users who want
+              to feel like kings of their computers, and the open source
+              developers who build the tools they depend on.
+            </p>
+            <p>
+              Users pay open source projects monthly. In return they choose from
+              three options:
+            </p>
+            <ul class="detail-list">
+              <li>Prevent features or API deprecation.</li>
+              <li>Add features to the API that make their lives easier.</li>
+              <li>Turn the project into Ara.</li>
+            </ul>
+            <p>Turning into Ara has two forms.</p>
+            <ol class="detail-list ordered">
+              <li>
+                Split the interface, data, and logic so personal data stays on
+                the local side.
+              </li>
+              <li>
+                Bring open source communities together to create shared
+                protocols and messages, so apps are aligned with each other.
+              </li>
+            </ol>
+            <p>
+              What users get: a bundle of open source software where features
+              and APIs are guaranteed not to disappear, all data stays local,
+              and nothing is locked to a vendor.
+            </p>
+            <p>
+              To surface what matters, Ara will build an analyzer that reads
+              what APIs exist and how users actually use them - then suggests
+              improvements that save time.
+            </p>
+            <p class="onboard-line">
+              <span>Onboards:</span> open source developers and their users
+            </p>
+          </article>
+        </section>
+
+        <section id="from-2026" class="roadmap-section section-next">
+          <p class="s-label">2026-onward</p>
+
+          <article class="phase-card">
+            <div class="phase-head">
+              <h3 class="phase-title">Phase II - Project Management</h3>
+              <span class="phase-state state-next">Coming next</span>
+            </div>
+            <p>
+              Built on what Cascade Fund proved, the second phase is a project
+              management environment that runs in the browser.
+            </p>
+            <p>
+              Local first: all your data stays on your machine. AI ready: the
+              model runs locally, trained on what you already own. Composable:
+              apps are Lego bricks built on other apps, reshuffled without
+              worrying about licenses.
+            </p>
+            <p>
+              This is the malleable surface. Software you own, not software you
+              rent.
+            </p>
+            <p class="onboard-line">
+              <span>Onboards:</span> designers, power users, productivity-focused
+              teams
+            </p>
+          </article>
+
+          <article class="phase-card">
+            <div class="phase-head">
+              <h3 class="phase-title">Phase III - Blockchain</h3>
+              <span class="phase-state state-horizon">The horizon</span>
+            </div>
+            <p>
+              The third phase puts the foundation on-chain. Two wings: one that
+              stores the semantics of open source software, one that runs
+              recommendation on top of those semantics.
+            </p>
+            <p>
+              The blockchain here is not a financial instrument - it is
+              collective wisdom. A trustless recommendation engine that surfaces
+              what users actually need, not what someone paid to promote.
+            </p>
+            <p>
+              And if it succeeds: it whitewashes blockchain from its infamous
+              reputation.
+            </p>
+            <p class="onboard-line">
+              <span>Onboards:</span> node operators, the broader ecosystem
+            </p>
+          </article>
+        </section>
+
+        <section id="join-us" class="roadmap-section section-join">
+          <p class="s-label">Join us</p>
+          <h2 class="section-title">Stay updated and collaborate</h2>
+          <p>
+            Lastly, to keep updated follow on our social media. Or if you want
+            to collaborate mail me at
+            <a href="mailto:medet@ara.foundation">medet@ara.foundation</a>.
+          </p>
+        </section>
+      </div>
+
+      <aside class="roadmap-right-wrap">
+        <section class="roadmap-right-panel" aria-label="Experiments source code">
+          <p class="roadmap-right-label">Code archive</p>
+          <h2 class="roadmap-right-title">Experiment GitHub links</h2>
+          <ol class="experiment-list">
+            {
+              experiments.map((exp, i) => (
+                <li class="experiment-item">
+                  <span class="experiment-index">{i + 2}.</span>
+                  <div>
+                    <a href={exp.href} target="_blank" rel="noopener noreferrer">
+                      {exp.title}
+                    </a>
+                    {"subtitle" in exp && exp.subtitle ? (
+                      <p>{exp.subtitle}</p>
+                    ) : null}
+                  </div>
+                </li>
+              ))
+            }
+          </ol>
+        </section>
+      </aside>
+    </div>
+  </div>
+</MinimalDarkLayout>
+
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;1,8..60,300&display=swap");
+
+  .roadmap-main {
+    --bg: #0d0d0d;
+    --line: rgba(255, 255, 255, 0.1);
+    --line2: rgba(255, 255, 255, 0.16);
+    --text: #e8e2d8;
+    --dim: #aba293;
+    --pre-accent: #d4824a;
+    --now-accent: #5abf9f;
+    --next-accent: #8f81ff;
+    --join-accent: #e0b85a;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Source Serif 4", Georgia, serif;
+  }
+
+  .roadmap-main * {
+    box-sizing: border-box;
+  }
+
+  .roadmap-main a {
+    color: inherit;
+  }
+
+  .roadmap-shell {
+    max-width: 1450px;
+    margin: 0 auto;
+    padding: 3rem 2rem 6rem;
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: minmax(200px, 250px) minmax(0, 1.45fr) minmax(220px, 280px);
+  }
+
+  .roadmap-nav-wrap {
+    position: relative;
+  }
+
+  .roadmap-nav {
+    position: sticky;
+    top: 2rem;
+    border: 1px solid var(--line);
+    background: #121212;
+    padding: 1.25rem;
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  .roadmap-nav-label {
+    font-family: "DM Mono", monospace;
+    font-size: 0.64rem;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    margin: 0 0 0.5rem;
+    color: var(--dim);
+  }
+
+  .nav-link {
+    text-decoration: none;
+    border: 1px solid var(--line);
+    padding: 0.65rem 0.75rem;
+    font-family: "DM Mono", monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition:
+      border-color 0.2s,
+      background-color 0.2s,
+      color 0.2s;
+  }
+
+  .nav-link:hover {
+    border-color: var(--line2);
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .nav-link-pre {
+    color: var(--pre-accent);
+  }
+
+  .nav-link-now {
+    color: var(--now-accent);
+  }
+
+  .nav-link-next {
+    color: var(--next-accent);
+  }
+
+  .nav-link-join {
+    color: var(--join-accent);
+  }
+
+  .roadmap-content {
+    border: 1px solid var(--line);
+    background: #111;
+  }
+
+  .roadmap-right-wrap {
+    position: relative;
+  }
+
+  .roadmap-right-panel {
+    position: sticky;
+    top: 2rem;
+    border: 1px solid var(--line);
+    background: #121212;
+    padding: 1.25rem;
+  }
+
+  .roadmap-right-label {
+    font-family: "DM Mono", monospace;
+    font-size: 0.64rem;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    margin: 0 0 0.6rem;
+    color: var(--dim);
+  }
+
+  .roadmap-right-title {
+    margin: 0 0 1rem;
+    font-family: "Playfair Display", serif;
+    font-size: 1.35rem;
+    font-weight: 400;
+    line-height: 1.2;
+  }
+
+  .experiment-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .experiment-item {
+    border: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.03);
+    padding: 0.7rem 0.75rem;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.6rem;
+    align-items: flex-start;
+  }
+
+  .experiment-index {
+    font-family: "DM Mono", monospace;
+    font-size: 0.72rem;
+    color: var(--dim);
+    line-height: 1.5;
+  }
+
+  .experiment-item a {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    font-family: "Playfair Display", serif;
+    font-size: 1rem;
+  }
+
+  .experiment-item p {
+    margin: 0.35rem 0 0;
+    font-family: "DM Mono", monospace;
+    font-size: 0.72rem;
+    line-height: 1.5;
+    color: var(--dim);
+  }
+
+  .roadmap-section {
+    padding: 3.4rem 3rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .roadmap-section:last-child {
+    border-bottom: 0;
+  }
+
+  .section-pre {
+    background: linear-gradient(180deg, #15110e 0%, #111 100%);
+  }
+
+  .section-now {
+    background: linear-gradient(180deg, #0f1715 0%, #101212 100%);
+  }
+
+  .section-next {
+    background: linear-gradient(180deg, #131224 0%, #111 100%);
+  }
+
+  .section-join {
+    background: linear-gradient(180deg, #1a1710 0%, #111 100%);
+  }
+
+  .s-label {
+    margin: 0 0 1.4rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-family: "DM Mono", monospace;
+    font-size: 0.66rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+  }
+
+  .s-label::before,
+  .s-label::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--line2);
+    max-width: 52px;
+  }
+
+  .section-title {
+    margin: 0 0 1.4rem;
+    font-family: "Playfair Display", serif;
+    font-weight: 400;
+    font-size: clamp(1.8rem, 4.5vw, 2.6rem);
+    line-height: 1.2;
+  }
+
+  .sub-title {
+    margin: 0 0 0.7rem;
+    font-family: "Playfair Display", serif;
+    font-weight: 400;
+    font-size: 1.5rem;
+  }
+
+  .timeline {
+    display: grid;
+    gap: 1.2rem;
+  }
+
+  .timeline-item,
+  .phase-card,
+  .completion-block {
+    border: 1px solid var(--line);
+    background: rgba(0, 0, 0, 0.25);
+    padding: 1.25rem 1.2rem;
+  }
+
+  .timeline-item p,
+  .phase-card p,
+  .section-join p {
+    margin: 0 0 1rem;
+    color: var(--text);
+    line-height: 1.75;
+    font-size: 1.04rem;
+  }
+
+  .timeline-item p:last-child,
+  .phase-card p:last-child,
+  .section-join p:last-child {
+    margin-bottom: 0;
+  }
+
+  .shot-grid {
+    display: grid;
+    gap: 0.8rem;
+    margin: 0 0 1rem;
+  }
+
+  .shot-grid.two {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .screenshot-placeholder {
+    min-height: 140px;
+    border: 1px dashed var(--line2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 1rem;
+    font-family: "DM Mono", monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--dim);
+    background: rgba(255, 255, 255, 0.02);
+    margin: 0 0 1rem;
+  }
+
+  .screenshot-photo {
+    margin: 0 0 1rem;
+    border: 1px solid var(--line2);
+    background: rgba(255, 255, 255, 0.02);
+    overflow: hidden;
+  }
+
+  .screenshot-photo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 140px;
+    object-fit: cover;
+  }
+
+  .screenshot-photo figcaption {
+    margin: 0;
+    padding: 0.55rem 0.75rem;
+    border-top: 1px solid var(--line);
+    font-family: "DM Mono", monospace;
+    font-size: 0.66rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--dim);
+    background: rgba(0, 0, 0, 0.18);
+  }
+
+  .done-list,
+  .detail-list {
+    margin: 0;
+    padding-left: 1.2rem;
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .done-list li,
+  .detail-list li {
+    line-height: 1.7;
+  }
+
+  .phase-card + .phase-card {
+    margin-top: 1.2rem;
+  }
+
+  .phase-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.9rem;
+    margin-bottom: 1rem;
+  }
+
+  .phase-title {
+    margin: 0;
+    font-family: "Playfair Display", serif;
+    font-size: 1.5rem;
+    font-weight: 400;
+    line-height: 1.2;
+  }
+
+  .phase-state {
+    font-family: "DM Mono", monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    border: 1px solid currentColor;
+    padding: 0.36rem 0.58rem;
+    white-space: nowrap;
+  }
+
+  .state-active {
+    color: var(--now-accent);
+  }
+
+  .state-next {
+    color: #8ab0ff;
+  }
+
+  .state-horizon {
+    color: #c09bff;
+  }
+
+  .onboard-line {
+    margin-top: 1rem;
+    font-size: 0.98rem;
+    color: var(--dim);
+  }
+
+  .onboard-line span {
+    color: var(--text);
+  }
+
+  .section-pre .s-label,
+  .section-pre a {
+    color: var(--pre-accent);
+  }
+
+  .section-now .s-label,
+  .section-now a {
+    color: var(--now-accent);
+  }
+
+  .section-next .s-label,
+  .section-next a {
+    color: var(--next-accent);
+  }
+
+  .section-join .s-label,
+  .section-join a {
+    color: var(--join-accent);
+  }
+
+  .section-pre .section-title,
+  .section-now .section-title,
+  .section-next .section-title,
+  .section-join .section-title {
+    color: var(--text);
+  }
+
+  .section-pre .timeline-item p,
+  .section-now .phase-card p,
+  .section-next .phase-card p,
+  .section-join p {
+    color: var(--text);
+  }
+
+  @media (max-width: 1000px) {
+    .roadmap-shell {
+      grid-template-columns: 1fr;
+      padding: 2rem 1rem 4rem;
+    }
+
+    .roadmap-nav {
+      position: static;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.5rem;
+    }
+
+    .roadmap-nav-label {
+      grid-column: 1 / -1;
+    }
+
+    .roadmap-section {
+      padding: 2.2rem 1.25rem;
+    }
+
+    .roadmap-right-panel {
+      position: static;
+    }
+
+    .phase-head {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .roadmap-nav {
+      grid-template-columns: 1fr;
+    }
+
+    .shot-grid.two {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

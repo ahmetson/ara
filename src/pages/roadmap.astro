@@ -323,6 +323,33 @@ const experiments = [
   @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;1,8..60,300&display=swap");
 
   .roadmap-main {
+    --bg: #faf8f3;
+    --line: rgba(49, 39, 29, 0.11);
+    --line2: rgba(49, 39, 29, 0.19);
+    --text: #25201a;
+    --dim: #6d6255;
+    --pre-accent: #a65f2f;
+    --now-accent: #1f8068;
+    --next-accent: #5e52c9;
+    --join-accent: #8f7025;
+    --panel-bg: #fffdf8;
+    --panel-bg-subtle: #f7f2ea;
+    --nav-hover-bg: rgba(49, 39, 29, 0.05);
+    --item-bg: rgba(255, 255, 255, 0.58);
+    --item-bg-strong: rgba(255, 255, 255, 0.74);
+    --caption-bg: rgba(49, 39, 29, 0.05);
+    --pre-bg: linear-gradient(180deg, #fff7ed 0%, #fffdf8 100%);
+    --now-bg: linear-gradient(180deg, #effaf5 0%, #fffdf8 100%);
+    --next-bg: linear-gradient(180deg, #f3f1ff 0%, #fffdf8 100%);
+    --join-bg: linear-gradient(180deg, #fff8e3 0%, #fffdf8 100%);
+    --state-next: #405fa8;
+    --state-horizon: #7353b7;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Source Serif 4", Georgia, serif;
+  }
+
+  :global(.dark) .roadmap-main {
     --bg: #0d0d0d;
     --line: rgba(255, 255, 255, 0.1);
     --line2: rgba(255, 255, 255, 0.16);
@@ -332,9 +359,18 @@ const experiments = [
     --now-accent: #5abf9f;
     --next-accent: #8f81ff;
     --join-accent: #e0b85a;
-    background: var(--bg);
-    color: var(--text);
-    font-family: "Source Serif 4", Georgia, serif;
+    --panel-bg: #121212;
+    --panel-bg-subtle: #111;
+    --nav-hover-bg: rgba(255, 255, 255, 0.05);
+    --item-bg: rgba(255, 255, 255, 0.03);
+    --item-bg-strong: rgba(0, 0, 0, 0.25);
+    --caption-bg: rgba(0, 0, 0, 0.18);
+    --pre-bg: linear-gradient(180deg, #15110e 0%, #111 100%);
+    --now-bg: linear-gradient(180deg, #0f1715 0%, #101212 100%);
+    --next-bg: linear-gradient(180deg, #131224 0%, #111 100%);
+    --join-bg: linear-gradient(180deg, #1a1710 0%, #111 100%);
+    --state-next: #8ab0ff;
+    --state-horizon: #c09bff;
   }
 
   .roadmap-main * {
@@ -362,7 +398,7 @@ const experiments = [
     position: sticky;
     top: 2rem;
     border: 1px solid var(--line);
-    background: #121212;
+    background: var(--panel-bg);
     padding: 1.25rem;
     display: grid;
     gap: 0.6rem;
@@ -393,7 +429,7 @@ const experiments = [
 
   .nav-link:hover {
     border-color: var(--line2);
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--nav-hover-bg);
   }
 
   .nav-link-pre {
@@ -414,7 +450,7 @@ const experiments = [
 
   .roadmap-content {
     border: 1px solid var(--line);
-    background: #111;
+    background: var(--panel-bg-subtle);
   }
 
   .roadmap-right-wrap {
@@ -425,7 +461,7 @@ const experiments = [
     position: sticky;
     top: 2rem;
     border: 1px solid var(--line);
-    background: #121212;
+    background: var(--panel-bg);
     padding: 1.25rem;
   }
 
@@ -456,7 +492,7 @@ const experiments = [
 
   .experiment-item {
     border: 1px solid var(--line);
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--item-bg);
     padding: 0.7rem 0.75rem;
     display: grid;
     grid-template-columns: auto 1fr;
@@ -496,19 +532,19 @@ const experiments = [
   }
 
   .section-pre {
-    background: linear-gradient(180deg, #15110e 0%, #111 100%);
+    background: var(--pre-bg);
   }
 
   .section-now {
-    background: linear-gradient(180deg, #0f1715 0%, #101212 100%);
+    background: var(--now-bg);
   }
 
   .section-next {
-    background: linear-gradient(180deg, #131224 0%, #111 100%);
+    background: var(--next-bg);
   }
 
   .section-join {
-    background: linear-gradient(180deg, #1a1710 0%, #111 100%);
+    background: var(--join-bg);
   }
 
   .s-label {
@@ -555,7 +591,7 @@ const experiments = [
   .phase-card,
   .completion-block {
     border: 1px solid var(--line);
-    background: rgba(0, 0, 0, 0.25);
+    background: var(--item-bg-strong);
     padding: 1.25rem 1.2rem;
   }
 
@@ -597,14 +633,14 @@ const experiments = [
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--dim);
-    background: rgba(255, 255, 255, 0.02);
+    background: var(--item-bg);
     margin: 0 0 1rem;
   }
 
   .screenshot-photo {
     margin: 0 0 1rem;
     border: 1px solid var(--line2);
-    background: rgba(255, 255, 255, 0.02);
+    background: var(--item-bg);
     overflow: hidden;
   }
 
@@ -625,7 +661,7 @@ const experiments = [
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--dim);
-    background: rgba(0, 0, 0, 0.18);
+    background: var(--caption-bg);
   }
 
   .done-list,
@@ -676,11 +712,11 @@ const experiments = [
   }
 
   .state-next {
-    color: #8ab0ff;
+    color: var(--state-next);
   }
 
   .state-horizon {
-    color: #c09bff;
+    color: var(--state-horizon);
   }
 
   .onboard-line {

@@ -1,7 +1,7 @@
 ---
 import MinimalDarkLayout from "@/layouts/MinimalDarkLayout.astro";
 import Link from "@/components/custom-ui/Link";
-import { companyInfo, socialLinks } from "@/types/ara";
+import { companyInfo } from "@/types/ara";
 import { getCollection } from "astro:content";
 import { readingMinutesForEssayId } from "@/lib/essay-reading";
 
@@ -27,10 +27,10 @@ function formatEssayHeroDate(d: Date) {
         on collective wisdom 🌐
       </h1>
       <p class="hero-subtitle">
-        Ara is a set open-source technologies and protocols to organize Web
-        semantically. <br />It brings ownership over computer to users. Lead
-        designer is
-        <a href="https://ahmetson.com/">Medet Ahmetson</a>.
+        Ara has multiple goals. Find a use case for blockchain. Set a new UI
+        metaphor beyond Windows. Make open-source sustainable by turning it into
+        a craft. One goal beneath all of them: users as gods of their own
+        technology.
       </p>
       <div class="hero-cta">
         <Link uri="https://cascadefund.org" asNewTab focus>
@@ -39,10 +39,6 @@ function formatEssayHeroDate(d: Date) {
         or
         <Link uri="/roadmap" className="hero-cta-link">view roadmap </Link>
       </div>
-      <p class="hero-cta-subtext">
-        Are you an open-source maintainer? Join our CascadeFund to organize
-        open-source projects semantically.
-      </p>
 
       <div class="hero-recent-essays">
         <p class="hero-recent-label">Recent essays</p>
@@ -51,7 +47,8 @@ function formatEssayHeroDate(d: Date) {
             recentEssays.map((essay) => (
               <a class="hero-recent-card" href={`/essays/${essay.id}`}>
                 <span class="hero-recent-date">
-                  {formatEssayHeroDate(essay.data.pubDate)} · {readingMinutesForEssayId(essay.id)} min read
+                  {formatEssayHeroDate(essay.data.pubDate)} ·{" "}
+                  {readingMinutesForEssayId(essay.id)} min read
                 </span>
                 <span class="hero-recent-title">{essay.data.title}</span>
                 <span class="hero-recent-desc">{essay.data.description}</span>
@@ -60,9 +57,7 @@ function formatEssayHeroDate(d: Date) {
           }
         </div>
         <p class="hero-recent-foot">
-          <a class="hero-recent-more" href="/essays">
-            Browse all essays
-          </a>
+          <a class="hero-recent-more" href="/essays"> Browse all essays </a>
         </p>
       </div>
     </div>
@@ -654,6 +649,34 @@ function formatEssayHeroDate(d: Date) {
   @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;1,8..60,300&display=swap");
 
   .ara-main {
+    --bg: #faf8f3;
+    --bg2: #f2eee7;
+    --bg3: #ebe3d6;
+    --line: rgba(49, 39, 29, 0.11);
+    --line2: rgba(49, 39, 29, 0.19);
+    --text: #25201a;
+    --dim: #64594d;
+    --dimmer: #968a7b;
+    --accent: #a65f2f;
+    --gold: #8f7025;
+    --card-bg: rgba(255, 255, 255, 0.62);
+    --card-bg-hover: rgba(255, 255, 255, 0.88);
+    --card-border: rgba(166, 95, 47, 0.36);
+    --card-border-hover: rgba(166, 95, 47, 0.72);
+    --card-shadow: 0 12px 30px rgba(49, 39, 29, 0.08);
+    --card-shadow-hover: 0 16px 38px rgba(166, 95, 47, 0.18);
+    --control-bg: rgba(255, 255, 255, 0.58);
+    --control-bg-hover: rgba(255, 255, 255, 0.82);
+    --current-bg: #eef0e8;
+    --social-bg: rgba(255, 255, 255, 0.36);
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Source Serif 4", Georgia, serif;
+    font-size: 18px;
+    line-height: 1.7;
+  }
+
+  :global(.dark) .ara-main {
     --bg: #0d0d0d;
     --bg2: #141414;
     --bg3: #1a1a1a;
@@ -664,11 +687,16 @@ function formatEssayHeroDate(d: Date) {
     --dimmer: #4a4540;
     --accent: #d4824a;
     --gold: #c9a84c;
-    background: var(--bg);
-    color: var(--text);
-    font-family: "Source Serif 4", Georgia, serif;
-    font-size: 18px;
-    line-height: 1.7;
+    --card-bg: rgba(20, 20, 20, 0.55);
+    --card-bg-hover: rgba(26, 26, 26, 0.75);
+    --card-border: rgba(212, 130, 74, 0.38);
+    --card-border-hover: rgba(212, 130, 74, 0.8);
+    --card-shadow: 0 12px 30px rgba(0, 0, 0, 0.24);
+    --card-shadow-hover: 0 16px 42px rgba(212, 130, 74, 0.2);
+    --control-bg: #1a1a1a;
+    --control-bg-hover: #111;
+    --current-bg: #141617;
+    --social-bg: rgba(255, 255, 255, 0.02);
   }
 
   .ara-main * {
@@ -794,19 +822,29 @@ function formatEssayHeroDate(d: Date) {
     flex-direction: column;
     gap: 0.45rem;
     padding: 1.1rem 1.15rem;
-    border: 1px solid var(--line);
+    border: 1.5px solid var(--card-border);
     border-radius: 2px;
-    background: rgba(20, 20, 20, 0.55);
+    background: var(--card-bg);
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, var(--accent) 18%, transparent),
+      var(--card-shadow);
     text-decoration: none;
     color: inherit;
+    position: relative;
     transition:
       border-color 0.15s ease,
-      background 0.15s ease;
+      background 0.15s ease,
+      box-shadow 0.15s ease,
+      transform 0.15s ease;
   }
 
   .ara-main .hero-recent-card:hover {
-    border-color: var(--line2);
-    background: rgba(26, 26, 26, 0.75);
+    border-color: var(--card-border-hover);
+    background: var(--card-bg-hover);
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, var(--accent) 26%, transparent),
+      var(--card-shadow-hover);
+    transform: translateY(-2px);
   }
 
   .ara-main .hero-recent-date {
@@ -1447,7 +1485,7 @@ function formatEssayHeroDate(d: Date) {
   }
 
   .ara-main .search-bar {
-    background: #1a1a1a;
+    background: var(--control-bg);
     border: 1px solid var(--line2);
     border-radius: 4px;
     padding: 10px 14px;
@@ -1474,7 +1512,7 @@ function formatEssayHeroDate(d: Date) {
   }
 
   .ara-main .search-result {
-    background: #111;
+    background: var(--control-bg);
     border: 1px solid rgba(212, 130, 74, 0.2);
     border-radius: 4px;
     padding: 12px 14px;
@@ -1711,7 +1749,7 @@ function formatEssayHeroDate(d: Date) {
   }
 
   .ara-main .chip {
-    background: #1a1a1a;
+    background: var(--control-bg);
     border: 1px solid var(--line2);
     border-radius: 20px;
     padding: 6px 14px;
@@ -2120,7 +2158,7 @@ function formatEssayHeroDate(d: Date) {
     justify-content: center;
     text-decoration: none;
     transition: all 0.2s;
-    background: rgba(255, 255, 255, 0.02);
+    background: var(--social-bg);
   }
 
   .ara-main .pilot-social-link:hover {
@@ -2152,7 +2190,7 @@ function formatEssayHeroDate(d: Date) {
   .ara-main .pilot-roadmap-item-current {
     padding: 1.45rem 1.5rem;
     border-left: 2px solid var(--accent);
-    background: #141617;
+    background: var(--current-bg);
   }
 
   .ara-main .pilot-roadmap-title {
@@ -2195,7 +2233,7 @@ function formatEssayHeroDate(d: Date) {
   }
 
   .ara-main .pilot-roadmap-item:hover {
-    background: #111;
+    background: var(--control-bg-hover);
     transition: background 0.2s;
   }
 

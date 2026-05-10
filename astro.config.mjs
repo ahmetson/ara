@@ -9,6 +9,7 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 // https://astro.build/config
 // @ts-ignore
 export default defineConfig({
+  site: 'https://ara.foundation',
   integrations: [react()],
   output: 'server',
   // Only set outDir for local development; Vercel adapter manages .vercel/output itself

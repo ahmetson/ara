@@ -1,14 +1,22 @@
 ---
 import MinimalDarkLayout from "@/layouts/MinimalDarkLayout.astro";
-import SocialLink from "@/components/utilitified_decorations/SocialLink";
 import Link from "@/components/custom-ui/Link";
 import { companyInfo, socialLinks } from "@/types/ara";
+import { getCollection } from "astro:content";
+import { readingMinutesForEssayId } from "@/lib/essay-reading";
 
-const joinSocial = [
-  socialLinks.linkedin,
-  socialLinks.twitter,
-  socialLinks.bluesky,
-];
+const essayEntries = (await getCollection("essays")).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+const recentEssays = essayEntries.slice(0, 2);
+
+function formatEssayHeroDate(d: Date) {
+  return d.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+}
 ---
 
 <MinimalDarkLayout title="Ara">
@@ -35,6 +43,28 @@ const joinSocial = [
         Are you an open-source maintainer? Join our CascadeFund to organize
         open-source projects semantically.
       </p>
+
+      <div class="hero-recent-essays">
+        <p class="hero-recent-label">Recent essays</p>
+        <div class="hero-recent-grid">
+          {
+            recentEssays.map((essay) => (
+              <a class="hero-recent-card" href={`/essays/${essay.id}`}>
+                <span class="hero-recent-date">
+                  {formatEssayHeroDate(essay.data.pubDate)} · {readingMinutesForEssayId(essay.id)} min read
+                </span>
+                <span class="hero-recent-title">{essay.data.title}</span>
+                <span class="hero-recent-desc">{essay.data.description}</span>
+              </a>
+            ))
+          }
+        </div>
+        <p class="hero-recent-foot">
+          <a class="hero-recent-more" href="/essays">
+            Browse all essays
+          </a>
+        </p>
+      </div>
     </div>
 
     <section id="pillars">
@@ -735,6 +765,88 @@ const joinSocial = [
     font-size: 0.95rem;
     line-height: 1.75;
     color: var(--dim);
+  }
+
+  .ara-main .hero-recent-essays {
+    margin-top: 3rem;
+    max-width: 900px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .ara-main .hero-recent-label {
+    font-family: "DM Mono", monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 1rem;
+  }
+
+  .ara-main .hero-recent-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
+
+  .ara-main .hero-recent-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    padding: 1.1rem 1.15rem;
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    background: rgba(20, 20, 20, 0.55);
+    text-decoration: none;
+    color: inherit;
+    transition:
+      border-color 0.15s ease,
+      background 0.15s ease;
+  }
+
+  .ara-main .hero-recent-card:hover {
+    border-color: var(--line2);
+    background: rgba(26, 26, 26, 0.75);
+  }
+
+  .ara-main .hero-recent-date {
+    font-family: "DM Mono", monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--dimmer);
+  }
+
+  .ara-main .hero-recent-title {
+    font-family: "Playfair Display", serif;
+    font-size: 1.15rem;
+    line-height: 1.3;
+    color: var(--text);
+  }
+
+  .ara-main .hero-recent-desc {
+    font-size: 0.88rem;
+    line-height: 1.55;
+    color: var(--dim);
+  }
+
+  .ara-main .hero-recent-foot {
+    margin: 1rem 0 0;
+  }
+
+  .ara-main .hero-recent-more {
+    font-family: "DM Mono", monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.15s ease;
+  }
+
+  .ara-main .hero-recent-more:hover {
+    border-bottom-color: var(--accent);
   }
 
   .ara-main section {

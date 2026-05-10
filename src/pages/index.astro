@@ -676,27 +676,29 @@ function formatEssayHeroDate(d: Date) {
     line-height: 1.7;
   }
 
-  :global(.dark) .ara-main {
-    --bg: #0d0d0d;
-    --bg2: #141414;
-    --bg3: #1a1a1a;
-    --line: rgba(255, 255, 255, 0.07);
-    --line2: rgba(255, 255, 255, 0.12);
-    --text: #e8e2d8;
-    --dim: #807a70;
-    --dimmer: #4a4540;
-    --accent: #d4824a;
-    --gold: #c9a84c;
-    --card-bg: rgba(20, 20, 20, 0.55);
-    --card-bg-hover: rgba(26, 26, 26, 0.75);
-    --card-border: rgba(212, 130, 74, 0.38);
-    --card-border-hover: rgba(212, 130, 74, 0.8);
-    --card-shadow: 0 12px 30px rgba(0, 0, 0, 0.24);
-    --card-shadow-hover: 0 16px 42px rgba(212, 130, 74, 0.2);
-    --control-bg: #1a1a1a;
-    --control-bg-hover: #111;
-    --current-bg: #141617;
-    --social-bg: rgba(255, 255, 255, 0.02);
+  @media (prefers-color-scheme: dark) {
+    .ara-main {
+      --bg: #0d0d0d;
+      --bg2: #141414;
+      --bg3: #1a1a1a;
+      --line: rgba(255, 255, 255, 0.07);
+      --line2: rgba(255, 255, 255, 0.12);
+      --text: #e8e2d8;
+      --dim: #807a70;
+      --dimmer: #4a4540;
+      --accent: #d4824a;
+      --gold: #c9a84c;
+      --card-bg: rgba(20, 20, 20, 0.55);
+      --card-bg-hover: rgba(26, 26, 26, 0.75);
+      --card-border: rgba(212, 130, 74, 0.38);
+      --card-border-hover: rgba(212, 130, 74, 0.8);
+      --card-shadow: 0 12px 30px rgba(0, 0, 0, 0.24);
+      --card-shadow-hover: 0 16px 42px rgba(212, 130, 74, 0.2);
+      --control-bg: #1a1a1a;
+      --control-bg-hover: #111;
+      --current-bg: #141617;
+      --social-bg: rgba(255, 255, 255, 0.02);
+    }
   }
 
   .ara-main * {
@@ -2407,6 +2409,32 @@ function formatEssayHeroDate(d: Date) {
     .ara-main .split-screen {
       width: 100%;
       max-width: 340px;
+    }
+
+    .ara-main .hero {
+      padding: 7rem 1.25rem 4rem;
+      text-align: center;
+    }
+
+    .ara-main .hero-slogan {
+      font-size: clamp(1.55rem, 5.5vw, 2rem);
+      max-width: 100%;
+    }
+
+    .ara-main .hero-subtitle {
+      text-align: center;
+    }
+
+    .ara-main .hero-cta {
+      justify-content: center;
+    }
+
+    .ara-main .hero-recent-essays {
+      text-align: left;
+    }
+
+    .ara-main .hero-recent-foot {
+      text-align: center;
     }
   }
 </style>
